@@ -1,3 +1,5 @@
+# （八）：应用 Wireshark 过滤条件抓取特定数据流
+
 应用抓包过滤，选择 Capture | Options，扩展窗口查看到**Capture Filter**栏。双击选定的接口，如下图所示，弹出**Edit Interface Settints**窗口。
 
 下图显示了**Edit Interface Settings**窗口，这里可以设置抓包过滤条件。如果你确知抓包过滤条件的语法，直接在 Capture Filter 区域输入。在输入错误时，Wireshark 通过红色背景区域表明无法处理过滤条件。最有可能的情况是，过滤条件中含有输入错误，或是使用了 display filter 的语法。

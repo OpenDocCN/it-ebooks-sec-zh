@@ -1,3 +1,5 @@
+# （七）：Statistics 统计工具功能详解与应用
+
 Wireshark 一个强大的功能在于它的统计工具。使用 Wireshark 的时候，我们有各种类型的工具可供选择，从简单的如显示终端节点和会话到复杂的如 Flow 和 IO 图表。本文将介绍基本网络统计工具。包括：捕捉文件摘要（Summary）,捕捉包的层次结构（Protocol Hirarchy）, 会话（Conversations）, 终端节点（Endpoints）, HTTP。
 
 # 更多信息
