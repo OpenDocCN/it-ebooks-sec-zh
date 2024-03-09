@@ -2342,7 +2342,11 @@ reporter：.mario, freddyb
 ES6 specifies a new language feature called "Template Strings" (often also referred to as "Quasi Literals" alongside multi-line strings and others). This allows to execute arbitrary JavaScript code without using parenthesis but back-ticks instead. Inside back-tick delimited strings, placeholders such as ${} can wrap executable code.
 
 ```
-<script> alert`1`; var something = `abc${alert(1)}def`; ``.constructor.constructor`alert\`1\````; </script> 
+<script> 
+alert`1`; 
+var something = `abc${alert(1)}def`; 
+``.constructor.constructor`alert\`1\``; 
+</script> 
 ```
 
 Make sure that your IDS, filter and other protective systems are aware of the fact, that back-ticks (U+0060) are now capable of initiating execution of methods and functions in JavaScript. Further make sure, that symbols such as ${} cannot be injected into existing template and multi-line strings.
