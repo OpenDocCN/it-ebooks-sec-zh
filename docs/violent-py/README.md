@@ -1,5 +1,3 @@
-# 介绍
-
 # Violent Python 中文版
 
 > 连载介绍信息: [zone.wooyun.org/content/23138](http://zone.wooyun.org/content/23138)

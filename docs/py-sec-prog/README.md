@@ -1,5 +1,3 @@
-# 介紹
-
 ## python 安全编程教程
 
 > 原文：[Python Tutorials](http://www.primalsecurity.net/tutorials/python-tutorials/)

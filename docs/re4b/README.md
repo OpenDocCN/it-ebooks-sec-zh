@@ -1,5 +1,3 @@
-# 介紹
-
 # 《Reverse Engineering for Beginners》
 
 > 乌克兰黑客 Dennis Yurichev 在 github 上以 latex 代码的方式开放了他的最新的图书：RE for Beginners(逆向工程入门)。

@@ -1,5 +1,3 @@
-# 介紹
-
 # Metasploit v4 POC 上手指南
 
 ![](img/metasploit 中文操作手册 8.png)

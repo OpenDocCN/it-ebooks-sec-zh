@@ -1,5 +1,3 @@
-# 介绍
-
 # Nmap 参考指南
 
 ## Table of Contents

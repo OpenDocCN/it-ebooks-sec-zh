@@ -1,5 +1,3 @@
-# 介绍
-
 # CTF 领域指南
 
 原文：[CTF Field Guide](https://trailofbits.github.io/ctf/)
