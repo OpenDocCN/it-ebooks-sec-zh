@@ -8,7 +8,7 @@
 
 这意味着有一些特殊的命令能够帮助你反弹 shell,像我们最常见的就是使用 netcat 命令来反弹 shell:
 
-```
+```py
 #启动 netcat 监听器
 ~$ nc -lvp 443
 listening on [any] 443 ...
@@ -19,7 +19,7 @@ listening on [any] 443 ...
 
 现在你可能注意到你看不到一些命令提示,我们输入几个命令试试:
 
-```
+```py
 id
 uid=1000(kali) gid=1000(kali) groups=1000(kali)
 
@@ -56,7 +56,7 @@ var
 
 对于已经安装了 python 的系统,我们可以使用 python 提供的 pty 模块,只需要一行脚本就可以创建一个原生的终端.下面是演示代码.执行第一行前 我还没有进入终端.
 
-```
+```py
 python -c "import pty;pty.spawn('/bin/bash')"
 
 kali@kali:/$ uname -a
@@ -77,7 +77,7 @@ kali@kali:/$
 
 -c 参数选项允许我们直接在命令终端里面执行指定脚本,上面那段脚本,我使用分号把两行代码合并为了一行.这样写并不为过.还有一点. 就是双引号里面只能使用单引号把/bin/bash 引起来,如果使用双引号就出出现语法错误.就像下面这样:
 
-```
+```py
 python -c "import pty;pty.spawn("/bin/bash")" 
 ```
 

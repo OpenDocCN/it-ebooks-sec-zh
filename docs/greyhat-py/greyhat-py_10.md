@@ -22,7 +22,7 @@ Sulley 和 SPIKE（一款著名的协议 fuzzing 工具，当然它是免费的�
 
 mpacket 的下载地址 [`oss.coresecurity.com/repo/Impacket-stable.zip`](http://oss.coresecurity.com/repo/Impacket-stable.zip)。下载完后解压到 C:\ directory,进入目录执行以下命令：
 
-```
+```py
 C:\Impacket-stable\Impacket-0.9.6.0&gt;C:\Python25\python.exe setup.py install 
 ```
 
@@ -40,13 +40,13 @@ C:\Impacket-stable\Impacket-0.9.6.0&gt;C:\Python25\python.exe setup.py install
 
 s_string()指令表示添加进测试数据的 primitives 是一个可 fuzz 的字符串。s_string()只有一个参数,就是有效的字符串，用于协议交互中的正常输入。比如，你 fuzzing 一个 email 地址：
 
-```
+```py
 s_string("justin@immunityinc.com) 
 ```
 
 Sulley 会把 justin@immunityinc.com 当作一个有效值，然后进行各种变形，最后扔给目 标程序。让我们看看 email 地址变成了什么样。
 
-```
+```py
 justin@immunityinc.comAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA AA
 justin@%n%n%n%n%n%n.com
 %d%d%d@immunityinc.comAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA AAAA 
@@ -56,7 +56,7 @@ justin@%n%n%n%n%n%n.com
 
 Delimiters(定界符)，用于将大的字符串分割成晓得容易管理的片段。还是用先前的 email 地址做例子，用 s_delim()指令能够将它分割成更多的 fuzz 字符串。
 
-```
+```py
 s_string("justin") 
 s_delim("@") 
 s_string("immunityinc") 
@@ -70,14 +70,14 @@ s_string("com")
 
 s_static()和 s_random()，顾名思义，第一个使传入的数据不改变，第二个使数据随机的 改变。
 
-```
+```py
 s_static("Hello,world!") 
 s_static("\x41\x41\x41") 
 ```
 
 s_random()可以随机产生变长的数据。
 
-```
+```py
 s_random("Justin",min_length=6, max_length=256, num_mutations=10) 
 ```
 
@@ -89,7 +89,7 @@ min_length 和 max_length 告诉 Sully 变形后的数据的长度范围， num_
 
 Binary Data(二进制数据)是数据表示中的瑞士军刀。Sullyey 几乎能处理所有二进制数 据。当我们在处理一些未知协议的数据包的时候，你也许只是想看看服务器是如何回应我们 生成的这些没有意义的数据的，这时候 s_binary() 就非常有用了
 
-```
+```py
 s_binary("0x00 \\x41\\x42\\x43 0d 0a 0d 0a") 
 ```
 
@@ -101,7 +101,7 @@ Integers(整数)的应用无处不在，从能看的见的明文数据，到看�
 
 表 9-1 列出了 Sulley 支持的主要几种整数类型。
 
-```
+```py
 1 byte – s_byte(), s_char() 
 2 bytes – s_word(), s_short()
 4 bytes – s_dword(), s_long(), s_int() 
@@ -112,7 +112,7 @@ Listing 9-1: Sulley 支持的整数类型
 
 所有的整数表达式都有几个重要的的选项。endian 项表示整数将以什么样的形式变现出 来，是小端- (<) 还是 大端- (>)格式 l 默认似乎小端。format 项有两个可选值，ascii 和 binary； 代表整数将被如何使用。举个例子，如果你有一个用 ASCII 格式 表示是 1，用 binary 表示 就是\x31。signed 项说明整数是有符号的还是无符号的，这个选项只有在 format 指定为 ascii 后有效，默认似乎 False。最后一个有趣的选项是 full_range，启用这个选项以后，Sulley 就 会在一个很广的范围内枚举可能的整数值。举个例子，如果我们传入的整数是一个无符号的 整数，把 full_range 设置成 True，这时候 Sulley 就会很智能的测试边界值(接近或者超过最 大值，或者接近最小值)，无符号的最大值是 65535，Sulley 就会试着使用 65534, 65535, 65536 去进行测试。full_range 默认为 False，因为可枚举的时间可是很长的。看看下面的例子。
 
-```
+```py
 s_word(0x1234, endian=">", fuzzable=False) 
 s_dword(0xDEADBEEF, format="ascii", signed=True) 
 ```
@@ -125,7 +125,7 @@ Blocks(块)Groups(组)是 Sulley 提供的强大的组织工具。Blocks 将独�
 
 下面就是一个使用块和组 fuzzing HTTP 的例子。
 
-```
+```py
 # import all of Sulley's functionality. 
 from sulley import *
 # this request is for fuzzing: {GET,HEAD,POST,TRACE} /index.html HTTP/1.1
@@ -169,13 +169,13 @@ FTP 是一个简单轻便的文件传输协议，被广泛的使用于各种环�
 
 一个 FTP 服务器既可以设置成不需要密码的匿名访问或者是需要密码的认证访问。因 为 WarFTPD 的漏洞出在 USER 和 PASS 命令上，所以我们就假定服务区使用认证访问。FTP 认证命令的格式如下:
 
-```
+```py
 USER <USERNAME> PASS <PASSWORD> 
 ```
 
 一旦客户端传入了有效的用户名和密码后，服务器就会赋予客户端，传输文件，改变目 录，查询文件等各种权限。当然 USER 和 PASS 命令只是 FTP 服务器提供的功能中的一个 子集，在认证成功后还有很多别的功能，如表 9-2。这些新的命令都要加入到我们程序的协 议框架(protocol skeleton)中。FTP 协议详细的命令，请看 rfc959。
 
-```
+```py
 CWD <DIRECTORY> - change working directory to DIRECTORY 
 DELE <FILENAME> - delete a remote file FILENAME
 MDTM <FILENAME> - return last modified time for file FILENAME 
@@ -190,7 +190,7 @@ Listing 9-2:我们要额外 fuzz 的 FTP 命令
 
 学以致用，学以致用啊！
 
-```
+```py
 #ftp.py
 from sulley import * 
 s_initialize("user") 
@@ -231,7 +231,7 @@ protocol skeleton 完成之后，让我们开始创建 Sulley 会话，把所有
 
 Sulley 会话包含了请求数据整合，网络数据包的捕捉，进程调试，崩溃报告，和虚拟机 控制。先让我们定义一个会话文件，然后详细的分析每个部分。
 
-```
+```py
 #ftp_session.py
 from sulley import *
 from requests import ftp # this is our ftp.py file 
@@ -263,7 +263,7 @@ Sulley 的优点之一就是能非常好的跟踪 fuzz 期间的数据交互，�
 
 在 Sulley 的主目录下可以找到 process_monitor.py 和 network_monitor.py 两个脚本，他 们分别负责网络监控和进程监控。
 
-```
+```py
 python process_monitor.py
 Output:
 ERR> USAGE: process_monitor.py
@@ -277,7 +277,7 @@ ERR> USAGE: process_monitor.py
 
 如下启动进程监控。
 
-```
+```py
 python process_monitor.py -c C:\warftpd.crash -p war-ftpd.exe 
 ```
 
@@ -285,7 +285,7 @@ python process_monitor.py -c C:\warftpd.crash -p war-ftpd.exe
 
 接下来看看 network_monitor.py。在这之前需要安装以下的库： WinPcap 4.0, pcapy, mpacket。
 
-```
+```py
 python network_monitor.py Output:
 ERR> USAGE: network_monitor.py
 <-d|--device DEVICE #> device to sniff on (see list below) 
@@ -306,13 +306,13 @@ Network Device List:
 
 现在我们启动 Sulley，并使用内置的 Web 界面观察整个 fuzz 过程。
 
-```
+```py
 python ftp_session.py 
 ```
 
 输出如下：
 
-```
+```py
 [07:42.47] current fuzz path: -> user 
 [07:42.47] fuzzed 0 of 6726 total cases
 [07:42.47] fuzzing 1 of 1121
@@ -341,7 +341,7 @@ Figure 9-2: Sulley web 界面显示的崩溃信息
 
 现在点击 test case 的数字，就会看到详细的崩溃信息。如表 9-3 PyDbg 崩溃信息格式在 60 页的"访问违例处理程序"中有详细的讲解。忘记的返回去看 看。
 
-```
+```py
 [INVALID]:5c5c5c5c Unable to disassemble at 5c5c5c5c from thread 252 caused access violation
 when attempting to read from 0x5c5c5c5c CONTEXT DUMP
 EIP: 5c5c5c5c Unable to disassemble at 5c5c5c5c 

@@ -14,7 +14,7 @@ Linux: sudo apt-get install python2.7 build-essential python-dev zlib1g-dev upx 
 
 下一步我们就运行 python 命令生成可执行文件:
 
-```
+```py
 python pyinstaller.py -onefile <scriptName> 
 ```
 
@@ -26,7 +26,7 @@ Python 脚本现在已经被编译成了 windows PE 文件，并且不需要 Pyt
 
 一个简单的脚本:
 
-```
+```py
 #!/usr/bin/python
 
 import os
@@ -36,7 +36,7 @@ os.system("echo Hello World!")
 
 现在我们把上面这个脚本编译成为一个可以执行的文件:
 
-```
+```py
 c:\PathToPython\python.exe pyinstaller.py --onefile helloWorld.py
 
 > helloWorld.exe

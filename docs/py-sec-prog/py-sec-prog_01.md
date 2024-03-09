@@ -10,7 +10,7 @@
 
 在终端里面输入 python:
 
-```
+```py
 ~$ python
 Python 2.7.6 (default, Mar 22 2014, 22:59:56) 
 [GCC 4.8.2] on linux2
@@ -20,7 +20,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 
 输入之后你就可以直接在解释器里面写你的代码了。下面我们将声明两个变量，并且使用 type()函数查看变量的类型。假设我们声明了一个字符串和整型：
 
-```
+```py
 >>>
 >>> ip = '8.8.8.8'
 >>> port = 53
@@ -35,7 +35,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 
 你可以使用内置的 help()函数去了解一个函数的详细。记住这一点，它可以帮助你在学习语言的时候学习到更多的详细内容.
 
-```
+```py
 >>>
 >>> help(type)
 >>> 
@@ -43,7 +43,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 
 有时你会想把一些变量和字符串连接起来然后通过脚本显示出来。那么你就需要使用 str()函数把整型转换成字符串类型
 
-```
+```py
 >>> ip='1.1.1.1'
 >>> port=55
 >>> print 'the ip is:'+ip+'and the port is:'+str(port)
@@ -54,7 +54,7 @@ the ip is:1.1.1.1and the port is:55
 
 Python 字符串允许你通过偏移值来获取你想需要的字符串,并且可以通过 len()函数来获取字符串的长度，它可以帮助你更方便的操作字符串。
 
-```
+```py
 >>>
 >>> domain='primalsecurity.net'
 >>> domain
@@ -72,14 +72,14 @@ Python 字符串允许你通过偏移值来获取你想需要的字符串,并且
 
 你可以使用内建的 dir()函数来列出模块定义的标识符。标识符有函数、类和变量。
 
-```
+```py
 >>> dir(ip)
 ['__add__', '__class__', '__contains__', '__delattr__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getitem__', '__getnewargs__', '__getslice__', '__gt__', '__hash__', '__init__', '__le__', '__len__', '__lt__', '__mod__', '__mul__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__rmod__', '__rmul__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '_formatter_field_name_split', '_formatter_parser', 'capitalize', 'center', 'count', 'decode', 'encode', 'endswith', 'expandtabs', 'find', 'format', 'index', 'isalnum', 'isalpha', 'isdigit', 'islower', 'isspace', 'istitle', 'isupper', 'join', 'ljust', 'lower', 'lstrip', 'partition', 'replace', 'rfind', 'rindex', 'rjust', 'rpartition', 'rsplit', 'rstrip', 'split', 'splitlines', 'startswith', 'strip', 'swapcase', 'title', 'translate', 'upper', 'zfill'] 
 ```
 
 现在你可以使用上面列举出来的内建字符串函数，如果想知道这个函数的更多描述可以参考前面提到的 help()函数:
 
-```
+```py
 >>>
 >>> help(ip.split)
 >>>
@@ -93,7 +93,7 @@ Python 字符串允许你通过偏移值来获取你想需要的字符串,并且
 
 这 split 函数把一个字符串通过":"切割生成一个新的列表。这是一个非常有用的字符串函数因为你能够把这个字符串里面的有用信息提出出来。例如，你获取到了一个 ip 列表，你想在这个列表里面添加一个索引值。你也可以删除和添加新的值到这个列表里面通过.append()和.remove()函数
 
-```
+```py
 >>>
 >>> list = string.split(':')
 >>>
@@ -116,7 +116,7 @@ Python 字符串允许你通过偏移值来获取你想需要的字符串,并且
 
 在上面提到过，Python 模块能够让你用少量的代码就能够完成你的任务,Python 有许多有用的内建模块(os,subprocess,socket,urllib,httplib,re,sys 等等)和第三方模块(cymruwhois,scapy,dpkt,spider 等等).使用 Python 模块很简单"import <modulenmae class="calibre11">". OS 模块是非常重要的因为你需要在你的 Python 代码里面调用系统命令:</modulenmae>
 
-```
+```py
 >>>
 >>> import os
 >>>
@@ -127,7 +127,7 @@ Python 字符串允许你通过偏移值来获取你想需要的字符串,并且
 
 你可以看到上面 os 模块给你提供了很多可以使用的功能函数，其中我发现我经常使用"os.system"，我可给它传递一个命令，然后通过它去在系统底层执行我们传递的命令.下面我们将会执行一个命令"echo ‘UHJpbWFsIFNlY3VyaXR5Cg==’ | base64 -d":
 
-```
+```py
 >>>
 >>> os.system("echo 'UHJpbWFsIFNlY3VyaXR5Cg==' | base64 -d")
 Primal Security
@@ -138,7 +138,7 @@ Primal Security
 
 现在我们将演示一些例子,如何在 Python 里面从一个文件里面读取数据和创建一个文件。下面的这个例子演示了如何创建一个文件对象，并且读取/写入数据到这个对象里面，通常你自己读取一个文件的数据，并且做一些逻辑处理然后把输出的写到文件里面:
 
-```
+```py
 >>>
 >>> file = open('test.txt', 'w')
 >>> file.write('Hello World')

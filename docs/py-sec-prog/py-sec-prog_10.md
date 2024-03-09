@@ -6,7 +6,7 @@
 
 首先你需要安装这个模块并且可以使用之前我们讲过的 dir 函数去看看这个模块提供了那些功能:
 
-```
+```py
 >>> from cymruwhois import Client
 >>> c = Client()
 >>> dir(c)
@@ -16,7 +16,7 @@
 
 现在我们使用 lookup 函数来查询一个单独的 IP 地址，在后面我们会使用"lookupmany"来查询一个 IP 数组列表:
 
-```
+```py
 >>> google = c.lookup('8.8.8.8') #译者注:国内会被 GFW
 >>> google
 <cymruwhois.record instance: 15169|8.8.8.8|8.8.8.0/24|US|GOOGLE - Google Inc.,US>
@@ -27,7 +27,7 @@
 
 现在我们有一个 cymruwhois.record 的实例,可以从中提取出下面这些信息:
 
-```
+```py
 >>>
 >>> dir(google)
 ['__doc__', '__init__', '__module__', '__repr__', '__str__', 'asn', 'cc', 'ip', 'owner', 'prefix']
@@ -48,7 +48,7 @@
 
 我们通常使用 tcpdump,BPF 还有 bash-fu 来处理 IP 列表,下面我们抓取了 SYN 包里面"tcp[13]=2"的 ip 并且通过 awk 的通道 stdout 与 stdin 把第六个元素使用" awk ‘{print $6}’"抓取出来，然后把使用 awk 抓取出来的 ip 写入到一个文件里面:
 
-```
+```py
 ~$ tcpdump -ttttnnr t.cap tcp[13]=2 | awk '{print $6}' | awk -F "." '{print $1"."$2"."$3"."$4}' > ips.txt
 reading from file t.cap, link-type LINUX_SLL (Linux cooked)
 ~$ python ip2net.py -r ips.txt
@@ -61,7 +61,7 @@ reading from file t.cap, link-type LINUX_SLL (Linux cooked)
 
 **ip2net.py**
 
-```
+```py
 #!/usr/bin/env python
 import sys, os, optparse
 from cymruwhois import Client

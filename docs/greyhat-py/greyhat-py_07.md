@@ -20,7 +20,7 @@ Hooking 是一种强大的进程监控 (process-observation)技 术,通过改变
 
 首先打开 Firefox，输入网址 [`www.openrce.org/`](http://www.openrce.org/)。一旦你接收了 SSl 证书，页面就 加载成功。接着 Immunity 附加到 firefox.exe 进程在 nspr4.PR_Write 设置断点。在 OpenRCE 网站右上角有一个登录窗口，设置用户名为 test 和密码 test，点击 Login 按钮。设置的断点 立刻被触发；再按 F9，断点再次触发。最后，你将在栈看到如下的内容：
 
-```
+```py
 [ESP + 8] => ASCII "username=test&password=test&remember_me=on" 
 ```
 
@@ -28,19 +28,19 @@ Hooking 是一种强大的进程监控 (process-observation)技 术,通过改变
 
 在用 PyDbg 定义 soft hook 之前，需要先定义一个包含说有 hook 目标的容器。如下初始 化容器：
 
-```
+```py
 hooks = utils.hook_container() 
 ```
 
 使用 hook_container 类的 add()方法将我们定义的 hook 加进去。函数原型：
 
-```
+```py
 add( pydbg, address, num_arguments, func_entry_hook, func_exit_hook ) 
 ```
 
 第一个参数设置成一个有效的 pydbg 目标，address 参数设置成要安装 hook 的地址， num_arguments 设置成传递给 hook 的参数。func_entry_hook 和 func_exit_hook 都是回调函数。 func_entry_hook 是 hook 被触发后立刻调用的，func_exit_hook 是被 hook 的函数将要退出之 前执行的。entry hook 用于得到函数的参数，exit hook 用于捕捉函数的返回值。
 
-```
+```py
 def entry_hook( dbg, args ):
     # Hook code here
     return DBG_CONTINUE 
@@ -50,14 +50,14 @@ dbg 参数设置成有效的 pydbg 目标，args 接收一个列表，包含 hoo
 
 exit hook 回调函数有一点不同就是多了个 ret 参数，包含了函数的返回值(EAX 的值): def exit_hook( dbg, args, ret ):
 
-```
+```py
 # Hook code here
 return DBG_CONTINUE 
 ```
 
 接下用实例看看如何用 entry hook 嗅探加密前的数据。
 
-```
+```py
 #firefox_hook.py from pydbg import *
 from pydbg.defines import * 
 import utils
@@ -110,7 +110,7 @@ else:
 
 代码简洁明了:在 PR_Write 上设置 hook，当 hook 被触发的时候，我们尝试读出第二个 参数指向的字符串。如果有符合的数据就打印在命令行。启动一个新的 Firefox，接着运行 firefox_hook.py 脚本。重复之前的步骤，登录 [`www.openrce.org/`](http://www.openrce.org/)，将看到输出如下：
 
-```
+```py
 [*] Attaching to firefox.exe with PID: 1344 
 [*] nspr4.PR_Write hooked at: 0x601a2760 
 [*] Hooks set, continuing process.
@@ -131,7 +131,7 @@ Listing 6-1: How cool is that! 我们能看到未加密前的用户名密码
 
 Immunity 调试器提供了一个简单的对象 FastLogHook 用来创建 hard hook。FastLogHook 在需要 hook 的函数里写入跳转代码，跳到 FastLogHook 申请的一块代码区域，函数内被跳 转代码覆盖的代码就存放在这块新创建的区域。当你构造 fast log hooks 的时候，需要先定 一个 hook 指针，然后定义想要记录的数据指针。程序框架如下：
 
-```
+```py
 imm = immlib.Debugger()
 fast = immlib.FastLogHook( imm ) 
 fast.logFunction( address, num_arguments ) 
@@ -142,7 +142,7 @@ fast.logBaseDisplacement( register, offset )
 
 logFunction 接受两个参数，address 就是在希望 hook 的函数内部的某个地址（这个地 址会被跳转指令覆盖）。如果在函数的头部 hook，num_arguments 则设置成想要捕捉到的参 数 的 数 量 ， 如 果 在 函 数 的 结 束 hook ， 则 设 置 成 0 。 数 据 的 记 录 由 logRegister(),logBaseDisplacement(), and logDirectMemory()三个方法完成。
 
-```
+```py
 logRegister( register ) 
 logBaseDisplacement( register, offset ) logDirectMemory( address ) 
 ```
@@ -151,7 +151,7 @@ logRegister()方法用于跟踪指定的寄存器，比如跟踪函数的返回�
 
 当 hook 触发，log 函数执行之后，他们就将数据存储在一个 FastLogHook 申请的地址。 为了检索 hook 的结果，你必须使用 getAllLog()函数，它会返回一个 Python 列表：
 
-```
+```py
 [( hook_address, ( arg1, arg2, argN )), ... ] 
 ```
 
@@ -165,7 +165,7 @@ Nicolas Waisman(顶级堆溢出专家)开发了 hippie(利用 hard hook)，可�
 
 在我们开始前，先了解下 RtlAllocateHeap 和 RtlFreeHeap。
 
-```
+```py
 BOOLEAN RtlFreeHeap(
     IN PVOID HeapHandle, IN ULONG Flags,
     IN PVOID HeapBase
@@ -178,7 +178,7 @@ PVOID RtlAllocateHeap(
 
 RtlFreeHeap 和 RtlAllocateHeap 的所有参数都是必须捕捉的，不过 RtlAllocateHeap 返回的新堆的地址也是需要捕捉的。
 
-```
+```py
 #hippie_easy.py 
 import immlib 
 import immutils
@@ -247,7 +247,7 @@ def main(args):
 
 第一个函数使用 Nico 内建的代码块找到可以在 RtlAllocateHeap 内部设置 hook 的地址。 让我们反汇编 RtlAllocateHeap 函数看看最后几行的指令是怎么样的：
 
-```
+```py
 0x7C9106D7 F605 F002FE7F TEST BYTE PTR DS:[7FFE02F0],2
 0x7C9106DE 0F85 1FB20200 JNZ ntdll.7C93B903
 0x7C9106E4 8BC6 MOV EAX,ESI
@@ -265,7 +265,7 @@ Python 代码从函数的头部看似反汇编，直到在 0x7C9106EB 找到 RET
 
 现在确认结果。重复运行!hippie_easy，你将会看到调试器日志窗口(ALT-L)的输出。
 
-```
+```py
 RtlFreeHeap(0x000a0000, 0x00000000, 0x000ca0b0) 
 RtlFreeHeap(0x000a0000, 0x00000000, 0x000ca058) 
 RtlFreeHeap(0x000a0000, 0x00000000, 0x000ca020) 

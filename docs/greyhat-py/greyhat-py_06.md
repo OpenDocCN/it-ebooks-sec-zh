@@ -26,7 +26,7 @@ Immunity 调试器提供了自由发行的版本，可以由 [`debugger.immunity
 
 在 Immunity 中执行 Python 的方法即使用 PyCommands。PyCommands 就是一个个 python 脚本文件，存放在 Immunity 安装目录的 PyCommands 文件夹里。每个 python 脚本都执行一 个任务（hooking，静态分析等待），相当于一个 PyCommand。每个 PyCommand 都有一个 特定的结构。以下就是一个基础的模型:
 
-```
+```py
 from immlib import * 
 def main(args):
     # Instantiate a immlib.Debugger instance 
@@ -36,7 +36,7 @@ def main(args):
 
 PyCommand 有两个必备条件。一个 main()函数，只接收一个参数（由所有参数组成的 python 列表）。另一个必备条件是在函数执行完成的时候必须返回一个字符串，最后更新在 调试器主界面的状态栏。执行命令之前必须在命令前加一个感叹号。
 
-```
+```py
 !<scriptname> 
 ```
 
@@ -78,7 +78,7 @@ Immunity 调试器包含了 13 总不同类型的 hook。每一种 hook 都能�
 
 以下的 LogBpHook 例子代码块能够作为 PyHook 的模板。
 
-```
+```py
 from immlib import *
 class MyHook( LogBpHook ): 
     def init ( self ):
@@ -89,7 +89,7 @@ class MyHook( LogBpHook ):
 
 我们重载了 LogBpHook 类，并且建立了 run()函数（必须）。当 hook 被触发的时候，所 有的 CPU 寄存器，以及指令都将被存入 regs，此时我们就可以修改它们了。regs 是一个字 典，如下访问相应寄存器的值：
 
-```
+```py
 regs["ESP"] 
 ```
 
@@ -105,7 +105,7 @@ hook 可以定义在 PyCommand 里，随时调用。也可以写成脚本放入 
 
 在获得 EIP 的控制权之后，你就要将执行权限转移到 shellcode。典型的方式就是，你用 一个寄存器指向你的 shellcode。你的工作就是在可执行的代码里或者在加载的模块里找到跳 转到寄存器的代码。 Immunity 提供的搜索接口使这项工作变得很简单，它将贯穿整个程序 寻找需要的代码。接下来就试验下。
 
-```
+```py
 # findinstruction.py 
 from immlib import * 
 def main(args):
@@ -125,13 +125,13 @@ def main(args):
 
 我们先转化要搜索的代码（记得内存中可是没有汇编指令的 ），然后通过 Search()方法 在整个程序的内存空间中包含这个指令的地址。在返回的地址列表中，找到每个地址所属的 页。接着确认页面是可执行的。每找到一个符合上面条件的就打印到记录窗口。在调试器的 命令栏里执行如下格式的命令。
 
-```
+```py
 !findinstruction <instruction to search for> 
 ```
 
 脚本运行后输入以下测试参数，
 
-```
+```py
 !findinstruction jmp esp 
 ```
 
@@ -157,7 +157,7 @@ Figure 5-3: 溢出之后 Immunity 栈窗口
 
 你能够从 CANVAS，Metasploit,或者你自己的制造的 shellcode。新建 badchar.py 文件， 输入以下代码。
 
-```
+```py
 #badchar.py
 from immlib import * 
 def main(args):
@@ -191,13 +191,13 @@ def main(args):
 
 在这个脚本中，我们只是从 Immunity 库中调用了 readMemory()函数。剩下的脚本只是 简单的字符串比较。现在你需要将你的 shellcode 做 ASCII 编码(如果你有字节 0xEB 0x09， 编码后后你的字符串将看着像 EB09），将代码贴入脚本，并且如下运行：
 
-```
+```py
 !badchar <Address to Begin Search> 
 ```
 
 在我们前面的例子中，我们将从 ESP+0x4 地址 (0x00AEFD4C) 寻找，所以要在 PyCommand 执行如下命令:
 
-```
+```py
 !badchar 0x00AEFD4c 
 ```
 
@@ -207,7 +207,7 @@ def main(args):
 
 DEP 是一种在 windows(XP SP2, 2003, Vista)下实现的的安全保护机制，用来防止代码 在栈或者堆上执行。这能阻止非常多的漏洞利用代码运行，因为大多的 exploit 都会把 shellcode 放在堆栈上。然而有一个技巧能巧妙的绕过 DEP，利用微软未公布的 API 函数 NtSetInformationProcess()。它能够阻止进程的 DEP 保护，将程序的执行权限转移到 shellcode。 Immunity 调试器提供了一个 PyCommand 命令 findantidep.py 能够很容易找到 DEP 的地址。让我们看一看这个 very very nice 的函数。
 
-```
+```py
 NTSTATUS NtSetInformationProcess( 
     IN HANDLE hProcessHandle,
     IN PROCESS_INFORMATION_CLASS ProcessInformationClass, 
@@ -218,7 +218,7 @@ NTSTATUS NtSetInformationProcess(
 
 为了使进程的 DEP 保护失效，需要将 NtSetInformationProcess()的 ProcessInformationClass 函数设置成 ProcessExecuteFlags (0x22)，将 ProcessInformation 参数 设置 MEM_EXECUTE_OPTION_ENABLE (0x2)。问题是在 shellcode 中调用这个函数将会出 现 NULL 字符。解决的方法是找到一个正常调用了 NtSetInformationProcess()的函数，再将 我们的 shellcode 拷贝到这个函数里。已经有一个已知的点就在 ntdll.dll 里。使用 Immunity 反汇编 ntdll.dll 找出这个地址。
 
-```
+```py
 7C91D3F8 . 3C 01 CMP AL,1
 7C91D3FA . 6A 02 PUSH 2
 7C91D3FC . 5E POP ESI
@@ -240,7 +240,7 @@ NTSTATUS NtSetInformationProcess(
 
 上面的代码就是调用 NtSetInformationProces 的必要过程。首先比较 AL 和 1，把 2 弹入 ESI，紧接着是条件跳转到 0x7C93FEBA。在这里将 ESI 拷贝进栈 EBP-4（记得 ESI 始终是 2）。接着非条件跳转到 7C91D403。在这里将确认堆栈 EBP-4 的值非零。非零则跳转 到 0x7C935D6D。从这里开始变得有趣，4 被第一个压入栈，EBP-4（始终是 2!）被加载进 EAX， 然后压入栈，接着 0x22 被压入，最后-1 被压入（-1 表示禁止当前进程的 DEP）。剩下调用 ZwSetInformationProcess（NtSetInformationProcess 的别称）。上面的代码完成的功能相当于 下面的函数调用：
 
-```
+```py
 NtSetInformationProcess( -1, 0x22, 0x2, 0x4 ) 
 ```
 
@@ -250,7 +250,7 @@ Perfect！这样进程的 DEP 就被取消了。在这之前有两项是必须�
 
 在平常你需要手工的获取这些地址，不过 Immunity 提供了 findantidep.py 辅助我们完成 这项 。最后你将得到一个 exploit 字符串，将它与你自己的 exploit 结合，就能够使用了。接 下来看看 findantidep.py 代码，接下来将会使用它进行测试。
 
-```
+```py
 # findantidep.py 
 import immlib 
 import immutils 
@@ -309,7 +309,7 @@ Figure 5-6: 选择一个返回地址
 
 最后看到的输出 i 结果如下:
 
-```
+```py
 stack = "\x75\x24\x01\x01\xff\xff\xff\xff\x56\x31\x91\x7c\xff\xff\xff\xff" + "A" * 0x54 + "\x75\x24\x01\x01" + shellcode 
 ```
 
@@ -325,7 +325,7 @@ stack = "\x75\x24\x01\x01\xff\xff\xff\xff\x56\x31\x91\x7c\xff\xff\xff\xff" + "A"
 
 现在最常用的反调试机制就是用 IsDebuggerPresent（由 kernel32.导出）。函数不需要参 数，如果发现有调试器附加到当前进程，就返回 1，否则返回 0.如果我们反汇编这个函数：
 
-```
+```py
 7C813093 &gt;/$ 64:A1 18000000 MOV EAX,DWORD PTR FS:[18]
 7C813099  &#124;. 8B40 30  MOV EAX,DWORD PTR DS:[EAX+30] 
 7C81309C  &#124;. 0FB640 02  MOVZX EAX,BYTE PTR DS:[EAX+2] 
@@ -334,7 +334,7 @@ stack = "\x75\x24\x01\x01\xff\xff\xff\xff\x56\x31\x91\x7c\xff\xff\xff\xff" + "A"
 
 代码通过不断的寻址找到能证明进程被调试的数据位，第一行，通过 FS 寄存器的第 0x18 位找到 TIB（线程信息块）的地址。第二行通过 TIB 的第 0x30 位找到 PEB(进程环境信息块) 的地址。第三行将 PEB 的 0x2 位置上的 BeingDebugged 变量存在 EAX 寄存器中，如果有调 试器附加到进程，该值为 0x1。Damian Gomez 提供了一个简单的方式绕过 IsDebuggerPresent， 可以很方便的在 Immunity 执行，或者在 PyCommand 中调用。
 
-```
+```py
 imm.writeMemory( imm.getPEBaddress() + 0x2, "\x00" ) 
 ```
 
@@ -344,7 +344,7 @@ imm.writeMemory( imm.getPEBaddress() + 0x2, "\x00" )
 
 病毒会测试枚举所有运行的进程以确认是否有调试器在运行。举个例子，如果你正在用 Immunity 调试 一个病毒，就会注册一个名为 ImmunityDebugger.exe 的进程。病毒通过用 Process32First 查找第一个注册的进程，接着用 Process32Next 循环获取剩下的进程。这两个 函数调用会返回一个布尔值，告诉调用者函数是否执行成功。我们重要将函数的返回值（存 储在 EAX 寄存器中），就当的设置为 0 就能够欺骗那些调用者了。代码如下：
 
-```
+```py
 process32first = imm.getAddress("kernel32.Process32FirstW") 
 process32next = imm.getAddress("kernel32.Process32NextW") 
 function_list = [ process32first, process32next ]

@@ -14,7 +14,7 @@ b — 基本的 web URL(默认: 无) w — 抓取的数量 (默认: 200) d — �
 
 图中的 python 爬虫脚本代码片段:
 
-```
+```py
 #!/usr/bin/python
 from spider import webspider as myspider
 import sys, optparse

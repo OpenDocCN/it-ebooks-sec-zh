@@ -16,7 +16,7 @@
 
 还有一些 cms 限制包含的后缀必须为.php 的时候用的是截取字符判断是不是.php 例如下面一段简单的代码
 
-```
+```php
 $include_file=$_GET[include_file];
 if ( isset( $include_file ) && strtolower( substr( $include_file, -4 ) ) == ".php" )
 {   
@@ -60,7 +60,7 @@ Allow_url_include 默认都是 off
 
 首先在 php.ini 里看一下 allow_url_include
 
-```
+```php
 ; Whether to allow include/require to open URLs (like http:// or ftp://) as files.
 allow_url_include = Off 
 ```
@@ -71,7 +71,7 @@ allow_url_include = Off
 
 这里我们先来测试一下
 
-```
+```php
 <?php
 include($_GET[yu]); 
 ```

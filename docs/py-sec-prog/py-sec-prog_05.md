@@ -8,7 +8,7 @@
 
 下面是我们的一个扫描器的伪代码:
 
-```
+```py
  #导入 socket,sys 模块，如果是 web 服务那么还需要导入 httplib,urllib 等模块
  <import modules> 
 
@@ -33,7 +33,7 @@ while True:
 
 上面这个脚本框架能够适用于各种服务，你可以根据你的服务(https,http,mysql,sshd)编写特定模糊测试脚本.下面我们演示一个基于"USER"命令的 ftp 服务器模糊测试脚本:
 
-```
+```py
 #导入你将要使用的模块，这样你就不用去自己实现那些功能函数了
 import sys, socket
 from time import sleep

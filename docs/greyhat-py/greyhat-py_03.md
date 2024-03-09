@@ -34,7 +34,7 @@ ECX 寄存器，也叫做计数寄存器，用于循环操作，比如重复的�
 
 看一下下面的 Python 片段：
 
-```
+```py
 counter = 0
 while counter < 10:
     print "Loop number: %d" % counter 
@@ -59,13 +59,13 @@ EBX 是唯一一个没有特殊用途的寄存器。它能够作为额外的数�
 
 Function Call in C
 
-```
+```py
 int my_socks(color_one, color_two, color_three); 
 ```
 
 Function Call in x86 Assembly
 
-```
+```py
 push color_three 
 push color_two 
 push color_one 
@@ -80,7 +80,7 @@ call my_socks
 
 如你所见，这是一个非常简单的数据结构，同时也是所有程序中函数调用的基础。当 my_sock()函数返回的时候，它会弹出栈里所有的参数（返回地址弹到 EIP），然后跳到返回 地址(Return address)指向的地方（父函数的代码段）继续执行。另一个需要考虑的概念就是 本地函数。把我们的 my_socks()函数扩展一点，让我们假定函数被调用后做的第一件事就是 申请一个字符串数组，将参数 color_one 复制到数组里。代码应该像这样：
 
-```
+```py
 int my_socks(color_one, color_)
 {
     char stinky_sock_color_on[10];
@@ -126,13 +126,13 @@ Figure 2-2: 在 stinky_sock_color_one 申请后的栈框架
 
 汇编指令是 CPU 执行的命令的高级表示方法。举个例子：
 
-```
+```py
 MOV EAX, EBX 
 ```
 
 这个指令告诉 CPU 把存储在 EBX 寄存器里的东西放到 EAX 寄存器里。相当简单，不 是吗？然而 CPU 根本不明白刚才的指令，它必须被转化成一种叫做操作码的东西。操作码（opcode）就是 operation code,是 CPU 能理解并执行的语言。前面的汇编指令转化成操作码 就是下面这样：
 
-```
+```py
 8BC3 
 ```
 
@@ -140,7 +140,7 @@ MOV EAX, EBX
 
 如果我们先前讲解的指令发生在 0x4433221 这个地址，一般是这样显示的：
 
-```
+```py
 0x44332211: 8BC3 MOV EAX, EBX 
 ```
 
@@ -148,13 +148,13 @@ MOV EAX, EBX
 
 在断点被设置前的操作码
 
-```
+```py
 0x44332211: 8BC3 MOV EAX, EBX 
 ```
 
 断点被设置后的操作码
 
-```
+```py
 0x44332211: CCC3 MOV EAX, EBX 
 ```
 

@@ -8,7 +8,7 @@
 
 下面是一个开始写 Python 脚本的基础例子，开始部分，我么告诉系统需要使用那一个解释器"#!/usr/bin/env python",然后我们通过"def main():"声明一个 main 函数,最后 2 行代码有 mian()的先执行。你可以定义在你的脚本里面定义其它函数，这样使得你的代码更容易的理解和修改维护：
 
-```
+```py
 #!/usr/bin/python
 import <module1>, <module2>
 
@@ -25,7 +25,7 @@ if __name__=="__main__":
 
 一种常见的写法是把每个功能函数分开写，执行一些操作之后然后返回结果。下面的这个伪代码演示的例子就能够很清晰的解释这个概念:
 
-```
+```py
 # 声明函数/逻辑处理
 def MyFunction:
   ...do work...
@@ -42,7 +42,7 @@ Python 类开始使用的时候会有点困难，因为它是教你以何种方�
 
 如果你感到迷惑，那么我建议你先不要去学习类，实际上，你并不需要类。但它可以让你的代码减少冗余。下面我们将定义个新的类"Domain"使用"class"关键字，当你实例化 Domain 类型对象的时候，它的类型有多种方式去定义:
 
-```
+```py
 >>> import os
 >>> class Domain:
 ...     def __init__(self, domain, port, protocol):
@@ -86,7 +86,7 @@ google.com has address 74.125.228.232
 
 最好我们来介绍一下 sys 模块，它可以让你读取从命令终端输入的值并且帮你引入到脚本里面，它的语法很简单，sys.agrv[0]就是一个实际的脚本名，并在命令行指定的每个参数后面分配一个下标。下面是一个简单的例子:
 
-```
+```py
 #!/usr/bin/python
 import sys
 
@@ -100,7 +100,7 @@ print "[+] The IP is: "+ip+" and the port is: "+port
 
 当执行这个脚本的时候，并且后面跟三个参数执行之后的结果如下:
 
-```
+```py
 ~$ python sys.py 8.8.8.8 53
 [+] The script name is: sys.py
 [+] The IP is: 8.8.8.8 and the port is: 53 

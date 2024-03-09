@@ -10,7 +10,7 @@
 
 第一种方法，其实就是从调试器本身调用这个程序（调试器就是父进程，对被调试进程 的控制权限更大）。在 Windows 上创建一个进程用 CreateProcessA()函数。将特定的标志传 进这个函数，使得目标进程能够被调试。一个 CreateProcessA()调用看起来像这样：
 
-```
+```py
 BOOL WINAPI CreateProcessA( 
     LPCSTR lpApplicationName, 
     LPTSTR lpCommandLine,
@@ -29,7 +29,7 @@ BOOL WINAPI CreateProcessA(
 
 创建两个 Python 文件 my_debugger.py 和 my_debugger_defines.py。我们将创建一个父类 debugger() 接 着 逐 渐 的 增 加 各 种 调 试 函 数 。 另 外 ， 把 所 有 的 结 构 ， 联 合 ， 常 量 放 到 my_debugger_defines.py 方便以后维护。
 
-```
+```py
 # my_debugger_defines.py
 from ctypes import *
 # Let's map the Microsoft types to ctypes for clarity 
@@ -110,7 +110,7 @@ class debugger():
 
 现在我们将构造一个简短的测试模块确定一下一切都能正常工作。调用 my_test.py，保 证前面的文件都在同一个目录下。
 
-```
+```py
 #my_test.py
 import my_debugger
 debugger = my_debugger.debugger() debugger.load("C:\\WINDOWS\\system32\\calc.exe") 
@@ -120,7 +120,7 @@ debugger = my_debugger.debugger() debugger.load("C:\\WINDOWS\\system32\\calc.exe
 
 为了附加到指定的进程，就必须先得到它的句柄。许多后面将用到的函数都需要句柄做 参数，同时我们也能在调试之前确认是否有权限调试它（如果附加都不行，就别提调试了）。 这个任务由 OpenProcess()完成，此函数由 kernel32.dll 库倒出，原型如下：
 
-```
+```py
 HANDLE WINAPI OpenProcess( 
     DWORD dwDesiredAccess, 
     BOOL bInheritHandle 
@@ -132,7 +132,7 @@ dwDesiredAccess 参数决定了我们希望对将要打开的进程拥有什么�
 
 接下来用 DebugActiveProcess()函数附加到目标进程：
 
-```
+```py
 BOOL WINAPI DebugActiveProcess(
     DWORD dwProcessId
 ); 
@@ -140,7 +140,7 @@ BOOL WINAPI DebugActiveProcess(
 
 把需要 a 附加的 PID 传入。一旦系统认为我们有权限访问目标进程，目标进程就假定 我们的调试器已经准备好处理调试事件，然后把进程的控制权转移给调试器。调试器接着循 环调用 WaitForDebugEvent()以便俘获调试事件。函数原型如下：
 
-```
+```py
 BOOL WINAPI WaitForDebugEvent(
     LPDEBUG_EVENT lpDebugEvent, 
     DWORD dwMilliseconds
@@ -151,7 +151,7 @@ BOOL WINAPI WaitForDebugEvent(
 
 调试器捕捉的每一个事件都有相关联的事件处理函数，在程序继续执行前可以完成不同 的 操 作 。 当 处 理 函 数 完 成 了 操 作 ， 我 们 希 望 进 程 继 续 执 行 用 ， 这 时 候 再 调 用 ContinueDebugEvent()。原型如下：
 
-```
+```py
 BOOL WINAPI ContinueDebugEvent( 
     DWORD dwProcessId,
     DWORD dwThreadId, 
@@ -165,7 +165,7 @@ dwProcessId 和 dwThreadId 参数由 DEBUG_EVENT 结构里的数据填充，当�
 
 提示：所有需要的结构,联合和常量都定义在了 debugger_defines.py 文件里，完整的代码可 以从 [`www.nostarch.com/ghpython.htm`](http://www.nostarch.com/ghpython.htm) 下载。
 
-```
+```py
 #my_debugger.py
 from ctypes import *
 from my_debugger_defines import * 
@@ -223,7 +223,7 @@ class debugger():
 
 现在让我们修改下测试套件以便使用新创建的函数。
 
-```
+```py
 #my_test.py
 import my_debugger
 debugger = my_debugger.debugger()
@@ -256,7 +256,7 @@ debugger.detach()
 
 如果一切都如描绘的一样正常工作，把下面两行从 my_debugger.py 中注释掉：
 
-```
+```py
 # raw_input("Press any key to continue...")
 # self.debugger_active = False 
 ```
@@ -269,7 +269,7 @@ debugger.detach()
 
 一个调试器必须能够在任何时候都搜集到 CPU 的各个寄存器的状态。当异常发生的时 候这能让我们确定栈的状态，目前正在执行的指令是什么，以及其他一些非常有用的信息。 要实现这个目的，首先要获取被调试目标内部的线程句柄，这个功能由 OpenThread()实现. 函数原型如下:
 
-```
+```py
 HANDLE WINAPI OpenThread( 
     DWORD dwDesiredAccess, 
     BOOL bInheritHandle, 
@@ -285,7 +285,7 @@ HANDLE WINAPI OpenThread(
 
 为了得到一个进程里寄存器的状态，我们必须枚举进程内部所有正在运行的线程。线程 是进程中真正的执行体（大部分活都是线程干的），即使一个程序不是多线程的，它也至少 有一个线程，主线程。实现这一功能的是一个强大的函数 CreateToolhelp32Snapshot()，它由 kernel32.dll 导出。这个函数能枚举出一个进程内部所有线程的列表，以加载的模块（DLLs） 的列表，以及进程所拥有的堆的列表。函数原型如下：
 
-```
+```py
 HANDLE WINAPI CreateToolhelp32Snapshot( 
     DWORD dwFlags,
     DWORD th32ProcessID
@@ -296,7 +296,7 @@ dwFlags 参数标志了我们需要收集的数据类型（线程，进程，模
 
 一旦我们从快照中获得了线程的列表，我们就能用 Thread32First()枚举它们了。函数原型如下：
 
-```
+```py
 BOOL WINAPI Thread32First( 
     HANDLE hSnapshot, 
     LPTHREADENTRY32 lpte
@@ -305,7 +305,7 @@ BOOL WINAPI Thread32First(
 
 hSnapshot 就 是 上 面 通 过 CreateToolhelp32Snapshot() 获 得 镜 像 句 柄 ， lpte 指 向 一 个 THREADENTRY32 结构（必须初始化过）。这个结构在 Thread32First()在调用成功后自动填 充，其中包含了被发现的第一个线程的相关信息。结构定义如下：
 
-```
+```py
 typedef struct THREADENTRY32{ 
     DWORD dwSize;
     DWORD cntUsage; 
@@ -323,7 +323,7 @@ typedef struct THREADENTRY32{
 
 现在我们已经获得了一个线程的有效句柄，最后一步就是获取所有寄存器的值。这就需 要通过 GetThreadContext()来实现。同样我们也能用 SetThreadContext()改变它们。
 
-```
+```py
 BOOL WINAPI GetThreadContext( 
     HANDLE hThread, 
     LPCONTEXT lpContext
@@ -337,7 +337,7 @@ BOOL WINAPI SetThreadContext(
 
 hThread 参数是从 OpenThread() 返回的线程句柄，lpContext 指向一个 CONTEXT 结构， 其中存储了所有寄存器的值。CONTEXT 非常重要，定义如下：
 
-```
+```py
 typedef struct CONTEXT { 
     DWORD ContextFlags; 
     DWORD Dr0;
@@ -371,7 +371,7 @@ typedef struct CONTEXT {
 
 让我们回来看看我们的老朋友 my_debugger.py 继续扩展它，增加枚举线程和获取寄存 器的功能。
 
-```
+```py
 #my_debugger.py
 class debugger():
     ...
@@ -416,7 +416,7 @@ class debugger():
 
 调试器已经扩展成功，让我们更新测试模块试验下新功能。
 
-```
+```py
 #my_test.py
 import my_debugger
 debugger = my_debugger.debugger()
@@ -441,7 +441,7 @@ debugger.detach()
 
 当你运行测试代码，你将看到如清单 3-1 显示的数据。
 
-```
+```py
 Enter the PID of the process to attach to: 4028
 [*] Dumping registers for thread ID: 0x00000550 
 [**] EIP: 0x7c90eb94
@@ -474,7 +474,7 @@ Listing 3-1:每个线程的 CPU 寄存器值
 
 为了让我们的调试器能够针对特定的事件采取相应的行动，我们必须给所有调试器能够 捕捉到的调试事件，编写处理函数。回去看看 WaitForDebugEvent() 函数，每当它捕捉到一 个调试事件的时候，就返回一个填充好了的 DEBUG_EVENT 结构。之前我们都忽略掉这个 结构，直接让进程继续执行下去，现在我们要用存储在结构里的信息决定如何处理调试事件。 DEBUG_EVENT 定义如下:
 
-```
+```py
 typedef struct DEBUG_EVENT { 
     DWORD dwDebugEventCode; 
     DWORD dwProcessId; 
@@ -511,7 +511,7 @@ Table 3-1:调试事件
 
 通过观察 dwDebugEventCode 的值，再通过上面的表就能找到与之相对应的存储在 u 里 的变量。让我们修改调试循环，通过获得的事件代码的值，显示当前发生的事件信息。用这些信息，我们能够了解到调试器启动或者附加一个线程后的整个流程。继续更新 my_debugger.py 和 our my_test.py 脚本。
 
-```
+```py
 #my_debugger.py
 ...
 class debugger():
@@ -545,7 +545,7 @@ debugger.detach()
 
 如果你用的是 calc.exe，输出将如下所示：
 
-```
+```py
 Enter the PID of the process to attach to: 2700 
 Event Code: 3 Thread ID: 3976
 Event Code: 6 Thread ID: 3976
@@ -568,7 +568,7 @@ Listing 3-2: 当附加到 cacl.exe 时的事件代码
 
 例外事件是非常重要，例外可能包括断点，访问异常，或者内存访问错误（例如尝试写 到一个只读的内存区）。所有这些都很重要，但是让我们捕捉先捕捉第一个 windows 设置的 断点。打开 my_debugger.py 加入以下代码：
 
-```
+```py
 #my_debugger.py
 ...
 class debugger():
@@ -628,7 +628,7 @@ class debugger():
 
 为了设置软件断点，我们必须能够将数据写入目标进程的内存。这需要通过 ReadProcessMemory() 和 WriteProcessMemory()实现。它们非常相似：
 
-```
+```py
 BOOL WINAPI ReadProcessMemory(
     HANDLE hProcess,
     LPCVOID lpBaseAddress, 
@@ -650,7 +650,7 @@ BOOL WINAPI WriteProcessMemory(
 
 现在让我们的调试器实现软件断点就相当容易了。修改调试器的核心类，以支持设置和 处理软件断点。
 
-```
+```py
 #my_debugger.py
 ...
 class debugger():
@@ -700,7 +700,7 @@ class debugger():
 
 现在调试器已经支持软件断点了，我们需要找个地址设置一个试试看。一般断点设置在 函数调用的地方，为了这次实验，我们就用老朋友 printf()作为将要捕获的目标函数。WIndows 调试 API 提供了简洁的 方法以确定一个函数的虚拟地址， GetProcAddress()，同样也是从 kernel32.dll 导出的。这个 函数需要的主要参数就是一个模块（一个 dll 或者一个.exe 文件）的句柄。模块中一般都包含 了我们感兴趣的函数; 可以通过 GetModuleHandle()获得模块的句柄。原型如下：
 
-```
+```py
 FARPROC WINAPI GetProcAddress( 
     HMODULE hModule,
     LPCSTR lpProcName
@@ -712,7 +712,7 @@ HMODULE WINAPI GetModuleHandle(
 
 这是一个很清晰的事件链：获得一个模块的句柄，然后查找从中导出感兴趣的函数的地 址。让我们增加一个调试函数，完成刚才做的。回到 my_debugger.py.。
 
-```
+```py
 my_debugger.py
 ...
 class debugger():
@@ -726,7 +726,7 @@ class debugger():
 
 现在创建第二个测试套件，循环的调用 printf()。我们将解析出函数的地址， 然后在这个地址上设置一个断点。之后断点被触发，就能看见输出结果，最后被测试的进程 继续执行循环。创建一个新的 Python 脚本 printf_loop.py，输入下面代码。
 
-```
+```py
 #printf_loop.py from ctypes 
 import * import time
 msvcrt = cdll.msvcrt 
@@ -739,7 +739,7 @@ while 1:
 
 现在更新测试套件，附加到进程，在 printf()上设置断点。
 
-```
+```py
 #my_test.py
 import my_debugger
 debugger = my_debugger.debugger()
@@ -753,7 +753,7 @@ debugger.run()
 
 现在开始测试，在命令行里运行 printf_loop.py。从 Windows 任务管理器里获得 python.exe 的 PID。然后运行 my_test.py ，键入 PID。你将看到如下的输出：
 
-```
+```py
 Enter the PID of the process to attach to: 4048 
 [*] Address of printf: 0x77c4186a
 [*] Setting breakpoint at: 0x77c4186a 
@@ -796,7 +796,7 @@ Listing 3-3: 处理软件断点事件的事件顺序
 
 设置断点的代码之前我们已经完成了，剩下的就是修改处理调试事件的主函数，让它能 够处理由硬件断点引发的异常。我们知道硬件断点由 INT1 (或者说是步进事件),所以我们就 只要就当的添加另一个异常处理函数到调试循环里。让我们设置断点。
 
-```
+```py
 #my_debugger.py
 ...
 class debugger():
@@ -860,7 +860,7 @@ class debugger():
 
 通过确认全局的硬件断点字典，我们选择了一个空的调试寄存器存储硬件断点。一 旦我们得到空位，接下来做的就是将硬件断点的地址填入调试寄存器，然后对 DR7 的标志 位进行更新适当的更新，启动断点。现在我们已经能够处理硬件断点了，让我们更新事件处 理函数添加一个 INT1 中断的异常处理。
 
-```
+```py
 #my_debugger.py
 ...
 class debugger():
@@ -927,7 +927,7 @@ class debugger():
 
 代码很容易理解；当 INT1 被击中（触发）的时候，查看是否有调试寄存器能够设置硬 件断点（通过检测 DR6）。如果有能够使用的就继续。接着如果在发生异常的地址发现一个 硬件断点，就将 DR7 的标志位置零，在其中的一个寄存器中填入断点的地址。让我们修改 my_test.py 并在 printf()上设置硬件断点看看。
 
-```
+```py
 #my_test.py
 import my_debugger
 from my_debugger_defines import * 
@@ -942,7 +942,7 @@ debugger.bp_set_hw(printf,1,HW_EXECUTE) debugger.run()
 
 运行后输出结果如下：
 
-```
+```py
 Enter the PID of the process to attach to: 2504 
 [*] Address of printf: 0x77c4186a
 Event Code: 3 Thread ID: 3704
@@ -981,7 +981,7 @@ Listing 3-4: 处理一个硬件断点事件的顺序
 
 为了能准确的计算出页面的大小，就要向系统查询信息获得一个内存页的默认大小。这 由 GetSystemInfo()函数完成，函数会装填一个 SYSTEM_INFO 结构，这个结构包含 wPageSize 成员，这就是操作系统内存页默认大小。
 
-```
+```py
 #my_debugger.py
 ...
 class debugger():
@@ -1003,7 +1003,7 @@ class debugger():
 
 已经获得默认页大小，那剩下的就是查询和控制页面的权限。第一步让我们查询出内存断点存在于内存里的哪一个页面。调用 VirtualQueryEx() 函数，将会填充一个 MEMORY_BASIC_INFORMATION 结构，这个结构中包含了页的信息。函数和结构定义如 下:
 
-```
+```py
 SIZE_T WINAPI VirtualQuery( 
     HANDLE hProcess, 
     LPCVOID lpAddress,
@@ -1023,7 +1023,7 @@ typedef struct MEMORY_BASIC_INFORMATION{
 
 上面的结构中 BaseAddress 的值就是我们要设置权限的页面的开始地址。接下来用 VirtualProtectEx()设置权限，函数原型如下：
 
-```
+```py
 BOOL WINAPI VirtualProtectEx( 
     HANDLE hProcess,
     LPVOID lpAddress, 
@@ -1035,7 +1035,7 @@ BOOL WINAPI VirtualProtectEx(
 
 让我们着手写代码。我们将创建 2 个全局列表，其中一个包含所有已经设置了好了 的保护页，另一个包含了所有的内存断点，在处理 GUARD_PAGE_EXCEPTION 异常的时 候将用得着。之后我们将在断点地址上，以及周围的区域设置权限。（因为断点地址有可能 横跨 2 个页面）。
 
-```
+```py
 #my_debugger.py
 ...
 class debugger():

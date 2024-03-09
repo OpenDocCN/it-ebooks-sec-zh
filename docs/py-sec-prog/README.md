@@ -8,7 +8,7 @@
 > 
 > 协议：[MIT License](https://github.com/smartFlash/pySecurity/blob/master/LICENSE)
 
-```
+```py
 ~# python
 >>> import urllib
 >>> from bs4 import BeautifulSoup

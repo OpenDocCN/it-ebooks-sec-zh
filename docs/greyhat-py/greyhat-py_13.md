@@ -16,7 +16,7 @@ IDAPyEmu 和 PEPyEm，剩下的 PyDbgPyEmu 留给大家自己去试验。下面�
 
 文件下载好后，解压到 C:\PyEmu。每次创建 PyEmu 脚本的时候，都要加入以下两行 Python 代码：
 
-```
+```py
 sys.path.append("C:\PyEmu\") 
 sys.path.append("C:\PyEmu\lib") 
 ```
@@ -47,7 +47,7 @@ PyEmu 负责驱动整个仿真器的运作。PyEmu 类本身被设计的非常�
 
 PyEmu 的执行过程由一个函数控制，execute()。原型如下：
 
-```
+```py
 execute( steps=1, start=0x0, end=0x0 ) 
 ```
 
@@ -57,7 +57,7 @@ execute( steps=1, start=0x0, end=0x0 )
 
 修改和检索寄存器与内存的值在逆向的过程中特别重要。 PyEmu 将它们分成了 4 类： 内存，栈变量(stack variables)，栈参数(stack arguments)，寄存器。内存操作由 get_memory() 和 set_memory()完成。
 
-```
+```py
 get_memory( address, size ) set_memory( address, value, size=0 ) 
 ```
 
@@ -65,7 +65,7 @@ get_memory()函数接收 2 个参数:address 为要查询的地址，size 为要
 
 另外两类基于栈操作的函数也差不多，主要负责栈框架中函数参数和本地变量的检索和 修改。
 
-```
+```py
 set_stack_argument( offset, value, name="" ) 
 get_stack_argument( offset=0x0, name="" ) 
 set_stack_variable( offset, value, name="" ) 
@@ -74,7 +74,7 @@ get_stack_variable( offset=0x0, name="" )
 
 set_stack_argument()的 offset 相对与 ESP，用于对传入函数的参数进行改变。在操作的过程中可以提供可以可选的名字。get_stack_argument()通过 offset 指定的相对于 ESP 的位移 获得参数值，或者通过指定的 name(前提是在 set_stack_argument 中提供了)获得。使用方式 如下：
 
-```
+```py
 set_stack_argument( 0x8, 0x12345678, name="arg_0" ) get_stack_argument( 0x8 )
 get_stack_argument( "arg_0" ) 
 ```
@@ -89,14 +89,14 @@ set_stack_variable()和 get_stack_variable()的操作也类似除了 offset 是�
 
 Register Handlers 寄存器处理函数，用于监视任何寄存器的改变。只要有寄存器的遭到 修改就将触发 Register Handlers。安装方式如下：
 
-```
+```py
 set_register_handler( register, register_handler_function ) 
 set_register_handler( "eax ", eax_register_handler ) 
 ```
 
 安装好之后，就需要定义处理函数了，原型如下：
 
-```
+```py
 def register_handler_function( emu, register, value, type ): 
 ```
 
@@ -106,7 +106,7 @@ def register_handler_function( emu, register, value, type ):
 
 Library handle 库处理函数，能让我们捕捉所有的外部库调用，在它们被调用进程序之前就截获它们，这样就能很方便的修改外部库函数的调用方式以及返回值。安装方式如下：
 
-```
+```py
 set_library_handler( function, library_handler_function ) 
 set_library_handler( "CreateProcessA", create_process_handler ) 
 set_library_handler("LoadLibraryA", loadlibrary) 
@@ -114,7 +114,7 @@ set_library_handler("LoadLibraryA", loadlibrary)
 
 库处理函数的原型如下：
 
-```
+```py
 def library_handler_function( emu, library, address ): 
 ```
 
@@ -124,13 +124,13 @@ def library_handler_function( emu, library, address ):
 
 Exception Handlers 异常处理函数和第二章介绍的"处理函数相似"。PyEmu 仿真器中的 异常会触发 Exception Handlers 的调用。当前 PyEmu 支持通用保护错误，也就是说我们能够 处理在模拟器中的任何内存访问违例。安装方式如下：
 
-```
+```py
 set_exception_handler( "GP", gp_exception_handler ) 
 ```
 
 Exception 处理函数原型如下：
 
-```
+```py
 def gp_exception_handler( emu, exception, address ): 
 ```
 
@@ -140,14 +140,14 @@ def gp_exception_handler( emu, exception, address ):
 
 Instruction Handlers 指令处理函数，很强大，因为它能捕捉任何特定的指令。就像 Cody 在 BlackHat 说展示的那样，你能够通过安装一个 CMP 指令的处理函数，来监视整个程序流 程的分支判断，并控制它们。
 
-```
+```py
 set_instruction_handler( instruction, instruction_handler ) 
 set_instruction_handler( "cmp", cmp_instruction_handler ) 
 ```
 
 Instruction 处理函数原型如下：
 
-```
+```py
 def cmp_instruction_handler( emu, instruction, op1, op2, op3 ): 
 ```
 
@@ -157,14 +157,14 @@ def cmp_instruction_handler( emu, instruction, op1, op2, op3 ):
 
 Opcode handlers 操作码处理函数和指令处理函数非常相似，任何一个特定的操作码被执 行的时候，都会调用 Opcode handlers。这样我们对代码的控制就变得更精确了。每一个指令 都有可能有不同的操作码这依赖于它们的运算对象，例如，PUSH EAX 时操作码是 0x50， 而 PUSH 0x70 时操作码是 0x6A，合起来整个指令的操作码就是 0x6A70,如下所示：
 
-```
+```py
 50 PUSH EAX
 6A 70 PUSH 0x70 
 ```
 
 它们的安装方法很简单：
 
-```
+```py
 set_opcode_handler( opcode, opcode_handler ) 
 set_opcode_handler( 0x50, my_push_eax_handler ) 
 set_opcode_handler( 0x6A70, my_push_70_handler ) 
@@ -172,7 +172,7 @@ set_opcode_handler( 0x6A70, my_push_70_handler )
 
 第一个参数只要简单的设置成我们需要捕捉的操作码，第二个参数就是处理函数了。捕捉的范围不限于单个字节，而可以是多这个字节，就想第二个例子一样。处理函数原型如下：
 
-```
+```py
 def opcode_handler( emu, opcode, op1, op2, op3 ): 
 ```
 
@@ -182,14 +182,14 @@ def opcode_handler( emu, opcode, op1, op2, op3 ):
 
 Memory handlers 内存处理函数用于跟踪特定地址的数据访问。它能让我们很方便的跟 踪缓冲区中感兴趣的数据以及全局变量的改变过程。安装过程如下：
 
-```
+```py
 set_memory_handler( address, memory_handler ) 
 set_memory_handler( 0x12345678, my_memory_handler ) 
 ```
 
 address 简单传入我们想要观察的内存地址， my_memory_handler 就是我们的处理函 数。函数原型如下：
 
-```
+```py
 def memory_handler( emu, address, value, size, type ) 
 ```
 
@@ -199,7 +199,7 @@ def memory_handler( emu, address, value, size, type )
 
 High-Level Memory Handlers 高级内存处理函数，很高级很强大。通过安装它们，我们 就能监视这个内存快（包括栈和堆）的读写。这样就能全面的控制内存的访问，是不是很邪恶。安装方式如下：
 
-```
+```py
 set_memory_write_handler( memory_write_handler ) 
 set_memory_read_handler( memory_read_handler ) 
 set_memory_access_handler( memory_access_handler )
@@ -213,7 +213,7 @@ set_heap_access_handler( heap_access_handler )
 
 所有的这些安装函数只要简单的提供一个处理函数就可以了，任何内存的变动都会通知 我们。处理函数的原型如下：
 
-```
+```py
 def memory_write_handler( emu, address ): 
 def memory_read_handler( emu, address ):
 def memory_access_handler( emu, address, type ): 
@@ -225,14 +225,14 @@ memory_write_handler 和 memory_read_handler 只是简单的接收 PyEmu 实例�
 
 The program counter handler 程序计数器处理函数，将在程序执行到特定地址的时候触 发。安装过程如下：
 
-```
+```py
 set_pc_handler( address, pc_handler ) 
 set_pc_handler( 0x12345678, 12345678_pc_handler ) 
 ```
 
 address 为我们将要监视的地址，一旦 CPU 执行到这就会触发我们的处理函数。处理 函数的原型如下：
 
-```
+```py
 def pc_handler( emu, address ): 
 ```
 
@@ -246,7 +246,7 @@ def pc_handler( emu, address ):
 
 我们的第一个例子就是在 IDA Pro 分析程序的时候，使用 PyEmu 仿真一次简单的函数 调用。这次实验的程序就是 addnum.exe，主要功能就是从命令行中接收两个参数，然后相 加，再输出结果，代码使用 C++ 编写，可从 [`www.nostarch.com/ghpython.htm`](http://www.nostarch.com/ghpython.htm) 下载。
 
-```
+```py
 /*addnum.cpp*/
 #include <stdlib.h>
 #include <stdio.h>
@@ -278,7 +278,7 @@ int main(int argc, char* argv[])
 
 在深入 PyEmu 使用之前，让我们看看 add_number 的反汇编代码。
 
-```
+```py
 var_4= dword ptr -4 
 # sum variable arg_0= dword ptr 8 
 # int num1 arg_4= dword ptr 0Ch 
@@ -301,7 +301,7 @@ var_4，arg_0，arg_4 分别是参数在栈中的位置，从 C++的反汇编代
 
 开始脚本编写，第一步确认 PyEmu 的路径设置正确。
 
-```
+```py
 #addnum_function_call.py 
 import sys 
 sys.path.append("C:\\PyEmu") 
@@ -311,7 +311,7 @@ from PyEmu import *
 
 设置好库路径之后，就要开始函数仿真部分的编写了。首先将我们逆向的程序的，代码 块和数据块映射到仿真器中，以便仿真器仿真运行。因为我们会使用 IDAPython 加载这些块，对相关函数不熟悉的同学，请翻到第十一章，认真阅读。
 
-```
+```py
 #addnum_function_call.py
 ...
 emu = IDAPyEmu()
@@ -333,7 +333,7 @@ print "[*] Finished loading data section into memory."
 
 使用任何仿真器方法之前都必须实例化一个 IDAPyEmu 对象。接着将代码块和数据块 加载进 PyEmu 的内存，名副其实的依葫芦画瓢喔。使用 IDAPython 的 SegByName()函数找 出块首，SegEnd()找出块尾。然后一个一个字节的将这些块中的数据拷贝到 PyEmu 的内存 中。代码和数据块都加载完成后，就要设置栈参数了，这些参数可以任意设置，最后再安装 一个 retn 指令处理函数。
 
-```
+```py
 #addnum_function_call.py
 ...
 # Set EIP to start executing at the function head 
@@ -350,7 +350,7 @@ print "[*] Finished function emulation run."
 
 首先将 EIP 指向到函数头，0x00401000，PyEmu 仿真器将从这里开始执行指令。接着， 在函数的 retn 指令上设置 助记符(mnemonic)或者指令处理函数(set_instruction_handler)。第 三步，设置栈参数以供函数调用。在这里设置成 0x00000001 和 0x00000002。最后让 PyEmu 执行完成整个函数 10 行代码。完整的代码如下。
 
-```
+```py
 #addnum_function_call.py
 import sys
 sys.path.append("C:\\PyEmu") 
@@ -390,7 +390,7 @@ def ret_handler(emu, address):
 
 ret 指令处理函数简单的设置成检索出栈参数和 EAX 的值，最后再将它们打印出来。 用 IDA 加载 addnum.exe，然后将 PyEmu 脚本当作 IDAPython 文件调用。输出结果将如下：
 
-```
+```py
 [*] Finished loading code section into memory. 
 [*] Finished loading data section into memory. 
 [*] Function took 1, 2 and the result is 3.
@@ -419,7 +419,7 @@ UPX 是自由的，是开源的，是跨平台的(Linux Windows....)。提供不
 
 解压到 C 盘，官方没有提供图形界面，所以我们必须从命令行操作。打开 CMD，改 变当前目录到 C:\upx303w(也就是 UPX 解压的目录)，输入以下命令：
 
-```
+```py
 C:\upx303w>upx -o c:\calc_upx.exe C:\Windows\system32\calc.exe
 Ultimate Packer for eXecutables 
 Copyright (C) 1996 - 2008
@@ -438,7 +438,7 @@ Packed 1 file. C:\upx303w>
 
 UPX 压缩可执行程序的方法很简单明了：重写程序的入口点，指向解压代码，同时添 加两个而外的块，UPX0 和 UPX1。使用 Immunity 加载压缩程序,检查内存布局(ALT-M),将会看到如下相似的输出：
 
-```
+```py
 Address Size Owner Section Contains Access Initial Access 00100000 00001000 calc_upx PE Header R RWE 
 01001000 00019000 calc_upx UPX0 RWE RWE
 0101A000 00007000 calc_upx UPX1 code RWE RWE 
@@ -452,7 +452,7 @@ UPX1 显示为代码块，其中包含了主要的解压代码。代码经过 UP
 
 接下来开始代码的编写，这次我们只使用独立的 PEPyEmu 模块。
 
-```
+```py
 #upx_unpacker.py
 from ctypes import *
 # You must set your path to pyemu 
@@ -483,7 +483,7 @@ emu.execute( start=emu.entry_point )
 
 第 一 步 将 压 缩 文 件 加 载 进 PyEmu 。 第 二 部 ， 在 LoadLibraryA, GetProcAddress, VirtualProtect 三个函数上设置库处理函数。这些函数都将在解压代码中调用，这些操作必须 我们自己在仿真器中完成。第三步，在解压程序执行完成准备跳到 OEP 的时候，我们将进 行相关的操作，这个任务就有 JMP 指令处理函数完成。最后告诉仿真器，从压缩程序头部 开始执行代码。
 
-```
+```py
 #upx_unpacker.py
 from ctypes import *
 # You must set your path to pyemu 
@@ -567,7 +567,7 @@ LoadLibrary 处理函数从栈中捕捉到调用的 DLL 的名字，然后使用
 
 下面就是 dump_unpacked 代码。
 
-```
+```py
 #upx_unpacker.py
 ...
 def dump_unpacked(emu): 
@@ -590,7 +590,7 @@ def dump_unpacked(emu):
 
 我们只需要简单的将 UPX0 和 UPX1 两个段的代码写入文件。一旦文件 dump 成功，就能够想正常程序一样分析调试它们了。在命令行中使用我们的解压脚本看看：
 
-```
+```py
 C:\>C:\Python25\python.exe upx_unpacker.py C:\calc_upx.exe calc_clean.exe 
 [*] We are jumping out of the unpacking routine.
 [*] OEP = 0x01012475

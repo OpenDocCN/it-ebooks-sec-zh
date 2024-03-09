@@ -34,7 +34,7 @@ Windows 的安装版本可以从 Python 主页上下载 http:// python.org/ftp/p
 
 如果需要在 Linux 上手工安装 Python 的话，可以按如下的步骤进行。这里使用 Red Hat 的衍生版，并且这个过程使用 root 权限。 第一步，下载 Python 2.5 源码并解压:
 
-```
+```py
 # cd /usr/local/
 # wget http://python.org/ftp/python/2.5.1/Python-2.5.1.tgz
 # tar –zxvf Python-2.5.1.tgz
@@ -44,7 +44,7 @@ Windows 的安装版本可以从 Python 主页上下载 http:// python.org/ftp/p
 
 代码解压到/usr/local/Python25 之后，就要编译安装了:
 
-```
+```py
 # ./configure –-prefix=/usr/local/Python25
 # make && make install
 # pwd
@@ -58,7 +58,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 
 现在我们就拥有了一个交互式的 Python Shell，能够自由的操作 Python 和 Python 库了。 输入个语句测试下:
 
-```
+```py
 >>> print "Hello World!" Hello World!
 >>> exit()
 # 
@@ -66,7 +66,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 
 很好！一切工作正常。为了让系统能够找到 Python 计时器的路径，需要编辑/root/.bashrc 文件(/用户名/.bashrc)。我个人比较喜欢 nano,不过你可以使用你喜欢编辑器(个人推荐 vim 嘿 嘿)。打开/root/.bashrc，在文件底部加入以下代码。
 
-```
+```py
 export PATH=/usr/local/Python25/:$PATH 
 ```
 
@@ -144,13 +144,13 @@ ctypes 提供了三种方法调用动态链接库:cdll(), windll(), 和 oledll()
 
 In C
 
-```
+```py
 int python_rocks(reason_one, reason_two, reason_three); 
 ```
 
 In x86 Assembly
 
-```
+```py
 push reason_three 
 push reason_two 
 push reason_one 
@@ -164,13 +164,13 @@ add esp, 12
 
 In C
 
-```
+```py
 int my_socks(color_one color_two, color_three); 
 ```
 
 In x86 Assembly
 
-```
+```py
 push color_three 
 push color_two 
 push color_one
@@ -183,7 +183,7 @@ call my_socks
 
 chapter1-printf.py Code on Windows
 
-```
+```py
 from ctypes import * 
 
 msvcrt = cdll.msvcrt
@@ -193,7 +193,7 @@ msvcrt.printf("Testing: %s", message_string)
 
 输出结果见如下：
 
-```
+```py
 C:\Python25> python chapter1-printf.py 
 Testing: Hello world!
 C:\Python25> 
@@ -203,7 +203,7 @@ Linux 下会有略微不同：
 
 chapter1-printf.py Code on Linux
 
-```
+```py
 from ctypes import *
 
 libc = CDLL("libc.so.6")
@@ -213,7 +213,7 @@ libc.printf("Testing: %s", message_string)
 
 输出结果如下:
 
-```
+```py
 # python /root/chapter1-printf.py 
 Testing: Hello world!
 # 
@@ -249,7 +249,7 @@ Listing 1-1:Python 与 C 数据类型映射
 
 请把这章表放到随时很拿到的地方。ctypes 类型初始化的值，大小和类型必须符合定义 的要求。看下面的例子。
 
-```
+```py
 C:\Python25> python.exe
 Python 2.5 (r25:51908, Sep 19 2006, 09:52:17) [MSC v.1310 32 bit (Intel)] on win32 Type "help", "copyright", "credits" or "license" for more information.
 >>> from ctypes import *
@@ -271,7 +271,7 @@ Python 2.5 (r25:51908, Sep 19 2006, 09:52:17) [MSC v.1310 32 bit (Intel)] on win
 
 In C
 
-```
+```py
 struct beer_recipe
 {
     int amt_barley; 
@@ -281,7 +281,7 @@ struct beer_recipe
 
 In Python
 
-```
+```py
 class beer_recipe(Structure):
     _fields_ = [ 
         ("amt_barley", c_int), 
@@ -293,7 +293,7 @@ class beer_recipe(Structure):
 
 In C
 
-```
+```py
 union {
     long barley_long; int barley_int;
     char barley_char[8];
@@ -302,7 +302,7 @@ union {
 
 In Python
 
-```
+```py
 class barley_amount(Union):
     _fields_ = [ 
         ("barley_long", c_long), 
@@ -315,7 +315,7 @@ class barley_amount(Union):
 
 chapter1-unions.py
 
-```
+```py
 from ctypes import *
 class barley_amount(Union):
     _fields_ = [
@@ -330,7 +330,7 @@ print "Barley amount as a char: %s" % my_barley.barley_char
 
 输出如下:
 
-```
+```py
 C:\Python25> python chapter1-unions.py
 Enter the amount of barley to put into the beer vat: 66 
 Barley amount as a long: 66

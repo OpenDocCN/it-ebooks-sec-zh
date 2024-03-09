@@ -10,7 +10,7 @@
 
 * * *
 
-```
+```php
 $resetpwd = md5(rand()); 
 ```
 
@@ -26,7 +26,7 @@ $resetpwd = md5(rand());
 
 * * *
 
-```
+```php
 $encryptstring=md5($this->time.$verification.$auth); 
 ```
 
@@ -56,7 +56,7 @@ $encryptstring=md5($this->time.$verification.$auth);
 
 在/app/user/action/forgetpwd.php 处。
 
-```
+```php
 $resetpwd = md5(rand());
 
             $new['user']->update('user',array(
@@ -150,7 +150,7 @@ ps. 更新程序了应该还是把日期更新了一下 要不别人会一直以
 
 依旧是 control/user.php
 
-```
+```php
 }else{
 
             $timetemp=date("Y-m-d H:i:s",$this->time);
@@ -190,7 +190,7 @@ $auth = util::strcode($timetemp, 'ENCODE');
 
 这里获取了一下时间 然后
 
-```
+```php
 function strcode($string,$action='ENCODE'){
 
         $key    = substr(md5($_SERVER["HTTP_USER_AGENT"].PP_KEY),8,18);

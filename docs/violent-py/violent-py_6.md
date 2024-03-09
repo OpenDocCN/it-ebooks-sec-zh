@@ -26,7 +26,7 @@
 
 典型的计算机用户依赖 WEB 浏览器浏览网站和导航互联网。每一个站点都是不同的，可以包含图片，音乐和视频中的各种各样的组合。然而，浏览器实际上读取一个文本类型的文档，理解它，然后将他显示给用户，类似于一个 Python 程序的源文件和 Python 解释器的互动。用户可以使用浏览器访问站点或者使用不同的方法浏览他们的源代码。Linux 下的我`wget`程序是个很受欢迎的方法。在 Python 中，浏览互联网的唯一途径是取回并下载一个网站的 HTML 源代码。有许多不同的库已经已经完成了处理 WEB 内容的任务。我们特别喜欢`Mechanize`，你在前几章已经用过。`Mechanize`： [`wwwsearch.sourceforge.net/mechanize/`](http://wwwsearch.sourceforge.net/mechanize/) 。 `Mechanize`主要的类 Browser，允许任何可以在浏览器是上进行的操作。这个类也有其他的有用的方法是程序变得更简单。下面脚本演示了`Mechanize`最基本的使用：取回一个站点的源代码。这需要创建一个浏览器对象，然后调用`open()`函数。
 
-```
+```py
 import mechanize
 
 def viewPage(url):
@@ -39,7 +39,7 @@ viewPage('http://www.syngress.com/')
 
 运行这个脚本，我们看到它打印出 `www.syngress.com` 首页的 HTML 代码。
 
-```
+```py
 recon:∼# python viewPage.py
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -62,7 +62,7 @@ content="" />
 
 现在我们有从互联网获取网页内容的能力，退一步想想接下来的处理很有必要。我们的程序和在浏览器中打开一个网站没有什么不同，因此，我们应该采取同样的步骤在正常的浏览网页时建立匿名。网站查找唯一标识符来识别网页游客有几种不同的方法。第一种方法是通过记录请求的 IP 来确认用户。这可以通过使用虚拟专用网络(VPN)或者 tor 网络来缓和。一旦一个客户连接到 VPN，然后，所有的将通过 VPN 自动处理。Python 可以连接到代理服务器，给程序添加匿名功能。`Mechanize`的 Browser 类可以指定一个代理服务器属性。简单的设置浏览器代理是不够巧妙的。有很多的免费的代理网络，所以用户可以进去选择它们，通过它们的功能浏览。在这个例子中，我们选择 [`www.hidemyass.com/`](http://www.hidemyass.com/) 的 HTTP 代理。在你读到这里的时候这个代理很有可能已经不工作了。所以去这个网站得到使用不同 HTTP 代理的细节。此外，McCurdy 维护了一个很好的代理列表在网站： [`rmccurdy.com/scripts/proxy/good.txt`](http://rmccurdy.com/scripts/proxy/good.txt) 。我们将测试我们的代理访问 NOAA 网站，它会友好的告诉你访问该网站时你的 IP 地址。
 
-```
+```py
 import mechanize
 
 def testProxy(url, proxy):
@@ -79,7 +79,7 @@ testProxy(url, hideMeProxy)
 
 虽然识别 HTML 源代码有一点困难，我们看到该网站人为我们的 IP 地址是`216.155.139.115`，我们的代理，成功！我们继续构建脚本。
 
-```
+```py
 recon:∼# python proxyTest.py
     <html><head><title>What's My IP Address?</title></head>
 <..SNIPPED..>
@@ -94,7 +94,7 @@ choopa.net</font></font><font color=white
 
 幸运的是，`Mechanize`改变`user-agent`字符串和改变代理一样简单。网站： [`www.useragentstring.com/pages/useragentstring.php`](http://www.useragentstring.com/pages/useragentstring.php) 为我们展示了一个巨大的有效的`user-agent`字符串名单供我们选择。我们将编写一个脚本来测试改变我们的`user-agent`字符串访问 [`whatismyuseragent.dotdoh.com/`](http://whatismyuseragent.dotdoh.com/) 来打印出我们的`user-agent`字符。
 
-```
+```py
 import mechanize
 
 def testUserAgent(url, userAgent):
@@ -111,7 +111,7 @@ testUserAgent(url, userAgent)
 
 运行这个脚本，我们看到我们可以用虚假的`user-agent`字符串来访问页面。
 
-```
+```py
 recon:∼# python userAgentTest.py
 <html>
 <head>
@@ -129,7 +129,7 @@ recon:∼# python userAgentTest.py
 
 最后，网站会返回一些包含独特标识的 cookie 给 WEB 浏览器允许网站识别重复的重复的访客。为了防止这一点，我们将执行其他函数从我们的 WEB 浏览器中清除 cookie。另外一个 Python 标准库`cookielib`包含几个处理不同类型 cookie 的容器。这里使用的 cookie 类型包含储存各种不同的 cookie 到硬盘的功能。这个功能允许用户查看 cookies 而不必在初始化后返回给网站。让我们建立一个简单的脚本使用`CookieJar`来测试。我们将打开 [`www.syngress.com`](http://www.syngress.com) 页面作为我们的第一个例子。但现在我们打印浏览会话存储的 cookie。
 
-```
+```py
 import mechanize
 import cookielib
 
@@ -147,7 +147,7 @@ printCookies(url)
 
 运行这个脚本，我们可以看到来自网站的 session id 的 cookie。
 
-```
+```py
 recon:∼# python printCookies.py
 <Cookie _syngress_session=BAh7CToNY3VydmVudHkiCHVzZDoJbGFzdCIAOg9zZYNzaW9uX2lkIiU1ZWFmNmIxMTQ5ZTQxMzUxZmE2ZDI1MSBlYTA4ZDUxOSIKZmxhc2hJQzonQWN0aW8uQ29udHJvbGxlcjo6Rmxhc2g6OkZsYXNoSGFzaHsABjoKQHVzZWR7AA%3D%3D--f80f741456f6c0dc82382bd8441b75a7a39f76c8 forwww.syngress.com/> 
 ```
@@ -156,7 +156,7 @@ recon:∼# python printCookies.py
 
 已经有了几个功能，将浏览器作为参数，修改它，偶尔添加一个额外的参数。如果将这些添加到一个类里面将很有用，这些功能可以归结为一个浏览器对象简单的调用，而不是导入我们的函数到某个文件使用笨拙的语法调用。我们我们这么做可以扩展`Browser`类，我们的新`Browser`类将会有我们已经创建过的函数，以及初始化的附加功能。这将有利于提高代码的可读性，并封装所有的功能在`Browser`类中直接处理。
 
-```
+```py
 import mechanize, cookielib, random, time
 
 class anonBrowser(mechanize.Browser):
@@ -188,7 +188,7 @@ class anonBrowser(mechanize.Browser):
 
 我们的新类有一个默认的`user-agents`列表，接受列表添加进去，以及用户想使用的代理服务器列表。它还具有我们先前创建的三个功能，可以单独也可以同时使用匿名函数。最后，`anonymize`提供等待 60 秒的选项，增加在服务器日志请求访问之间的时间。同时也不改变提供的信息，该额外的步骤减小了被识别为相同的源地址的机会。增加时间和模糊的通过安全是一个道理，但是额外的措施是有帮助的，时间通常不是一个问题。另一个程序可以以相同的方式使用这个新类。文件`anonBrowser.py`包含新类，如果想在导入调用是看到它，我们必须将它保存在脚本的目录。 让我们编写我们的脚本，导入我们的新类。我有一个教授曾将帮助他四岁的女儿在线投票竞争小猫冠军。由于投票是在会话的基础上的，每个游客的票需要是唯一的。我们来看看是否我们能欺骗这个网站给予我们每次访问唯一的 cookie。我们将匿名访问该网站四次。
 
-```
+```py
 from anonBrowser import *
 ab = anonBrowser(proxies=[],user_agents=[('User-agent','superSecretBroswer')])
 for attempt in range(1, 5):
@@ -201,7 +201,7 @@ for attempt in range(1, 5):
 
 运行该脚本，我们看到页面获得五次不同时间不同 cookie 的访问。成功！随着我们匿名访问类的建立，让我们抹去我们访问网站上的私人信息。
 
-```
+```py
 recon:∼# python kittenTest.py
 [*] Fetching page
 <Cookie PHPSESSID=qg3fbia0t7ue3dnen5i8brem61 for kittenwar.com/>
@@ -221,7 +221,7 @@ recon:∼# python kittenTest.py
 
 为了从目标网站解析链接，我们有两个选择：(1)利用正则表达式来搜索和替换 HTML 代码。(2)使用强大的第三方库`BeautifulSoup`，可以在下面网站下载安装： [`www.crummy.com/software/BeautifulSoup/`](http://www.crummy.com/software/BeautifulSoup/) 。`BeautifulSoup`的创造者构建了这个极好的库来处理和解析 HTML 代码和 XML。首先，我们看看怎样使用两种方法找到链接，然后解释为什么大多数情况下`BeautifulSoup`是很好的选择。
 
-```
+```py
 # coding=UTF-8
 
 from anonBrowser import *
@@ -268,7 +268,7 @@ if __name__ == '__main__':
 
 运行我们的脚本，让我们来解析来自流行网站的链接，我们的脚本产生链接的结果通过正则表达式和`BeautifulSoup`解析。
 
-```
+```py
 recon:# python linkParser.py -uhttp://www.hampsterdance.com/
 [+] Printing Links From Regex.
 styles.css
@@ -315,7 +315,7 @@ http://www.statcounter.com/joomla/
 
 除了网页上面的链接，它上面的图片可能会有用。在第三章，我们展示了如何从图像中提取元数据。再一次，`BeautifulSoup`成为了关键，允许在任何 HTML 中搜索`img`标签。浏览器对象下载图片保存在本地硬盘，代码的变化只是将链接变为图像。随着这些变化，我们基本的检索器已经变得足够强大到找到网页的链接和下载图像。
 
-```
+```py
 # coding=UTF-8
 from anonBrowser import *
 from BeautifulSoup import BeautifulSoup
@@ -361,7 +361,7 @@ if __name__ == '__main__':
 
 运行这个脚本，我们看到它成功的下载了网站的所有图像。
 
-```
+```py
 econ:∼# python imageMirror.py -u http://xkcd.com -d /tmp/
 [+] Saving /tmp/imgs.xkcd.com_static_terrible_small_logo.png
 [+] Saving /tmp/imgs.xkcd.com_comics_moon_landing.png
@@ -376,7 +376,7 @@ econ:∼# python imageMirror.py -u http://xkcd.com -d /tmp/
 
 想象一下，一个朋友问你一个隐晦的问题，他们错误的以为你知道些什么。你怎么回答？Google 一下。所以，我们如何了解目标公司的更多信息了？好的，答案再次是 Google。Google 提供了应用程序接口 API 允许程序员进行查询并得到结果，而不必尝试破解正常的 Google 界面。目前有两套 API，老旧的 API 和 API，这些需要开发者密钥。要求独一无二的开发者密钥让匿名变得不可能，一些我们以努力获得成功的脚本将不能用。幸运的是老旧的版本任然允许一天之中进行一系列的查询，大约每天 30 次搜索结果。用于收集信息的话 30 次结果足够了解一个组织网站的信息了。我们将建立我们的查询功能，返回攻击者感兴趣的信息。
 
-```
+```py
 import urllib
 from anonBrowser import *
 
@@ -390,7 +390,7 @@ google('Boondock Saint')
 
 从 Google 返回的内容和下面的类似。
 
-```
+```py
 {"responseData": {"results":[{"GsearchResultClass":"GwebSearch",
 "unescapedUrl":"http://www.boondocksaints.com/","url":"http://
 www.boondocksaints.com/","visibleUrl":"www.boondocksaints.
@@ -412,7 +412,7 @@ u003den\u0026q\u003dBoondock+Saint","searchResultTime":"0.16"}},
 
 `quote_plus()`函数是这个脚本中的新的代码块。URL 编码是指非字母数字的字符被转换然后发送到服务器。虽然不是完美的 URL 编码，但是适合我们的目的。最后打印 Google 的响应显示：一个长字符串的括号和引号。如果你仔细观察，会发现响应的内容看起来很像字典。这些响应是 json 格式的，和字典非常相似，不出所料，Python 有库可以构建和处理 json 字符串。让我们添加这个功能重新审视这个响应。
 
-```
+```py
 import urllib, json
 from anonBrowser import *
 
@@ -427,7 +427,7 @@ google('Boondock Saint')
 
 当我们打印对象时，看起来非常像第一次函数的响应。json 库加载响应到一个字典，让这些字段更容易理解，而不需要手动的解析字符串。
 
-```
+```py
 {u'responseData': {u'cursor': {u'moreResultsUrl': u'http://www.google.
 com/search?oe=utf8&amp;ie=utf8&amp;source=uds&amp;start=0&amp;hl=en&amp;q=Boondock
 +Saint', u'estimatedResultCount': u'62800', u'searchResultTime':
@@ -448,7 +448,7 @@ u'responseDetails': None, u'responseStatus': 200}
 
 现在我们可以考虑在一个给定的 Google 搜索的结果里什么事是重要的。显然，页面返回的链接很重要。此外，页面的标题和 Google 用的小的文本断对理解链接指向哪里也很重要。为了组织这些结果，我们创建了一个类来保存结果。这将是访问不同的信息更容易。
 
-```
+```py
 # coding=UTF-8
 import json
 import urllib
@@ -494,7 +494,7 @@ if __name__ == '__main__':
 
 这种更简洁的呈现数据的方式产生以下输出：
 
-```
+```py
 recon:∼# python anonGoogle.py -k 'Boondock Saint'
 [The Boondock Saints, The Boondock Saints (1999) - IMDb, The Boondock
     Saints II: All Saints Day (2009) - IMDb, The Boondock Saints -
@@ -509,7 +509,7 @@ Wikipedia, the free encyclopedia]
 
 让我们探究以下如何从 Twitter 检索数据。具体来说，我们要转发美国爱国者黑客 th3j35t3r 的微博，他把 Boondock Saint 作为自己的昵称。我们将构建`reconPerson()`类然后输入 th3j35t3r 作为 Twitter 的搜索关键字。
 
-```
+```py
 # coding=UTF-8
 
 import json
@@ -547,7 +547,7 @@ print ap.query_twitter('from:th3j35t3r since:2010-01-01 include:retweets')
 
 当进一步的继续检索 Twitter，我们已经看到了打来那个的信息，这可能对爱国者黑客有用。他正在和一些黑客团体 UGNazi 的支持者起冲突。好奇心驱使我们想知道为什么会变成这样。
 
-```
+```py
 recon:∼# python twitterRecon.py
 [{'tweet': u'RT @XNineDesigns: @th3j35t3r Do NOT give up. You are
 the bastion so many of us need. Stay Frosty!!!!!!!!', 'geo':
@@ -567,7 +567,7 @@ my thesis paper for my masters will now be focused on supporting the
 
 很多 Twitter 用户遵守一个不成文的规定，当有创作时就与全世界分享。一般来说，计算公式是：【其他 Twitter 用户的消息是针对】+【文本的消息加上段连接】+【Hash 标签】。其他的信息可能也包括，但是不在消息体内，就像图像或者位置。然而，退后一步，以攻击者的眼光审视一下这个公式，对于恶意用户这个公式变成了：【用户感兴趣的人，增加某人真正交流的机会】+【某人感兴趣的链接或者主题，他们会对这个主题的消息很感兴趣】+【某人可能会对这个主题有更多的了解】。图片或者地理标签不在有用或者是朋友的有趣的花边新闻。他们会成为配置中的额外的细节，例如某人经常去哪吃早餐。虽然这可能是一个偏执的观点，我们将自动化的收集从 Twitter 检索的每一条信息。
 
-```
+```py
 # coding=UTF-8
 
 import json
@@ -637,7 +637,7 @@ if __name__ == '__main__':
 
 我了测试我们的脚本，我们建立了城市的列表。
 
-```
+```py
 recon:∼# cat mlb-cities.txt | more
 baltimore
 boston
@@ -656,7 +656,7 @@ recon:∼# python twitterGeo.py -u redsox -c mlb-cities.txt
 
 接下来我们将收集目标的兴趣，这包括其他用户或者是网路内容。任何时候网站都提供了能力知道用户对什么感兴趣，跳过去，这些数据将成为成功的社会工程攻击的基础。如我们前面讨论的，Twitter 的兴趣点包含任何链接，Hash 标签或者是其他用户提到的内容。用正则表达式找到这些很容易。
 
-```
+```py
 # coding=UTF-8
 import json
 import re
@@ -733,7 +733,7 @@ if __name__ == '__main__':
 
 运行我们的兴趣分析脚本，我们看到它解析出针对目标的链接，用户名，Hash 标签。请注意，它返回了一个 Youtube 的视频，一些用户名和当前即将到来的比赛的 Hash 标签。好奇心再一次让我们知道该怎么做。
 
-```
+```py
 recon:∼# python twitterInterests.py -u sonnench
 [+] Links.
     [+]http://www.youtube.com/watch?v=K-BIuZtlC7k&amp;feature=plcp
@@ -753,7 +753,7 @@ recon:∼# python twitterInterests.py -u sonnench
 
 可以做其他事情扩展处理 Twitter 的能力。互联网上有无限的资源，无数中分析数据的方法要求扩大自动化收集信息程序的能力。 将我们整个系列的侦查包装在一起，我们做了一个类来检索位置，兴趣和 Twitter。这些在下一节中将会看到用处的。
 
-```
+```py
 # coding=UTF-8
 import urllib
 from anonBrowser import *
@@ -841,7 +841,7 @@ class reconPerson:
 
 发送电子邮件的过程中通常需要开发客户的选择，点击新建，然后点击发送。在这背后，客户端连接到服务器，可能记录了日志，交换信息的发送人，收件人和其他必要的资料。Python 的`Smtplib`库将在程序中处理这些过程。我们将通过建立一个 Python 的电子邮件客户端发送我们的恶意邮件给目标。这个客户端很基本，但让我们在程序中发送邮件很简单。我们这次的目的，我们将使用 Google 的邮件 SMTP 服务，你需要创建一个 Google 邮件账户，在我们的脚本中使用，或者使用自己的 SMTP 服务器。
 
-```
+```py
 import smtplib
 from email.mime.text import MIMEText
 
@@ -872,7 +872,7 @@ sendMail(user, pwd, 'target@tgt.tgt', 'Re: Important', 'Test Message')
 
 运行脚本，检查我们的邮箱，我们可以看到成功的发送了邮件。
 
-```
+```py
 recon:# python sendMail.py
 [+] Connecting To Mail Server.
 [+] Starting Encrypted Session.
@@ -891,7 +891,7 @@ recon:# python sendMail.py
 
 代码的 if 语句仔细的处理和如何将短信息连接在一起是很重要的问题。当处理数量巨大的可能性时，在我们的侦查中将使用更多情况的代码，每一个可能性会被分为独立的函数。每一个方法将以特定的的方法承担一块的开始和结束，然后独立与其他代码的操作。这样，收集到某人的信息就越多，唯一改变的是方法。最后一步是通过我们的电子邮件客户端，相信它的人愚蠢的做剩下的活。这个过程的没一部分在这一章中都讨论过，这是任何被用来获取权限的钓鱼网站的产物。在我们的例子中，我们简单的发送一个名不副实的链接，有效荷载可以是附件或者是诈骗网站，或者任何其他的攻击方法。这个过程将对每一个成员重复，只要一个人上当攻击者就能获取权限。 我们特定的脚本将攻击一个用户基于他公开的信息。基于他的地点，用户，Hash 标签，链接，脚本将创建一个附带恶意链接的邮件等待用户点击。
 
-```
+```py
 # coding=UTF-8
 import smtplib
 import optparse
@@ -964,7 +964,7 @@ if __name__ == '__main__':
 
 测试我们的脚本，我们可以获得一些关于 Boston Red Sox 的信息，从他的 Twitter 账户上，为了发送一个恶意的垃圾邮件。
 
-```
+```py
 recon# python sendSpam.py -u redsox -t target@tgt -l username -p password
 [+] Fetching tweets from: redsox
 [+] Fetching interests from: redsox

@@ -4,7 +4,7 @@
 
 下面这段代码封装了一个无限循环,通过 raw_input 获取用户输入的终止标记，最后提交请求,从下面的这段代码你可以看到 如何去完成一个 HTTP 请求以及如何修改 User-Agent 的内容：
 
-```
+```py
 #!/usr/bin/python
 import sys, urllib2    #导入需要使用的模块
 

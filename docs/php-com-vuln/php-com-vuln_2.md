@@ -24,7 +24,7 @@
 
 例如某 cms 中的安装文件
 
-```
+```php
 if (empty ($step))
 {
 $step = 1;//当用户没有提交 step 的时候 赋值为 1
@@ -74,7 +74,7 @@ $sp_allow_url_fopen = (in
 
 * * *
 
-```
+```php
 header("Content-Type: text/html; charset={$lang}");    
 foreach(Array('_GET','_POST','_COOKIE') as $_request){    
 foreach($$_request as $_k => $_v) ${$_k} = _runmagicquotes($_v);    
@@ -136,7 +136,7 @@ foreach($$_request as $_k => $_v) ${$_k} = _runmagicquotes($_v);
 
 首先以之前发过的 sitestar 举例下
 
-```
+```php
 if(file_exists($lockfile) && ($_a=='template' || $_a=='setting' || $_a=='check')) {    
 exit('please delete install.lock!');    
 } 
@@ -144,7 +144,7 @@ exit('please delete install.lock!');
 
 这里我们来理解一下这个逻辑, 这里的 file_exists($lockfile) 因为安装成功后 lockfile 肯定存在的 所以这里肯定会是 true 然后再看一下 这里是一个 && true true 才会进入语句块。 那么如果$_a 不为 template 、 setting 、 check 的话 那么后面的就为 false True and false => false 就不会进入这个语句块 就不会 exit 再配合后面的
 
-```
+```php
 else if($_a=="create"){    
 $link = mysql_connect($db_host,$db_user,$db_pwd); 
 ```
@@ -157,7 +157,7 @@ $link = mysql_connect($db_host,$db_user,$db_pwd);
 
 剩下的还有 hdwiki 之前也有一个基本差不多这样的例子
 
-```
+```php
 if (file_exists(HDWIKI_ROOT.'/data/install.lock') && $step != '8') {
 echo "<font color='red'>{$lang['tipAlreadyInstall']}</font>";
 exit();
@@ -166,7 +166,7 @@ exit();
 
 如果 step 为 8 的话 那么就不会执行 exit 了。
 
-```
+```php
 case 8:
 require_once HDWIKI_ROOT.'/config.php';
 require_once HDWIKI_ROOT.'/lib/hddb.class.php';
@@ -220,7 +220,7 @@ PHPSHE B2C 商城系统 v1.2(build 20140519 UTF8)
 
 在 install/index.php
 
-```
+```php
 error_reporting(E_ALL ^ E_NOTICE);
 
 date_default_timezone_set('PRC');
@@ -302,7 +302,7 @@ switch ($_g_step) {
 
 在 install/index.php 中
 
-```
+```php
 header("Content-Type: text/html; charset={$lang}");
 
 foreach(Array('_GET','_POST','_COOKIE') as $_request){
@@ -342,7 +342,7 @@ if(file_exists($insLockfile)){
 
 这里判断了是否 lock lock 了就退出。
 
-```
+```php
 foreach(Array('_GET','_POST','_COOKIE') as $_request){
 
     foreach($$_request as $_k => $_v) ${$_k} = _runmagicquotes($_v); 
@@ -388,7 +388,7 @@ foreach(Array('_GET','_POST','_COOKIE') as $_request){
 
 　　原本应该是没有任何问题的。但我们来到安装脚本，/app/controllers/install.php 中，查看它是怎么处理的：
 
-```
+```php
 class Install extends Install_Controller
 
 {
@@ -416,7 +416,7 @@ class Install extends Install_Controller
 
 　　然后，在往下翻，就能看到安装的函数：
 
-```
+```php
 public function step($step)
 
     {
@@ -646,7 +646,7 @@ public function step($step)
 
 ## 修复方案
 
-```
+```php
 function __construct ()
 
     {
@@ -684,7 +684,7 @@ FengCMS 修复不当导致 getshell，属于修复不当，跟其他的没重复
 
 漏洞重复了。现在重新看一下。发现修复的有问题，而且 install 目录默认是不会自动删除的，依然可以 getshell！
 
-```
+```php
 header("Content-type:text/html;charset=utf-8");
 
 define("TPL_INCLUDE",1);
@@ -752,7 +752,7 @@ Sitestar 前台 Getshell。 无需登录。
 
 在 install/index.php 中
 
-```
+```php
 define('IN_CONTEXT', 1);
 
 include_once('load.php');
@@ -762,7 +762,7 @@ include_once('load.php');
 
 包含进来 那再继续看看。
 
-```
+```php
 $lockfile = ROOT.'/install.lock';
 
 $pattern_db = '/[0-9a-zA-Z]*$/';
@@ -786,7 +786,7 @@ if(file_exists($lockfile) && ($_a=='template' || $_a=='setting' || $_a=='check')
 
 继续看后面的码。
 
-```
+```php
 if($_a=='template'){
 
     include P_TPL."/template.php";
@@ -974,7 +974,7 @@ if($_a=='template'){
 
 来找找哪个可以利用的。
 
-```
+```php
 }else if($_a=="createadmin"){
 
     $link = mysql_connect($db_host,$db_user,$db_pwd);
@@ -1028,7 +1028,7 @@ if($_a=='template'){
 
 我所利用的是这个。 貌似可以直接添加一个管理。 但是不甘心, 看看能不能直接 Getshell。
 
-```
+```php
 $link = mysql_connect($db_host,$db_user,$db_pwd);
 
     if (!$link) {
@@ -1052,7 +1052,7 @@ $link = mysql_connect($db_host,$db_user,$db_pwd);
 
 首先看这里。 要检测 mysql 是否能够连接得上, 并且$db_name 得存在这个 mysql 中。
 
-```
+```php
 $_a = ParamHolder::get("_a","");
 
 $_m = ParamHolder::get("_m","frontpage");
@@ -1082,11 +1082,11 @@ $db_host = $db_host1.":".$db_port;
 
 我们自己搭建一个 mysql 可外联就行了。
 
-```
+```php
 $pattern_db = '/[0-9a-zA-Z]*$/'; 
 ```
 
-```
+```php
 if(!preg_match($pattern_db, $db_name)||!preg_match($pattern_db, $db_user)){
 
     echo '1001';exit;
@@ -1096,7 +1096,7 @@ if(!preg_match($pattern_db, $db_name)||!preg_match($pattern_db, $db_user)){
 
 匹配出除开 0-9 a-z A-Z 以外的就退出。
 
-```
+```php
 $passwd = sha1($admin_pwd);
 
     $tme = time();
@@ -1110,7 +1110,7 @@ $passwd = sha1($admin_pwd);
 
 这里 跟进去
 
-```
+```php
 function create_config($host,$user,$pwd,$dnname,$pre,$port){
 
     $str = "";
@@ -1158,7 +1158,7 @@ access violation error!
 
 然后就进入了无尽的测试当中。。
 
-```
+```php
 function create_config($host,$user,$pwd,$dnname,$pre,$port){
 
     $str = "";
@@ -1196,7 +1196,7 @@ function create_config($host,$user,$pwd,$dnname,$pre,$port){
 
 看这个 理论上来说 只有
 
-```
+```php
 $str .= "public static \$mysqli_charset = 'utf8';\n";
 
     $str .= "public static \$cookie_prefix = '".randomStr(6)."_';\n";
@@ -1206,7 +1206,7 @@ $str .= "public static \$enable_db_debug = false;\n";
 
 这三行不可控, 但是 由于
 
-```
+```php
 $str .= "public static \$db_host = '$host';\n";
 
     $str .= "public static \$db_user = '$user';\n";
@@ -1218,7 +1218,7 @@ $str .= "public static \$db_host = '$host';\n";
 
 这四个 会用来连接 如果连接不上的话 就退出了。 就算不上能随意控制。
 
-```
+```php
 $str .= "public static \$port = '$port';\n";
 
     $str .= "public static \$mysqli_charset = 'utf8';\n";
@@ -1244,7 +1244,7 @@ DB_HOST 肯定是不能改的 要不就连不上了。
 
 那就要从 DB_NAME db_user 和 db_pwd 下手了。
 
-```
+```php
 $pattern_db = '/[0-9a-zA-Z]*$/';
 
 if(!preg_match($pattern_db, $db_name)||!preg_match($pattern_db, $db_user)){

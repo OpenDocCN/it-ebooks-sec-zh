@@ -6,7 +6,7 @@
 
 这一小段代码是演示的 CVE-2012-3152 Oracle 本地文件包含的漏洞利用 PoC,与前一个 PoC 示例有点类似，也是通过循环可以无限输入需要访问文件目录。对于下面这一段脚本无前面有点不同。增加了一点交互性的东西。通过[termcolor](https://pypi.python.org/packages/source/t/termcolor/termcolor-1.1.0.tar.gz)模块来实现:
 
-```
+```py
 #!/usr/bin/python
 import sys, urllib2    # 导入需要的包
 from termcolor import colored   # 这里需要下载"termcolor"模块

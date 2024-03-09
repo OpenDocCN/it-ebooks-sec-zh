@@ -8,7 +8,7 @@
 
 Ok,说了这么多,让我们来看看代码:
 
-```
+```py
 >>>
 >>> import os
 >>> os.system('uname -a')
@@ -32,7 +32,7 @@ rtt min/avg/max/mdev = 0.043/0.043/0.043/0.000 ms
 
 下面我们使用 subprocess 模块运行相同的命令:
 
-```
+```py
 >>> import subprocess
 >>>
 >>> com_str = 'uname -a'
@@ -51,7 +51,7 @@ uid=1000(cell) gid=1000(cell) groups=1000(cell),0(root)
 
 和第一段代码对比你会发现语法比较复杂,但是你可以把内容存储到一个变量里面并且你也可以把返回的内容写入到一个文件里面去;
 
-```
+```py
 >>> com_str = 'id'
 >>> command = subprocess.Popen([com_str], stdout=subprocess.PIPE, shell=True)
 >>> (output, error) = command.communicate()
