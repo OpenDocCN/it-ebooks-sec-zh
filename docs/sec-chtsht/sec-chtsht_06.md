@@ -1,7 +1,5 @@
 # IOS 开发者备忘单
 
-# IOS 开发者备忘单
-
 > 原文：[IOS Developer Cheat Sheet](https://www.owasp.org/index.php/IOS_Developer_Cheat_Sheet)
 > 
 > 来源：[IOS 开发者备忘单](http://cheatsheets.hackdig.com/?2.htm)

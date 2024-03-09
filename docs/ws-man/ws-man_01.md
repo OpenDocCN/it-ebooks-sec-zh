@@ -1,7 +1,5 @@
 # Wireshark 用户手册
 
-# Wireshark 用户手册
-
 ![](img/000061.png)
 
 介绍 Wireshark 安装、界面、基本操作

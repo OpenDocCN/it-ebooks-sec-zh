@@ -1,7 +1,5 @@
 # 13\. Dom Xss 实例 [Discuz X2.5]
 
-# 13\. Dom Xss 实例 [Discuz X2.5]
-
 > 来源：[13\. Dom Xss 实例 [Discuz X2.5]](http://www.wooyun.org/bugs/wooyun-2010-016437)
 
 ## 简要描述

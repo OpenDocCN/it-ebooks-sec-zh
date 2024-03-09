@@ -1,7 +1,5 @@
 # 2\. 输出在`<script></script>`之间的情况
 
-# 2\. 输出在`<script></script>`之间的情况
-
 > [2\. 输出在`<script></script>`之间的情况](http://www.wooyun.org/bugs/wooyun-2010-015959)
 
 ## 简要描述

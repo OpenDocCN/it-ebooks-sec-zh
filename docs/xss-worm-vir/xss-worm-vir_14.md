@@ -1,7 +1,5 @@
 # Notes
 
-# Notes
-
 1.  The Samy Worm “I’ll never get caught. I’m Popular.” – [`namb.la/popular/`](http://namb.la/popular/)
 
 2.  Cross-site Scripting (Web Security Threat Classification) – [`www.webappsec.org/projects/threat/classes/cross-`](http://www.webappsec.org/projects/threat/classes/cross-site_scripting.shtml) [site_scripting.shtml](http://www.webappsec.org/projects/threat/classes/cross-site_scripting.shtml)

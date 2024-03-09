@@ -1,7 +1,5 @@
 # 15\. Flash Xss 进阶 [ExternalInterface.call 第一个参数]
 
-# 15\. Flash Xss 进阶 [ExternalInterface.call 第一个参数]
-
 > 来源：[15\. Flash Xss 进阶 [ExternalInterface.call 第一个参数]](http://www.wooyun.org/bugs/wooyun-2010-016532)
 
 ## 简要描述

@@ -1,7 +1,5 @@
 # 0x01 安装的问题
 
-# 0x01 安装的问题
-
 * * *
 
 首先拿到一份源码 肯定是先 install 上。 而在安装文件上又会经常出现问题。
@@ -206,8 +204,6 @@ $obj['sitenick'] = string::hiconv($obj['sitenick'], 'gbk', 'utf-8');
 
 # WooYun-2014-62047：PHPSHE B2C 重装。
 
-# WooYun-2014-62047：PHPSHE B2C 重装。
-
 漏洞作者： [′雨。](http://www.wooyun.org/whitehats/′雨。)![认证白帽子](img/v.png)
 
 来源：[`www.wooyun.org/bugs/wooyun-2014-062047`](http://www.wooyun.org/bugs/wooyun-2014-062047)
@@ -294,8 +290,6 @@ switch ($_g_step) {
 
 # WooYun-2014-73244：frcms 重装系统
 
-# WooYun-2014-73244：frcms 重装系统
-
 漏洞作者： [路人甲](http://www.wooyun.org/whitehats/路人甲)
 
 来源：[`www.wooyun.org/bugs/wooyun-2014-073244`](http://www.wooyun.org/bugs/wooyun-2014-073244)
@@ -375,8 +369,6 @@ foreach(Array('_GET','_POST','_COOKIE') as $_request){
 ## 修复方案
 
 修改变量覆盖的地方。
-
-# WooYun-2013-45143：开源轻论坛 StartBBS 前台 getshell
 
 # WooYun-2013-45143：开源轻论坛 StartBBS 前台 getshell
 
@@ -678,8 +670,6 @@ function __construct ()
 
 # WooYun-2014-76648：FengCMS 修复不当导致 getshell
 
-# WooYun-2014-76648：FengCMS 修复不当导致 getshell
-
 漏洞作者： [xiaoL](http://www.wooyun.org/whitehats/xiaoL)
 
 来源：[`www.wooyun.org/bugs/wooyun-2014-076648`](http://www.wooyun.org/bugs/wooyun-2014-076648)
@@ -741,8 +731,6 @@ if(file_exists(ROOT_PATH.'/upload/INSTALL')){
 echo 完了
 
 exit()一下
-
-# WooYun-2014-54387：建站之星 Sitestar 前台 Getshell 一枚
 
 # WooYun-2014-54387：建站之星 Sitestar 前台 Getshell 一枚
 

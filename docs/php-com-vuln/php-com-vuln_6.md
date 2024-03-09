@@ -1,7 +1,5 @@
 # 0x05 上传
 
-# 0x05 上传
-
 * * *
 
 这个上传就大概说说。
@@ -95,8 +93,6 @@ copy(ROOT_PATH."$webdb[updir]/$value",ROOT_PATH."$webdb[updir]/{$value}.jpg");
 例子: [WooYun: qibocmsV7 整站系统任意文件下载导致无限制注入多处(可提升自己为管理 Demo 演示)](http://www.wooyun.org/bugs/wooyun-2014-066459)
 
 这个例子还涉及到了一个 win 的特性 bypass 黑名单
-
-# WooYun-2014-88418：phpyun (20141230) 任意文件删除致注入可改任意用户密码(4 处打包)
 
 # WooYun-2014-88418：phpyun (20141230) 任意文件删除致注入可改任意用户密码(4 处打包)
 
@@ -518,8 +514,6 @@ function editpw_action()
 
 # WooYun-2014-65835：Qibocms 图片系统任意文件查看导致的多处注入(可提升自己为管理员)
 
-# WooYun-2014-65835：Qibocms 图片系统任意文件查看导致的多处注入(可提升自己为管理员)
-
 漏洞作者： [′雨。](http://www.wooyun.org/whitehats/′雨。)![认证白帽子](img/v.png)
 
 来源：[`www.wooyun.org/bugs/wooyun-2014-065835`](http://www.wooyun.org/bugs/wooyun-2014-065835)
@@ -863,8 +857,6 @@ $onlineip 就为**.**.**.**了。
 ## 修复方案
 
 源头还是任意文件查看。，
-
-# WooYun-2014-66459：qibocmsV7 整站系统任意文件下载导致无限制注入多处(可提升自己为管理 Demo 演示)
 
 # WooYun-2014-66459：qibocmsV7 整站系统任意文件下载导致无限制注入多处(可提升自己为管理 Demo 演示)
 

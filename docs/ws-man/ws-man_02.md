@@ -1,7 +1,5 @@
 # 译者序
 
-# 译者序
-
 **目录**
 
 *   [1\. 为什么要翻译](http://man.lupaworld.com/content/network/wireshark/yizhexu.html#p.1)

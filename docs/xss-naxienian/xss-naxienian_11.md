@@ -1,7 +1,5 @@
 # 11\. Dom Xss 进阶 [善变 iframe]
 
-# 11\. Dom Xss 进阶 [善变 iframe]
-
 > 来源：[11\. Dom Xss 进阶 [善变 iframe]](http://www.wooyun.org/bugs/wooyun-2010-016223)
 
 ## 简要描述

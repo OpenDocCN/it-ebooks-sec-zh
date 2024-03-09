@@ -1,7 +1,5 @@
 # 2\. 安装和初始化设置
 
-# 2\. 安装和初始化设置
-
 本指南将在 Ubuntu Linux 10.04 x64 操作系统上安装 Metasploit Professional 版 本。 此外，将构建一个测试实验室来运行 POC。
 
 2.1 前往 [`www.rapid7.com/products/metasploit/system-requirements.jsp`](http://www.rapid7.com/products/metasploit/system-requirements.jsp) 并检 查更新过的系统要求。

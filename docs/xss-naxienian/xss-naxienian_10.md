@@ -1,7 +1,5 @@
 # 10\. Dom Xss 进阶 [邂逅 eval]
 
-# 10\. Dom Xss 进阶 [邂逅 eval]
-
 > 来源：[10\. Dom Xss 进阶 [邂逅 eval]](http://www.wooyun.org/bugs/wooyun-2010-016197)
 
 ## 简要描述

@@ -1,7 +1,5 @@
 # HTML5 安全备忘单
 
-# HTML5 安全备忘单
-
 > 来源：[HTML5 Security Cheatsheet](https://html5sec.org/)
 
 ## HTML5 特性向量

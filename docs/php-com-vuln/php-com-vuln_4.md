@@ -1,7 +1,5 @@
 # 0x03 注入
 
-# 0x03 注入
-
 * * *
 
 下面来说一下注入。 这里谈的是 mysql。 注入大概也就是把用户可控的一些变量, 带入到了数据库的各种操作当中且没有做好很好的过滤。 比如注册用户的时候检测用户名是否存在的时候,把用户提交的用户名拿到数据库中去查询。 查询是否存在这个用户名, 如果这里对用户名没有做好过滤的话 那么用户就可以提交一些特殊字符来注入了。
@@ -578,8 +576,6 @@ $_key{0} != '_' && $$_key = daddslashes($_value);
 
 # WooYun-2014-63225：74cms 最新版 注入 8-9
 
-# WooYun-2014-63225：74cms 最新版 注入 8-9
-
 漏洞作者： [′雨。](http://www.wooyun.org/whitehats/′雨。)![认证白帽子](img/v.png)
 
 来源：[`www.wooyun.org/bugs/wooyun-2014-063225`](http://www.wooyun.org/bugs/wooyun-2014-063225)
@@ -776,8 +772,6 @@ elseif($act == 'key')
 
 # WooYun-2014-55842：qibocms 下载系统 SQL 注入一枚（官网可重现）
 
-# WooYun-2014-55842：qibocms 下载系统 SQL 注入一枚（官网可重现）
-
 漏洞作者： [′雨。](http://www.wooyun.org/whitehats/′雨。)![认证白帽子](img/v.png)
 
 来源：[`www.wooyun.org/bugs/wooyun-2014-055842`](http://www.wooyun.org/bugs/wooyun-2014-055842)
@@ -867,8 +861,6 @@ $queryString = $_POST['queryString'];
 求过滤。
 
 求 20 分。
-
-# WooYun-2014-53187：qibocms B2b 注入一枚
 
 # WooYun-2014-53187：qibocms B2b 注入一枚
 
@@ -1019,8 +1011,6 @@ f($type=='hot'||$type=='com'||$type=='new'||$type=='lastview'||$type=='like')
 求保养
 
 求 20.
-
-# WooYun-2014-56822：phpdisk V7 sql 注入 2
 
 # WooYun-2014-56822：phpdisk V7 sql 注入 2
 
@@ -1200,8 +1190,6 @@ $file = unserialize(base64_decode($data));
 
 # WooYun-2014-53189：qibocms 分类注入一枚可提升自己为管理
 
-# WooYun-2014-53189：qibocms 分类注入一枚可提升自己为管理
-
 漏洞作者： [′雨。](http://www.wooyun.org/whitehats/′雨。)![认证白帽子](img/v.png)
 
 来源：[`www.wooyun.org/bugs/wooyun-2014-053189`](http://www.wooyun.org/bugs/wooyun-2014-053189)
@@ -1308,8 +1296,6 @@ $cpDB=$db->get_one("SELECT * FROM `{$pre}memberdata_1` WHERE uid='$lfjuid'");
 
 # WooYun-2014-51734：phpmps 注入一枚
 
-# WooYun-2014-51734：phpmps 注入一枚
-
 漏洞作者： [′雨。](http://www.wooyun.org/whitehats/′雨。)![认证白帽子](img/v.png)
 
 来源：[`www.wooyun.org/bugs/wooyun-2014-051734`](http://www.wooyun.org/bugs/wooyun-2014-051734)
@@ -1353,8 +1339,6 @@ extract 变量覆盖。
 ## 修复方案
 
 过滤。
-
-# WooYun-2014-55338：MetInfo 最新版(5.2.4)一处 SQL 盲注漏洞
 
 # WooYun-2014-55338：MetInfo 最新版(5.2.4)一处 SQL 盲注漏洞
 
@@ -1648,8 +1632,6 @@ step3：破解 admin 密码
 
 # WooYun-2014-50636：PHPCMS 全版本通杀 SQL 注入漏洞
 
-# WooYun-2014-50636：PHPCMS 全版本通杀 SQL 注入漏洞
-
 漏洞作者： [felixk3y](http://www.wooyun.org/whitehats/felixk3y)
 
 来源：[`www.wooyun.org/bugs/wooyun-2014-050636`](http://www.wooyun.org/bugs/wooyun-2014-050636)
@@ -1916,8 +1898,6 @@ step3 在缩略图栏填入 [`**.**.**.**/sql.jpg'，如图`](http://**.**.**.**
 
 # WooYun-2014-53198：cmseasy 绕过补丁 SQL 注入一枚
 
-# WooYun-2014-53198：cmseasy 绕过补丁 SQL 注入一枚
-
 漏洞作者： [′雨。](http://www.wooyun.org/whitehats/′雨。)![认证白帽子](img/v.png)
 
 来源：[`www.wooyun.org/bugs/wooyun-2014-053198`](http://www.wooyun.org/bugs/wooyun-2014-053198)
@@ -2051,8 +2031,6 @@ $order_sn = trim($order_sn);
 继续过滤。
 
 这次别忽略了。。
-
-# WooYun-2014-68853：Phpyun 注入漏洞二
 
 # WooYun-2014-68853：Phpyun 注入漏洞二
 
@@ -2428,8 +2406,6 @@ server 里面只检测了 referer
 
 # WooYun-2014-62957：CmsEasy 最新版本无限制 SQL 注射
 
-# WooYun-2014-62957：CmsEasy 最新版本无限制 SQL 注射
-
 漏洞作者： [blue](http://www.wooyun.org/whitehats/blue)![认证白帽子](img/v.png)
 
 来源：[`www.wooyun.org/bugs/wooyun-2014-062957`](http://www.wooyun.org/bugs/wooyun-2014-062957)
@@ -2467,8 +2443,6 @@ if(!preg_match('/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|
 ## 修复方案
 
 在入库时统一 addslashes 最佳
-
-# WooYun-2014-65837：qibocms 黄页系统 SQL 注入一枚
 
 # WooYun-2014-65837：qibocms 黄页系统 SQL 注入一枚
 
@@ -2557,8 +2531,6 @@ $title=$title?$title:$array[name]; 如果没定义$title 的话就是直接用�
 直接查看源码得到数据。
 
 ## 修复方案
-
-# WooYun-2014-79041：Supesite 前台注入 #2 (Insert)
 
 # WooYun-2014-79041：Supesite 前台注入 #2 (Insert)
 
@@ -2764,8 +2736,6 @@ function fileext($filename) {
 
 # WooYun-2014-80867：qibocms 地方门户系统注入一个问题(demo 测试)
 
-# WooYun-2014-80867：qibocms 地方门户系统注入一个问题(demo 测试)
-
 漏洞作者： [′雨。](http://www.wooyun.org/whitehats/′雨。)![认证白帽子](img/v.png)
 
 来源：[`www.wooyun.org/bugs/wooyun-2014-080867`](http://www.wooyun.org/bugs/wooyun-2014-080867)
@@ -2934,8 +2904,6 @@ function keyword_del($id,$keyword){
 
 # WooYun-2014-80870：qibocms 地方门户系统注入（多处类似,demo 测试)
 
-# WooYun-2014-80870：qibocms 地方门户系统注入（多处类似,demo 测试)
-
 漏洞作者： [′雨。](http://www.wooyun.org/whitehats/′雨。)![认证白帽子](img/v.png)
 
 来源：[`www.wooyun.org/bugs/wooyun-2014-080870`](http://www.wooyun.org/bugs/wooyun-2014-080870)
@@ -3037,8 +3005,6 @@ dianping/post.php?action=postnew&fid=11&postdb[address]=xx&postdb[city_id]=x&_er
 ## 修复方案
 
 把 $_erp=$Fid_db[tableid][$fid]; 放在前面。
-
-# WooYun-2014-79938：齐博地方门户系统 SQL 注入漏洞(无需登录可批量)
 
 # WooYun-2014-79938：齐博地方门户系统 SQL 注入漏洞(无需登录可批量)
 
@@ -3198,8 +3164,6 @@ unset($fids);之后再进入 while 循环。
 
 # WooYun-2014-80259：齐博整站/地方门户 SQL 注入漏洞
 
-# WooYun-2014-80259：齐博整站/地方门户 SQL 注入漏洞
-
 漏洞作者： [phith0n](http://www.wooyun.org/whitehats/phith0n)![认证白帽子](img/v.png)
 
 来源：[`www.wooyun.org/bugs/wooyun-2014-080259`](http://www.wooyun.org/bugs/wooyun-2014-080259)
@@ -3341,8 +3305,6 @@ truename=xxxx%0000&Limitword[000]=&email=123@**.**.**.**&provinceid=,address=(se
 ## 修复方案
 
 过滤，转义。
-
-# WooYun-2014-69746：qibocms V7 整站系统最新版 SQL 注入一枚 & 另外一处能引入转义符的地方。
 
 # WooYun-2014-69746：qibocms V7 整站系统最新版 SQL 注入一枚 & 另外一处能引入转义符的地方。
 
@@ -3590,8 +3552,6 @@ $keyword=addslashes($keyword);
 
 # WooYun-2014-70353：qibocms 多个系统绕过补丁继续注入 2
 
-# WooYun-2014-70353：qibocms 多个系统绕过补丁继续注入 2
-
 漏洞作者： [′雨。](http://www.wooyun.org/whitehats/′雨。)![认证白帽子](img/v.png)
 
 来源：[`www.wooyun.org/bugs/wooyun-2014-070353`](http://www.wooyun.org/bugs/wooyun-2014-070353)
@@ -3777,8 +3737,6 @@ foreach 出来的 key 没有过滤 直接带入到了查询当中
 这个我真心也不知道怎么过滤了。。
 
 还是看你们把。
-
-# WooYun-2014-70366：qibocms 全部开源系统 Getshell
 
 # WooYun-2014-70366：qibocms 全部开源系统 Getshell
 
@@ -4084,8 +4042,6 @@ D:\ApmServ\www\htdocs\qibov7\data\label_hf.php
 
 # WooYun-2014-71516：Discuz 5.x 6.x 7.x 前台 SQL 注入漏洞一枚
 
-# WooYun-2014-71516：Discuz 5.x 6.x 7.x 前台 SQL 注入漏洞一枚
-
 漏洞作者： [′雨。](http://www.wooyun.org/whitehats/′雨。)![认证白帽子](img/v.png)
 
 来源：[`www.wooyun.org/bugs/wooyun-2014-071516`](http://www.wooyun.org/bugs/wooyun-2014-071516)
@@ -4320,8 +4276,6 @@ $db->query("DELETE FROM {$tablepre}polloptions WHERE polloptionid='$key' AND tid
 
 # WooYun-2014-80875：qibocms 地方门户系统 注入#4(demo 测试)
 
-# WooYun-2014-80875：qibocms 地方门户系统 注入#4(demo 测试)
-
 漏洞作者： [′雨。](http://www.wooyun.org/whitehats/′雨。)![认证白帽子](img/v.png)
 
 来源：[`www.wooyun.org/bugs/wooyun-2014-080875`](http://www.wooyun.org/bugs/wooyun-2014-080875)
@@ -4435,8 +4389,6 @@ UPDATE `{$_pre}pic` SET name='{$titledb[$key]}',imgurl='$value' WHERE pid='{$pid
 判断是不是数组。
 
 如果是数组的话 再进行这样的操作。
-
-# WooYun-2014-60159：phpmps 注入 (可修改其他用户密码,官网成功)
 
 # WooYun-2014-60159：phpmps 注入 (可修改其他用户密码,官网成功)
 
@@ -4574,8 +4526,6 @@ function updatepw($get, $post) {
 
 # WooYun-2014-61135：PHPEMS (在线考试系统) 设计缺陷 Getshell 一枚(官网已 shell)
 
-# WooYun-2014-61135：PHPEMS (在线考试系统) 设计缺陷 Getshell 一枚(官网已 shell)
-
 漏洞作者： [′雨。](http://www.wooyun.org/whitehats/′雨。)![认证白帽子](img/v.png)
 
 来源：[`www.wooyun.org/bugs/wooyun-2014-061135`](http://www.wooyun.org/bugs/wooyun-2014-061135)
@@ -4629,8 +4579,6 @@ define('UC_KEY', '1234567890');
 ## 修复方案
 
 判断是否整合。
-
-# WooYun-2014-58479：最土团购注入一枚可直接提升自己为管理 & 无限刷钱。
 
 # WooYun-2014-58479：最土团购注入一枚可直接提升自己为管理 & 无限刷钱。
 
@@ -4836,8 +4784,6 @@ UPDATE `user` SET `money`=money + asd WHERE `id`='88'
 
 # WooYun-2014-55026：Destoon Sql 注入漏洞 2（有条件）
 
-# WooYun-2014-55026：Destoon Sql 注入漏洞 2（有条件）
-
 漏洞作者： [′雨。](http://www.wooyun.org/whitehats/′雨。)![认证白帽子](img/v.png)
 
 来源：[`www.wooyun.org/bugs/wooyun-2014-055026`](http://www.wooyun.org/bugs/wooyun-2014-055026)
@@ -4971,8 +4917,6 @@ $transaction_id = $resHandler->getParameter("transaction_id");
 ## 修复方案
 
 过滤。
-
-# WooYun-2014-52363：CSDJCMS 程式舞曲最新版 Sql 一枚
 
 # WooYun-2014-52363：CSDJCMS 程式舞曲最新版 Sql 一枚
 
@@ -5126,8 +5070,6 @@ Check it.
 
 # WooYun-2014-80873：qibocms 地方门户系统 注入#3 (demo 测试)
 
-# WooYun-2014-80873：qibocms 地方门户系统 注入#3 (demo 测试)
-
 漏洞作者： [′雨。](http://www.wooyun.org/whitehats/′雨。)![认证白帽子](img/v.png)
 
 来源：[`www.wooyun.org/bugs/wooyun-2014-080873`](http://www.wooyun.org/bugs/wooyun-2014-080873)
@@ -5199,8 +5141,6 @@ hy/member/homepage_ctrl.php?atn=pic_edit&pids[]=1) union select 1,2,3,4,user(),6
 ## 修复方案
 
 intval
-
-# WooYun-2014-79045：Supesite 前台注入 #3 (Delete)
 
 # WooYun-2014-79045：Supesite 前台注入 #3 (Delete)
 
@@ -5420,8 +5360,6 @@ intval 或者 单引号上把
 
 # WooYun-2014-88872：phpyun v3.2 (20141226) 两处注入。
 
-# WooYun-2014-88872：phpyun v3.2 (20141226) 两处注入。
-
 漏洞作者： [′雨。](http://www.wooyun.org/whitehats/′雨。)![认证白帽子](img/v.png)
 
 来源：[`www.wooyun.org/bugs/wooyun-2014-088872`](http://www.wooyun.org/bugs/wooyun-2014-088872)
@@ -5774,8 +5712,6 @@ if($_POST['linkway']=='1'){
 
 # WooYun-2014-88872：phpyun v3.2 (20141226) 两处注入。
 
-# WooYun-2014-88872：phpyun v3.2 (20141226) 两处注入。
-
 漏洞作者： [′雨。](http://www.wooyun.org/whitehats/′雨。)![认证白帽子](img/v.png)
 
 来源：[`www.wooyun.org/bugs/wooyun-2014-088872`](http://www.wooyun.org/bugs/wooyun-2014-088872)
@@ -6125,8 +6061,6 @@ if($_POST['linkway']=='1'){
 第一个用 pylode
 
 第二个对出库的 addslashes 一次。
-
-# WooYun-2014-80877：qibocms 地方门户系统 二次注入#5(demo 测试)
 
 # WooYun-2014-80877：qibocms 地方门户系统 二次注入#5(demo 测试)
 
@@ -6253,8 +6187,6 @@ demo 测试:
 ## 修复方案
 
 出库转义。
-
-# WooYun-2014-68362：74cms (20140709) 二枚二次注入
 
 # WooYun-2014-68362：74cms (20140709) 二枚二次注入
 
@@ -6534,8 +6466,6 @@ $setsqlarr['key']=$resume_basic['intention_jobs'].$resume_basic['recentjobs'].$r
 
 # WooYun-2014-67424：Hdwiki 最新版二次注入一枚
 
-# WooYun-2014-67424：Hdwiki 最新版二次注入一枚
-
 漏洞作者： [′雨。](http://www.wooyun.org/whitehats/′雨。)![认证白帽子](img/v.png)
 
 来源：[`www.wooyun.org/bugs/wooyun-2014-067424`](http://www.wooyun.org/bugs/wooyun-2014-067424)
@@ -6722,8 +6652,6 @@ $blackuser = str_replace(",","','",$blacklist);
 
 # WooYun-2014-60166：云人才系统 SQL 注入，绕过 WAF
 
-# WooYun-2014-60166：云人才系统 SQL 注入，绕过 WAF
-
 漏洞作者： [酱油甲](http://www.wooyun.org/whitehats/酱油甲)
 
 来源：[`www.wooyun.org/bugs/wooyun-2014-060166`](http://www.wooyun.org/bugs/wooyun-2014-060166)
@@ -6839,8 +6767,6 @@ VERSION
 ## 修复方案
 
 过滤
-
-# WooYun-2014-66221：Cmseasy SQL 注射漏洞之三
 
 # WooYun-2014-66221：Cmseasy SQL 注射漏洞之三
 
@@ -6997,8 +6923,6 @@ mysql 日志 ：
 ## 修复方案
 
 不要把$_POST 提交过去。。
-
-# WooYun-2014-88004：Hdwiki (20141205) 存在 7 处 SQL 注入漏洞（含之前处理不当安全的漏洞）
 
 # WooYun-2014-88004：Hdwiki (20141205) 存在 7 处 SQL 注入漏洞（含之前处理不当安全的漏洞）
 
@@ -7877,8 +7801,6 @@ $blackuser = str_replace(",","','",$blacklist);
 ## 修复方案
 
 无尽的过滤。
-
-# WooYun-2014-80723：Discuz!某两个版本前台产品命令执行（无需登录）
 
 # WooYun-2014-80723：Discuz!某两个版本前台产品命令执行（无需登录）
 

@@ -1,7 +1,5 @@
 # 0x06 加密函数问题。
 
-# 0x06 加密函数问题。
-
 * * *
 
 这种问题主要是想进各种办法把这些加密函数的 key 拿到 或者想办法加密一些特殊字符然后拿到加密的字符串
@@ -35,8 +33,6 @@
 例子: [WooYun: 一个 PHPWIND 可拿 shell 的高危漏洞](http://www.wooyun.org/bugs/wooyun-2014-072727)
 
 例子: [WooYun: PHPCMS V9 一个为所欲为的漏洞](http://www.wooyun.org/bugs/wooyun-2014-066394)
-
-# WooYun-2014-71655：DedeCMS-V5.7-SP1(2014-07-25)sql 注入+新绕过思路
 
 # WooYun-2014-71655：DedeCMS-V5.7-SP1(2014-07-25)sql 注入+新绕过思路
 
@@ -430,8 +426,6 @@ INSERT INTO `dede_shops_products` (`aid`,`oid`,`userid`,`title`,`price`,`buynum`
 
 # WooYun-2014-66138：phpcms 最新版绕过全局防御暴力注入（官网演示）
 
-# WooYun-2014-66138：phpcms 最新版绕过全局防御暴力注入（官网演示）
-
 漏洞作者： [索马里的海贼](http://www.wooyun.org/whitehats/索马里的海贼)
 
 来源：[`www.wooyun.org/bugs/wooyun-2014-066138`](http://www.wooyun.org/bugs/wooyun-2014-066138)
@@ -754,8 +748,6 @@ userid 来自 cookie cookie 是加密过的 所以无视 GPC 无视任何防御
 
 # WooYun-2014-80370：程氏舞曲 CMS 某泄露，导致 sql 注入
 
-# WooYun-2014-80370：程氏舞曲 CMS 某泄露，导致 sql 注入
-
 漏洞作者： [路人甲](http://www.wooyun.org/whitehats/路人甲)
 
 来源：[`www.wooyun.org/bugs/wooyun-2014-080370`](http://www.wooyun.org/bugs/wooyun-2014-080370)
@@ -865,8 +857,6 @@ Cookie: cs_id=L8kxDzdqKNy9%2F2Qs0g
 方案 2：调用 cookie 的后，在 addslashes 一下。
 
 或者有其他办法，共同进步。
-
-# WooYun-2013-24984：PHPCMS 最新版(V9)SQL 注入一枚
 
 # WooYun-2013-24984：PHPCMS 最新版(V9)SQL 注入一枚
 
@@ -1064,8 +1054,6 @@ $trade_sn    = param::get_cookie('trade_sn'); //约 110 行位置，如果可以
 
 # WooYun-2014-72727：一个 PHPWIND 可拿 shell 的高危漏洞
 
-# WooYun-2014-72727：一个 PHPWIND 可拿 shell 的高危漏洞
-
 漏洞作者： [Map](http://www.wooyun.org/whitehats/Map)
 
 来源：[`www.wooyun.org/bugs/wooyun-2014-072727`](http://www.wooyun.org/bugs/wooyun-2014-072727)
@@ -1223,8 +1211,6 @@ function appKey($apiId, $time, $secretkey, $get, $post) {
 ## 修复方案
 
 不要轻信 key，可以将 m，a，c 都加入 key 的运算。
-
-# WooYun-2014-66394：PHPCMS V9 一个为所欲为的漏洞
 
 # WooYun-2014-66394：PHPCMS V9 一个为所欲为的漏洞
 

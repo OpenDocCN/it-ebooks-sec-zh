@@ -1,7 +1,5 @@
 # 第四章 实时捕捉数据包
 
-# 第四章 实时捕捉数据包
-
 **目录**
 
 *   [4.1\. 介绍](http://man.lupaworld.com/content/network/wireshark/capturing_live.html#c4.1)

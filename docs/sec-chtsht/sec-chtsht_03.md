@@ -1,7 +1,5 @@
 # 加密存储备忘单
 
-# 加密存储备忘单
-
 > 原文：[Cryptographic Storage Cheat Sheet](https://www.owasp.org/index.php/Cryptographic_Storage_Cheat_Sheet)
 > 
 > 来源：[加密存储备忘单](http://cheatsheets.hackdig.com/?5.htm)

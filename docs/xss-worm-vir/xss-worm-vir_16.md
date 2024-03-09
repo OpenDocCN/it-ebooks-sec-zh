@@ -1,7 +1,5 @@
 # 关于
 
-# 关于
-
 ## 关于作者
 
 Jeremiah Grossman 是 WhiteHat Security 的创始人和 CTO，在漏洞管理方面是世界知名专家，Web 应用安全联盟的创始人之一，最近被评为 InfoWorld 的 2007 年 25 位首席技术官。格罗斯曼先生是一个经常在行业会议发表演讲的 人，包括黑帽子大会，ISACA，CSI，OWASP，Vanguard，ISSA，OWASP，Defcon 黑客大会等。他撰写了大量的文章和白皮书，发现了许多尖端的攻击和防御技术，是《XSS Exploits》的合作作者。格罗斯曼先生经常在各大媒体出版物发表 文章，如 InfoWorld，USA Today，PCWorld，Dark Reading，SC Magazine，SecurityFocus，C-Net，SC Magazine，CSO 以 及 InformationWeek。在 WhiteHat Security 之前，他是雅虎的一个信息安全人员。

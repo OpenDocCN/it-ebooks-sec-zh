@@ -1,7 +1,5 @@
 # XSS 过滤绕过备忘单
 
-# XSS 过滤绕过备忘单
-
 > 原文：[XSS Filter Evasion Cheat Sheet](https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet)
 > 
 > 来源：[XSS Filter Evasion Cheat Sheet 中文版](http://drops.wooyun.org/tips/1955)

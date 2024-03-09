@@ -1,7 +1,5 @@
 # 16\. Flash Xss 进阶 [ExternalInterface.call 第二个参数]
 
-# 16\. Flash Xss 进阶 [ExternalInterface.call 第二个参数]
-
 > 来源：[16\. Flash Xss 进阶 [ExternalInterface.call 第二个参数]](http://www.wooyun.org/bugs/wooyun-2010-016598)
 
 ## 简要描述

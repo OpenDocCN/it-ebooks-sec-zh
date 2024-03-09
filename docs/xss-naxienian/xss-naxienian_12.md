@@ -1,7 +1,5 @@
 # 12\. Dom Xss 进阶 [路径 con]
 
-# 12\. Dom Xss 进阶 [路径 con]
-
 > 来源：[12\. Dom Xss 进阶 [路径 con]](http://www.wooyun.org/bugs/wooyun-2010-016279)
 
 ## 简要描述

@@ -1,7 +1,5 @@
 # 第六章　漏洞利用
 
-# 第六章　漏洞利用
-
 漏洞利用是获得系统控制权限的重要途径。用户从目标系统中找到容易攻击的漏洞，然后利用该漏洞获取权限，从而实现对目标系统的控制。为了便于用户练习，本章将介绍 Metasploit 发布的 Metasploitable 2。用户可以将其作为练习用的 Linux 操作系统。本章将利用 Metasploitable 系统上存在的漏洞，介绍各种渗透攻击，如 MySQL 数据库、PostgreSQL 数据库及 Tomcat 服务等，其主要知识点如下：
 
 *   Metasploitable 操作系统；

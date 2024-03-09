@@ -1,7 +1,5 @@
 # WEB 应用安全测试备忘单
 
-# WEB 应用安全测试备忘单
-
 > 原文：[Web Application Security Testing Cheat Sheet](https://www.owasp.org/index.php/Web_Application_Security_Testing_Cheat_Sheet)
 > 
 > 来源：[WEB 应用安全测试备忘单](http://cheatsheets.hackdig.com/?8.htm)

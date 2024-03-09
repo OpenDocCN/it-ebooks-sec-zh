@@ -1,7 +1,5 @@
 # 身份验证备忘单
 
-# 身份验证备忘单
-
 > 原文：[Authentication Cheat Sheet](https://www.owasp.org/index.php/Authentication_Cheat_Sheet)
 > 
 > 来源：[身份验证备忘单](http://cheatsheets.hackdig.com/?3.htm)

@@ -1,7 +1,5 @@
 # PHP 安全备忘单
 
-# PHP 安全备忘单
-
 > 译者：[fisherMartyn](https://github.com/fisherMartyn)
 > 
 > 来源：[PHP-SECURITY-CHEAT-SHEET](https://github.com/fisherMartyn/PHP-SECURITY-CHEAT-SHEET)

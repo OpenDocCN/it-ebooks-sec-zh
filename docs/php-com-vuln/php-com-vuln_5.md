@@ -1,7 +1,5 @@
 # 0x04 找回密码出现的问题。
 
-# 0x04 找回密码出现的问题。
-
 * * *
 
 下面介绍一些我在 cms 遇到的找回密码时候犯得错误。
@@ -35,8 +33,6 @@ $encryptstring=md5($this->time.$verification.$auth);
 补丁后 多了一个$auth$timetemp=date("Y-m-d H:i:s",$this->time);$auth = util::strcode($timetemp, 'ENCODE'); 可以$auch 是对时间来了一个算法。 结果这个算法的 KEY 并没有初始化 导致了如果我们知道了这个时间 就可以自己生成出来加密的字符串 这里带入算法的是时间 这里是我们可以知道的。
 
 例子: [WooYun: Hdwiki 设计缺陷知邮箱可改密码（包括管理员）](http://www.wooyun.org/bugs/wooyun-2014-067410) //绕过补丁继续找回 hdwiki 任意用户密码
-
-# WooYun-2014-50304：Thinksaas 找回密码处设计错误利用账户可找回密码。
 
 # WooYun-2014-50304：Thinksaas 找回密码处设计错误利用账户可找回密码。
 
@@ -129,8 +125,6 @@ $resetpwd = md5(rand());
 ## 修复方案
 
 还是不要用随机的把。。
-
-# WooYun-2014-67410：Hdwiki 设计缺陷知邮箱可改密码（包括管理员）
 
 # WooYun-2014-67410：Hdwiki 设计缺陷知邮箱可改密码（包括管理员）
 

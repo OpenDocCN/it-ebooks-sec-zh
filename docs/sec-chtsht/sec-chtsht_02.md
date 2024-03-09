@@ -1,7 +1,5 @@
 # 点击劫持防御备忘单
 
-# 点击劫持防御备忘单
-
 > 原文：[Clickjacking Defense Cheat Sheet](https://www.owasp.org/index.php/Clickjacking_Defense_Cheat_Sheet)
 > 
 > 来源：[点击劫持防御备忘单](http://cheatsheets.hackdig.com/?1.htm)

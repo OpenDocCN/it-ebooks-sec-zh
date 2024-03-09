@@ -1,7 +1,5 @@
 # 3\. 输出在 HTML 属性里的情况
 
-# 3\. 输出在 HTML 属性里的情况
-
 > 来源：[3\. 输出在 HTML 属性里的情况](http://www.wooyun.org/bugs/wooyun-2010-015963)
 
 ## 简要描述

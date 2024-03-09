@@ -1,7 +1,5 @@
 # 9\. Dom Xss 入门 [隐式输出]
 
-# 9\. Dom Xss 入门 [隐式输出]
-
 > 来源：[9\. Dom Xss 入门 [隐式输出]](http://www.wooyun.org/bugs/wooyun-2010-016150)
 
 ## 简要描述

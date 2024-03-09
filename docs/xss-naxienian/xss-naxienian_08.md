@@ -1,7 +1,5 @@
 # 8\. Dom Xss 入门 [显式输出]
 
-# 8\. Dom Xss 入门 [显式输出]
-
 > 来源：[. Dom Xss 入门 [显式输出]](http://www.wooyun.org/bugs/wooyun-2010-016041)
 
 ## 简要描述

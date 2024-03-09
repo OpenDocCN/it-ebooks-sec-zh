@@ -1,7 +1,5 @@
 # 21\. 存储型 XSS 进阶 [猜测规则，利用 Flash addCallback 构造 XSS]
 
-# 21\. 存储型 XSS 进阶 [猜测规则，利用 Flash addCallback 构造 XSS]
-
 > 来源：[21\. 存储型 XSS 进阶 [猜测规则，利用 Flash addCallback 构造 XSS]](http://www.wooyun.org/bugs/wooyun-2010-016803)
 
 ## 简要描述

@@ -1,7 +1,5 @@
 # XSS 蠕虫 & 病毒 即将发生的威胁与最好的防御
 
-# XSS 蠕虫 & 病毒 即将发生的威胁与最好的防御
-
 June 2007 – updated Jeremiah Grossman
 
 Founder and CTO, WhiteHat Security

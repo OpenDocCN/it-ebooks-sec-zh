@@ -1,7 +1,5 @@
 # 第六章 处理已经捕捉的包
 
-# 第六章 处理已经捕捉的包
-
 **目录**
 
 *   [6.1\. 浏览您捕捉的包](http://man.lupaworld.com/content/network/wireshark/chek_packet.html#c6.1)

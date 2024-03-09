@@ -1,7 +1,5 @@
 # 12\. 高级技术
 
-# 12\. 高级技术
-
 本章节将说明`Post-Exploitation Macros`（入侵后宏）和`Persistent Agent`（持 续代理程序）。 `Post-Exploitation Macros`（入侵后宏）帮助您在构建完会话后自 动执行操作。 例如：通过 XP 工作站构建完一个会话后，无需管理员的介入即可自动执 行密码收集和屏幕捕获操作。
 
 `Persistent Agent`（持续代理程序）帮助您在重启和登录主机后，让主机自动构建针 对 Metasploit 的会话。无需再次入侵/强力攻击主机。 换言之，在 Metasploit 的控制 下，部署了代理程序的主机就像是`僵尸`。

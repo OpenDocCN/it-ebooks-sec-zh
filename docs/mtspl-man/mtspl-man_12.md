@@ -1,7 +1,5 @@
 # 11\. 社会工程
 
-# 11\. 社会工程
-
 在 Metasploit Pro 中使用`Campaigns`（宣传活动）来启动`Social Engineering`
 
 （社会工程）。 `Campaign`（宣传活动）包括 Web、电子邮件和 USB 模式。 您可以 自定义网页和电子邮件内容来模拟面向客户端的常规钓鱼攻击。 一旦目标客户端连接到

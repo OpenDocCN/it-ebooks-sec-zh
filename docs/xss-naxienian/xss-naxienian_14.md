@@ -1,7 +1,5 @@
 # 14\. Flash Xss 入门 [navigateToURL]
 
-# 14\. Flash Xss 入门 [navigateToURL]
-
 > 来源：[14\. Flash Xss 入门 [navigateToURL]](http://www.wooyun.org/bugs/wooyun-2010-016512)
 
 ## 简要描述
